@@ -7,6 +7,7 @@ from backtest.ftmo_quant_backtest import (
     Config,
     active_floor,
     aggregate_h1,
+    atr_sma_of_tr,
     ema,
     floor_volume,
     htf_ema_aligned,
@@ -107,6 +108,25 @@ class BacktestEngineTests(unittest.TestCase):
         # the range was defended, so the trade is skipped.
         bars[18] = Bar(start + timedelta(hours=18), 18.0, 19.0, 17.95, 18.05, 0.01)
         self.assertEqual(signal(19, bars, fast, slow, config), 0)
+
+    def test_atr_matches_sma_of_true_range(self) -> None:
+        # MT5's iATR is an SMA of True Range (not Wilder), so the engine's ATR
+        # must be a plain moving average of TR with the first TR ignored.
+        start = datetime(2026, 1, 5, 0)
+        highs_lows = [(10.0, 9.0), (11.0, 9.5), (10.5, 9.5), (12.0, 10.0), (11.5, 10.5)]
+        bars = [
+            Bar(start + timedelta(hours=i), lo, hi, lo, hi, 0.0)
+            for i, (hi, lo) in enumerate(highs_lows)
+        ]
+        atr = atr_sma_of_tr(bars, 2)
+        tr = [0.0]
+        for i in range(1, len(bars)):
+            pc = bars[i - 1].close
+            tr.append(max(bars[i].high, pc) - min(bars[i].low, pc))
+        self.assertTrue(math.isnan(atr[1]))
+        self.assertAlmostEqual(atr[2], (tr[1] + tr[2]) / 2)
+        self.assertAlmostEqual(atr[3], (tr[2] + tr[3]) / 2)
+        self.assertAlmostEqual(atr[4], (tr[3] + tr[4]) / 2)
 
     def test_sma_uses_trailing_window(self) -> None:
         result = sma([1.0, 2.0, 3.0, 4.0], 2)
