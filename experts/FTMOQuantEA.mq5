@@ -16,10 +16,26 @@ input int             InpDonchianLookback      = 20;
 input int             InpFastEmaPeriod         = 50;
 input int             InpSlowEmaPeriod         = 200;
 input int             InpAtrPeriod             = 14;
-input double          InpStopAtrMultiple       = 2.0;
+input double          InpStopAtrMultiple       = 2.5;
 input double          InpRewardRisk            = 2.2;
+input double          InpEntryBufferAtr        = 0.5;
+input double          InpCandleBodyMin         = 0.2;
+input double          InpCandleWickMax         = 0.3;
 input bool            InpAllowLong             = true;
 input bool            InpAllowShort            = true;
+
+input group "Confluence & regime filters"
+input bool            InpUseHtf1Confluence     = true;         // primary higher timeframe
+input ENUM_TIMEFRAMES InpHtf1Timeframe         = PERIOD_H4;
+input bool            InpUseHtf2Confluence     = true;         // secondary higher timeframe
+input ENUM_TIMEFRAMES InpHtf2Timeframe         = PERIOD_D1;
+input int             InpHtfFastEmaPeriod       = 50;
+input int             InpHtfSlowEmaPeriod       = 200;
+input int             InpSkipHour1             = 12;           // server hour to skip (-1 = none)
+input int             InpVolAvgLen             = 50;           // ATR average length (0 = off)
+input double          InpVolRatioMin           = 0.0;          // min ATR/avg at entry
+input double          InpVolRatioMax           = 2.5;          // max ATR/avg at entry
+input int             InpMsChannelLookback     = 0;            // market-structure lookback (0 = off)
 
 input group "Position risk"
 input double          InpRiskPerTradePct       = 0.35;
@@ -42,20 +58,32 @@ input bool            InpEmergencyCloseAllAccountPositions = true;
 input string          InpStateId                  = "ftmo1";
 
 input group "Trading window (server time)"
-input int             InpSessionStartHour      = 7;
-input int             InpSessionEndHour        = 20;
+input int             InpSessionStartHour      = 8;
+input int             InpSessionEndHour        = 17;
 input bool            InpCloseBeforeWeekend    = true;
-input int             InpFridayCloseHour       = 20;
+input int             InpFridayCloseHour       = 17;
 
 input group "Trade management"
 input double          InpBreakEvenAtR          = 1.0;
 input double          InpTrailStartAtR         = 1.5;
 input double          InpTrailAtrMultiple      = 2.0;
 
+input group "Scale-out & trend pyramiding"
+input double          InpTp1R                  = 1.0;   // first partial target (R)
+input double          InpTp1Fraction           = 0.4;   // fraction closed at TP1
+input double          InpTp2Fraction           = 0.3;   // fraction closed at TP2 (=InpRewardRisk)
+input bool            InpPyramidEnabled        = true;  // add on pullbacks while trend holds
+input int             InpMaxUnits              = 3;     // max concurrent units
+input double          InpPullbackAtr           = 0.5;   // pullback depth (ATR) to arm a re-entry
+
 CTrade trade;
 int    fastEmaHandle = INVALID_HANDLE;
 int    slowEmaHandle = INVALID_HANDLE;
 int    atrHandle     = INVALID_HANDLE;
+int    htf1FastHandle = INVALID_HANDLE;
+int    htf1SlowHandle = INVALID_HANDLE;
+int    htf2FastHandle = INVALID_HANDLE;
+int    htf2SlowHandle = INVALID_HANDLE;
 double initialBalance = 0.0;
 double dayStartBalance = 0.0;
 int    currentTradingDay = 0;
@@ -340,10 +368,136 @@ bool CheckAccountGuard()
    return !tradingLocked;
 }
 
+double PointValuePerLot()
+{
+   double ts = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE);
+   double tv = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_VALUE);
+   if(ts <= 0.0)
+      return 0.0;
+   return tv / ts;
+}
+
+int CountUnits()
+{
+   int n = 0;
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket > 0 &&
+         PositionGetInteger(POSITION_MAGIC) == InpMagicNumber &&
+         PositionGetString(POSITION_SYMBOL) == _Symbol)
+         n++;
+   }
+   return n;
+}
+
+// Sum of the money still at risk to each unit's stop; used to keep aggregate
+// pyramiding exposure inside the FTMO floor.
+double OpenRiskMoney()
+{
+   double total = 0.0;
+   double vpl = PointValuePerLot();
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket == 0 ||
+         PositionGetInteger(POSITION_MAGIC) != InpMagicNumber ||
+         PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      double open = PositionGetDouble(POSITION_PRICE_OPEN);
+      double sl = PositionGetDouble(POSITION_SL);
+      double vol = PositionGetDouble(POSITION_VOLUME);
+      ENUM_POSITION_TYPE type = (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
+      double riskPrice = type == POSITION_TYPE_BUY ? open - sl : sl - open;
+      if(riskPrice > 0.0)
+         total += riskPrice * vol * vpl;
+   }
+   return total;
+}
+
+bool AnyUnitTp1Done()
+{
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket == 0 ||
+         PositionGetInteger(POSITION_MAGIC) != InpMagicNumber ||
+         PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      if(GlobalVariableGet(StateKey("f_" + StringFormat("%I64u", ticket))) >= 1.0)
+         return true;
+   }
+   return false;
+}
+
 bool ProjectedRiskAllowed(const double riskMoney)
 {
-   double projectedEquity = AccountInfoDouble(ACCOUNT_EQUITY) - riskMoney * 1.15;
+   double projectedEquity = AccountInfoDouble(ACCOUNT_EQUITY)
+                          - (OpenRiskMoney() + riskMoney) * 1.15;
    return projectedEquity > ActiveProtectionFloor();
+}
+
+int TrendSide()          { return (int)GlobalVariableGet(StateKey("trend_side")); }
+void SetTrendSide(int s) { GlobalVariableSet(StateKey("trend_side"), (double)s); }
+bool PullbackArmed()     { return GlobalVariableGet(StateKey("pullback")) > 0.0; }
+void SetPullback(bool a) { GlobalVariableSet(StateKey("pullback"), a ? 1.0 : 0.0); }
+
+void ResetTrendExtreme()
+{
+   GlobalVariableSet(StateKey("trend_ext"),
+                     iClose(_Symbol, InpSignalTimeframe, 1));
+}
+
+// Fold the last completed bar into the favorable extreme and arm a re-entry
+// once price has retraced by InpPullbackAtr * ATR.
+void UpdatePullback()
+{
+   int side = TrendSide();
+   if(side == 0)
+      return;
+   double atr = IndicatorValue(atrHandle, 1);
+   if(atr == EMPTY_VALUE || atr <= 0.0)
+      return;
+   double hi1 = iHigh(_Symbol, InpSignalTimeframe, 1);
+   double lo1 = iLow(_Symbol, InpSignalTimeframe, 1);
+   double ext = GlobalVariableGet(StateKey("trend_ext"));
+   if(side > 0)
+   {
+      if(hi1 > ext)
+      {
+         ext = hi1;
+         GlobalVariableSet(StateKey("trend_ext"), ext);
+      }
+      if(ext - lo1 >= InpPullbackAtr * atr)
+         SetPullback(true);
+   }
+   else
+   {
+      if(ext == 0.0 || lo1 < ext)
+      {
+         ext = lo1;
+         GlobalVariableSet(StateKey("trend_ext"), ext);
+      }
+      if(hi1 - ext >= InpPullbackAtr * atr)
+         SetPullback(true);
+   }
+}
+
+void CloseAllUnits(const string reason)
+{
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket == 0 ||
+         PositionGetInteger(POSITION_MAGIC) != InpMagicNumber ||
+         PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      if(!trade.PositionClose(ticket))
+         Print("Close-all (", reason, ") failed for #", ticket, ": ",
+               trade.ResultRetcodeDescription());
+   }
+   SetTrendSide(0);
+   SetPullback(false);
 }
 
 //+------------------------------------------------------------------+
@@ -365,6 +519,8 @@ bool IsTradingSession()
       return false;
    if(now.day_of_week == 5 && now.hour >= InpFridayCloseHour)
       return false;
+   if(InpSkipHour1 >= 0 && now.hour == InpSkipHour1)
+      return false;
 
    if(InpSessionStartHour == InpSessionEndHour)
       return true;
@@ -373,9 +529,58 @@ bool IsTradingSession()
    return now.hour >= InpSessionStartHour || now.hour < InpSessionEndHour;
 }
 
-bool HasOpenSymbolPosition()
+bool HtfAgrees(const int fastHandle, const int slowHandle, const int direction)
 {
-   return PositionSelect(_Symbol);
+   double f = IndicatorValue(fastHandle, 1);
+   double s = IndicatorValue(slowHandle, 1);
+   if(f == EMPTY_VALUE || s == EMPTY_VALUE)
+      return false;
+   return direction > 0 ? f > s : f < s;
+}
+
+// Higher-timeframe confluence, volatility regime and market-structure gates.
+// Each references only completed bars (shift 1) to avoid look-ahead.
+bool ConfluenceOK(const int direction)
+{
+   if(InpUseHtf1Confluence && !HtfAgrees(htf1FastHandle, htf1SlowHandle, direction))
+      return false;
+   if(InpUseHtf2Confluence && !HtfAgrees(htf2FastHandle, htf2SlowHandle, direction))
+      return false;
+
+   if(InpVolAvgLen > 0)
+   {
+      double atrBuf[];
+      if(CopyBuffer(atrHandle, 0, 1, InpVolAvgLen, atrBuf) != InpVolAvgLen)
+         return false;
+      double sum = 0.0;
+      for(int i = 0; i < InpVolAvgLen; ++i)
+         sum += atrBuf[i];
+      double avg = sum / InpVolAvgLen;
+      double atr1 = IndicatorValue(atrHandle, 1);
+      if(avg <= 0.0 || atr1 == EMPTY_VALUE)
+         return false;
+      double ratio = atr1 / avg;
+      if(ratio < InpVolRatioMin || ratio > InpVolRatioMax)
+         return false;
+   }
+
+   if(InpMsChannelLookback > 0)
+   {
+      int lb = InpMsChannelLookback;
+      double upNow = -DBL_MAX, upThen = -DBL_MAX, loNow = DBL_MAX, loThen = DBL_MAX;
+      for(int shift = 2; shift < InpDonchianLookback + 2; ++shift)
+      {
+         upNow  = MathMax(upNow,  iHigh(_Symbol, InpSignalTimeframe, shift));
+         loNow  = MathMin(loNow,  iLow(_Symbol, InpSignalTimeframe, shift));
+         upThen = MathMax(upThen, iHigh(_Symbol, InpSignalTimeframe, shift + lb));
+         loThen = MathMin(loThen, iLow(_Symbol, InpSignalTimeframe, shift + lb));
+      }
+      if(direction > 0 && !(upNow > upThen && loNow > loThen))
+         return false;
+      if(direction < 0 && !(upNow < upThen && loNow < loThen))
+         return false;
+   }
+   return true;
 }
 
 int Signal()
@@ -398,10 +603,42 @@ int Signal()
       lower = MathMin(lower, iLow(_Symbol, InpSignalTimeframe, shift));
    }
 
+   // Require the breakout close to clear the channel by a fraction of ATR so
+   // marginal pokes through the range (the main source of whipsaw) are ignored.
+   double buffer = 0.0;
+   if(InpEntryBufferAtr > 0.0)
+   {
+      double atr1 = IndicatorValue(atrHandle, 1);
+      if(atr1 == EMPTY_VALUE || atr1 <= 0.0)
+         return 0;
+      buffer = InpEntryBufferAtr * atr1;
+   }
+
+   // Candlestick confirmation on the completed breakout bar (shift 1): demand a
+   // decisive body that closes in the breakout direction with only a small
+   // rejection wick. A doji or a long opposing wick means the range was
+   // defended, so skip the trade.
+   double open1  = iOpen(_Symbol, InpSignalTimeframe, 1);
+   double high1  = iHigh(_Symbol, InpSignalTimeframe, 1);
+   double low1   = iLow(_Symbol, InpSignalTimeframe, 1);
    double close1 = iClose(_Symbol, InpSignalTimeframe, 1);
-   if(InpAllowLong && close1 > upper && fast1 > slow1 && fast1 > fast2)
+   double candleRange = high1 - low1;
+   if(candleRange <= 0.0)
+      return 0;
+   double body      = MathAbs(close1 - open1);
+   double upperWick = high1 - MathMax(open1, close1);
+   double lowerWick = MathMin(open1, close1) - low1;
+   bool strongBody  = body / candleRange >= InpCandleBodyMin;
+   bool bullishCandle = strongBody && close1 > open1 &&
+                        upperWick / candleRange <= InpCandleWickMax;
+   bool bearishCandle = strongBody && close1 < open1 &&
+                        lowerWick / candleRange <= InpCandleWickMax;
+
+   if(InpAllowLong && close1 > upper + buffer && fast1 > slow1 && fast1 > fast2 &&
+      bullishCandle && ConfluenceOK(1))
       return 1;
-   if(InpAllowShort && close1 < lower && fast1 < slow1 && fast1 < fast2)
+   if(InpAllowShort && close1 < lower - buffer && fast1 < slow1 && fast1 < fast2 &&
+      bearishCandle && ConfluenceOK(-1))
       return -1;
    return 0;
 }
@@ -431,7 +668,10 @@ double PositionSize(const int direction, const double entryPrice,
    return NormalizeDouble(volume, 8);
 }
 
-bool OpenTrade(const int direction)
+// Opens one trend unit with a stop only; TP1/TP2 partials and the runner trail
+// are managed on each bar in ManagePositions. Per-ticket metadata is created
+// lazily there on first sight, so no ticket lookup is needed here.
+bool OpenUnit(const int direction)
 {
    MqlTick tick;
    if(!SymbolInfoTick(_Symbol, tick))
@@ -458,22 +698,18 @@ bool OpenTrade(const int direction)
    if(direction > 0)
    {
       double sl = NormalizeDouble(tick.bid - stopDistance, digits);
-      double actualRisk = tick.ask - sl;
-      double tp = NormalizeDouble(tick.ask + actualRisk * InpRewardRisk, digits);
       double volume = PositionSize(direction, tick.ask, sl, riskMoney);
       if(volume <= 0.0)
          return false;
-      sent = trade.Buy(volume, _Symbol, 0.0, sl, tp, "FTMOQ breakout");
+      sent = trade.Buy(volume, _Symbol, 0.0, sl, 0.0, "FTMOQ unit");
    }
    else
    {
       double sl = NormalizeDouble(tick.ask + stopDistance, digits);
-      double actualRisk = sl - tick.bid;
-      double tp = NormalizeDouble(tick.bid - actualRisk * InpRewardRisk, digits);
       double volume = PositionSize(direction, tick.bid, sl, riskMoney);
       if(volume <= 0.0)
          return false;
-      sent = trade.Sell(volume, _Symbol, 0.0, sl, tp, "FTMOQ breakout");
+      sent = trade.Sell(volume, _Symbol, 0.0, sl, 0.0, "FTMOQ unit");
    }
 
    uint retcode = trade.ResultRetcode();
@@ -487,8 +723,16 @@ bool OpenTrade(const int direction)
    return true;
 }
 
+double FloorVolume(const double raw)
+{
+   double step = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
+   if(step <= 0.0)
+      return 0.0;
+   return NormalizeDouble(MathFloor(raw / step) * step, 8);
+}
+
 //+------------------------------------------------------------------+
-//| Open-position management                                         |
+//| Open-position management: TP1/TP2 scale-out + runner trail       |
 //+------------------------------------------------------------------+
 void ManagePositions()
 {
@@ -503,6 +747,7 @@ void ManagePositions()
    int digits = (int)SymbolInfoInteger(_Symbol, SYMBOL_DIGITS);
    long stopLevelPoints = SymbolInfoInteger(_Symbol, SYMBOL_TRADE_STOPS_LEVEL);
    double minStopDistance = (stopLevelPoints + 2) * _Point;
+   double minVolume = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_MIN);
 
    for(int i = PositionsTotal() - 1; i >= 0; --i)
    {
@@ -516,32 +761,95 @@ void ManagePositions()
          (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
       double open = PositionGetDouble(POSITION_PRICE_OPEN);
       double sl = PositionGetDouble(POSITION_SL);
-      double tp = PositionGetDouble(POSITION_TP);
+      double vol = PositionGetDouble(POSITION_VOLUME);
       if(sl <= 0.0)
          continue;
 
-      // Before break-even, the original SL still encodes initial risk.
-      double initialRisk = MathAbs(open - sl);
-      string riskKey = StateKey("risk_" + StringFormat("%I64u", ticket));
-      if(GlobalVariableCheck(riskKey))
-         initialRisk = GlobalVariableGet(riskKey);
+      string suffix = StringFormat("%I64u", ticket);
+      string irKey = StateKey("ir_" + suffix);
+      string ovKey = StateKey("ov_" + suffix);
+      string t1Key = StateKey("t1_" + suffix);
+      string t2Key = StateKey("t2_" + suffix);
+      string fKey  = StateKey("f_" + suffix);
+
+      double initialRisk, originalVol, tp1, tp2;
+      int flags;
+      if(!GlobalVariableCheck(irKey))
+      {
+         // First sight of this unit: capture its geometry (volume is still the
+         // original, no partial has run yet) and its TP1/TP2 prices.
+         initialRisk = MathAbs(open - sl);
+         if(initialRisk <= 0.0)
+            continue;
+         originalVol = vol;
+         tp1 = type == POSITION_TYPE_BUY ? open + initialRisk * InpTp1R
+                                         : open - initialRisk * InpTp1R;
+         tp2 = type == POSITION_TYPE_BUY ? open + initialRisk * InpRewardRisk
+                                         : open - initialRisk * InpRewardRisk;
+         flags = 0;
+         GlobalVariableSet(irKey, initialRisk);
+         GlobalVariableSet(ovKey, originalVol);
+         GlobalVariableSet(t1Key, tp1);
+         GlobalVariableSet(t2Key, tp2);
+         GlobalVariableSet(fKey, 0.0);
+      }
       else
-         GlobalVariableSet(riskKey, initialRisk);
+      {
+         initialRisk = GlobalVariableGet(irKey);
+         originalVol = GlobalVariableGet(ovKey);
+         tp1 = GlobalVariableGet(t1Key);
+         tp2 = GlobalVariableGet(t2Key);
+         flags = (int)GlobalVariableGet(fKey);
+      }
       if(initialRisk <= 0.0)
          continue;
 
+      // TP1: book the first partial and trail the original order to break-even.
+      if(flags < 1)
+      {
+         bool hit = type == POSITION_TYPE_BUY ? tick.bid >= tp1 : tick.ask <= tp1;
+         if(hit)
+         {
+            double closeVol = FloorVolume(originalVol * InpTp1Fraction);
+            if(closeVol >= minVolume && closeVol < vol)
+            {
+               trade.PositionClosePartial(ticket, closeVol);
+               if(PositionSelectByTicket(ticket))
+                  vol = PositionGetDouble(POSITION_VOLUME);
+            }
+            flags = 1;
+            GlobalVariableSet(fKey, 1.0);
+         }
+      }
+
+      // TP2: book the second partial; the remainder rides as a trailing runner.
+      if(flags == 1)
+      {
+         bool hit2 = type == POSITION_TYPE_BUY ? tick.bid >= tp2 : tick.ask <= tp2;
+         if(hit2)
+         {
+            double closeVol = FloorVolume(originalVol * InpTp2Fraction);
+            if(closeVol >= minVolume && closeVol < vol)
+            {
+               trade.PositionClosePartial(ticket, closeVol);
+               if(PositionSelectByTicket(ticket))
+                  vol = PositionGetDouble(POSITION_VOLUME);
+            }
+            flags = 2;
+            GlobalVariableSet(fKey, 2.0);
+         }
+      }
+
       double move = type == POSITION_TYPE_BUY ? tick.bid - open : open - tick.ask;
       double candidate = sl;
-
-      if(move >= initialRisk * InpBreakEvenAtR)
+      if(flags >= 1 || move >= initialRisk * InpBreakEvenAtR)
       {
          if(type == POSITION_TYPE_BUY)
             candidate = MathMax(candidate, open);
          else
             candidate = MathMin(candidate, open);
       }
-
-      if(move >= initialRisk * InpTrailStartAtR)
+      if(flags >= 2 && move >= initialRisk * InpTrailStartAtR)
       {
          if(type == POSITION_TYPE_BUY)
             candidate = MathMax(candidate, tick.bid - atr * InpTrailAtrMultiple);
@@ -558,15 +866,15 @@ void ManagePositions()
       bool improves = type == POSITION_TYPE_BUY
                       ? candidate > sl + _Point
                       : candidate < sl - _Point;
-      if(improves)
+      if(improves && PositionSelectByTicket(ticket))
       {
-         bool requested = trade.PositionModify(ticket, candidate, tp);
-         uint retcode = trade.ResultRetcode();
-         if(!requested ||
-            (retcode != TRADE_RETCODE_DONE &&
-             retcode != TRADE_RETCODE_NO_CHANGES))
-            Print("Stop update failed for #", ticket, ": ",
-                  trade.ResultRetcodeDescription());
+         if(!trade.PositionModify(ticket, candidate, 0.0))
+         {
+            uint retcode = trade.ResultRetcode();
+            if(retcode != TRADE_RETCODE_NO_CHANGES)
+               Print("Stop update failed for #", ticket, ": ",
+                     trade.ResultRetcodeDescription());
+         }
       }
    }
 }
@@ -605,7 +913,18 @@ int OnInit()
    if(InpDonchianLookback < 2 || InpFastEmaPeriod < 2 ||
       InpSlowEmaPeriod <= InpFastEmaPeriod || InpAtrPeriod < 2 ||
       InpRiskPerTradePct <= 0.0 || InpStopAtrMultiple <= 0.0 ||
-      InpRewardRisk <= 0.0 || InpMaxTradesPerDay < 1 ||
+      InpRewardRisk <= 0.0 || InpEntryBufferAtr < 0.0 ||
+      InpCandleBodyMin < 0.0 || InpCandleBodyMin > 1.0 ||
+      InpCandleWickMax < 0.0 || InpCandleWickMax > 1.0 ||
+      InpHtfFastEmaPeriod < 2 || InpHtfSlowEmaPeriod <= InpHtfFastEmaPeriod ||
+      InpSkipHour1 > 23 || InpVolAvgLen < 0 ||
+      InpVolRatioMin < 0.0 || InpVolRatioMax < InpVolRatioMin ||
+      InpMsChannelLookback < 0 ||
+      InpTp1R <= 0.0 || InpTp1R >= InpRewardRisk ||
+      InpTp1Fraction < 0.0 || InpTp2Fraction < 0.0 ||
+      InpTp1Fraction + InpTp2Fraction > 1.0 ||
+      InpMaxUnits < 1 || InpPullbackAtr < 0.0 ||
+      InpMaxTradesPerDay < 1 ||
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
       InpTrailStartAtR < InpBreakEvenAtR || InpTrailAtrMultiple <= 0.0 ||
@@ -638,6 +957,25 @@ int OnInit()
       atrHandle == INVALID_HANDLE)
       return INIT_FAILED;
 
+   if(InpUseHtf1Confluence)
+   {
+      htf1FastHandle = iMA(_Symbol, InpHtf1Timeframe, InpHtfFastEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      htf1SlowHandle = iMA(_Symbol, InpHtf1Timeframe, InpHtfSlowEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      if(htf1FastHandle == INVALID_HANDLE || htf1SlowHandle == INVALID_HANDLE)
+         return INIT_FAILED;
+   }
+   if(InpUseHtf2Confluence)
+   {
+      htf2FastHandle = iMA(_Symbol, InpHtf2Timeframe, InpHtfFastEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      htf2SlowHandle = iMA(_Symbol, InpHtf2Timeframe, InpHtfSlowEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      if(htf2FastHandle == INVALID_HANDLE || htf2SlowHandle == INVALID_HANDLE)
+         return INIT_FAILED;
+   }
+
    trade.SetExpertMagicNumber(InpMagicNumber);
    trade.SetDeviationInPoints(InpSlippagePoints);
    trade.SetTypeFillingBySymbol(_Symbol);
@@ -660,6 +998,14 @@ void OnDeinit(const int reason)
       IndicatorRelease(slowEmaHandle);
    if(atrHandle != INVALID_HANDLE)
       IndicatorRelease(atrHandle);
+   if(htf1FastHandle != INVALID_HANDLE)
+      IndicatorRelease(htf1FastHandle);
+   if(htf1SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(htf1SlowHandle);
+   if(htf2FastHandle != INVALID_HANDLE)
+      IndicatorRelease(htf2FastHandle);
+   if(htf2SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(htf2SlowHandle);
 }
 
 void OnTimer()
@@ -674,12 +1020,35 @@ void OnTick()
    bool accountSafe = CheckAccountGuard();
    HandleWeekendExit();
    ManagePositions();
-   if(!accountSafe || !IsTradingSession() || HasOpenSymbolPosition())
+
+   int units = CountUnits();
+   if(units == 0)
+   {
+      SetTrendSide(0);
+      SetPullback(false);
+   }
+
+   // Trend change: flatten every unit when the EMA stack flips against the
+   // open trend. A fresh signal then starts the next trend.
+   if(units > 0 && accountSafe)
+   {
+      double fast1 = IndicatorValue(fastEmaHandle, 1);
+      double slow1 = IndicatorValue(slowEmaHandle, 1);
+      int side = TrendSide();
+      if(fast1 != EMPTY_VALUE && slow1 != EMPTY_VALUE &&
+         ((side > 0 && fast1 < slow1) || (side < 0 && fast1 > slow1)))
+      {
+         CloseAllUnits("trend change");
+         units = 0;
+      }
+   }
+
+   if(!accountSafe || !IsTradingSession())
       return;
 
    int entries, losses;
    TodayStrategyStats(entries, losses);
-   if(entries >= InpMaxTradesPerDay || losses >= InpMaxLosingTradesPerDay)
+   if(losses >= InpMaxLosingTradesPerDay)
       return;
 
    datetime bar = iTime(_Symbol, InpSignalTimeframe, 0);
@@ -687,7 +1056,43 @@ void OnTick()
       return;
    lastSignalBar = bar;
 
-   int signal = Signal();
-   if(signal != 0)
-      OpenTrade(signal);
+   if(units > 0)
+      UpdatePullback();
+
+   if(units == 0)
+   {
+      if(entries >= InpMaxTradesPerDay)
+         return;
+      int signal = Signal();
+      if(signal != 0 && OpenUnit(signal))
+      {
+         SetTrendSide(signal);
+         ResetTrendExtreme();
+         SetPullback(false);
+      }
+      return;
+   }
+
+   // Pyramid: after TP1 on the trend, add on the pullback resume.
+   if(!InpPyramidEnabled || units >= InpMaxUnits ||
+      !AnyUnitTp1Done() || !PullbackArmed())
+      return;
+
+   int side = TrendSide();
+   double c1 = iClose(_Symbol, InpSignalTimeframe, 1);
+   double h2 = iHigh(_Symbol, InpSignalTimeframe, 2);
+   double l2 = iLow(_Symbol, InpSignalTimeframe, 2);
+   double fast1 = IndicatorValue(fastEmaHandle, 1);
+   double fast2 = IndicatorValue(fastEmaHandle, 2);
+   double slow1 = IndicatorValue(slowEmaHandle, 1);
+   if(fast1 == EMPTY_VALUE || fast2 == EMPTY_VALUE || slow1 == EMPTY_VALUE)
+      return;
+   bool resume = side > 0 ? c1 > h2 : c1 < l2;
+   bool emaOk = side > 0 ? (fast1 > slow1 && fast1 > fast2)
+                         : (fast1 < slow1 && fast1 < fast2);
+   if(resume && emaOk && OpenUnit(side))
+   {
+      SetPullback(false);
+      ResetTrendExtreme();
+   }
 }
