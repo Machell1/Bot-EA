@@ -64,8 +64,9 @@ class Config:
     ema_fast: int = 50
     ema_slow: int = 200
     atr_period: int = 14
-    stop_atr: float = 2.0
+    stop_atr: float = 2.5
     reward_risk: float = 2.2
+    entry_buffer_atr: float = 0.5
     risk_pct: float = 0.35
     sizing_cost_reserve: float = 1.10
     break_even_r: float = 1.0
@@ -73,9 +74,9 @@ class Config:
     trail_atr: float = 2.0
     max_trades_day: int = 2
     max_losses_day: int = 2
-    session_start: int = 7
-    session_end: int = 20
-    friday_close: int = 20
+    session_start: int = 8
+    session_end: int = 17
+    friday_close: int = 17
     daily_profit_lock_pct: float = 1.0
     official_daily_loss_pct: float = 5.0
     official_total_loss_pct: float = 10.0
@@ -164,6 +165,7 @@ def signal(
     fast: list[float],
     slow: list[float],
     config: Config,
+    atr: list[float] | None = None,
 ) -> int:
     if index < max(config.ema_slow + 10, config.donchian + 2):
         return 0
@@ -171,9 +173,25 @@ def signal(
     upper = max(bar.high for bar in prior)
     lower = min(bar.low for bar in prior)
     close = bars[index - 1].close
-    if close > upper and fast[index - 1] > slow[index - 1] and fast[index - 1] > fast[index - 2]:
+    # Require the breakout close to clear the channel by a fraction of ATR so
+    # marginal pokes through the range (the main source of whipsaw) are ignored.
+    buffer = 0.0
+    if atr is not None and config.entry_buffer_atr > 0.0:
+        recent_atr = atr[index - 1]
+        if not math.isfinite(recent_atr):
+            return 0
+        buffer = config.entry_buffer_atr * recent_atr
+    if (
+        close > upper + buffer
+        and fast[index - 1] > slow[index - 1]
+        and fast[index - 1] > fast[index - 2]
+    ):
         return 1
-    if close < lower and fast[index - 1] < slow[index - 1] and fast[index - 1] < fast[index - 2]:
+    if (
+        close < lower - buffer
+        and fast[index - 1] < slow[index - 1]
+        and fast[index - 1] < fast[index - 2]
+    ):
         return -1
     return 0
 
@@ -333,7 +351,7 @@ def run_backtest(
             and spread / point <= max_spread_points
             and math.isfinite(atr[index - 1] if index else math.nan)
         ):
-            side = signal(index, bars, fast, slow, config)
+            side = signal(index, bars, fast, slow, config, atr)
             if side:
                 bid = bar.open
                 ask = bar.open + spread

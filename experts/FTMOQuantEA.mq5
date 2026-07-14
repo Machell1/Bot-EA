@@ -16,8 +16,9 @@ input int             InpDonchianLookback      = 20;
 input int             InpFastEmaPeriod         = 50;
 input int             InpSlowEmaPeriod         = 200;
 input int             InpAtrPeriod             = 14;
-input double          InpStopAtrMultiple       = 2.0;
+input double          InpStopAtrMultiple       = 2.5;
 input double          InpRewardRisk            = 2.2;
+input double          InpEntryBufferAtr        = 0.5;
 input bool            InpAllowLong             = true;
 input bool            InpAllowShort            = true;
 
@@ -42,10 +43,10 @@ input bool            InpEmergencyCloseAllAccountPositions = true;
 input string          InpStateId                  = "ftmo1";
 
 input group "Trading window (server time)"
-input int             InpSessionStartHour      = 7;
-input int             InpSessionEndHour        = 20;
+input int             InpSessionStartHour      = 8;
+input int             InpSessionEndHour        = 17;
 input bool            InpCloseBeforeWeekend    = true;
-input int             InpFridayCloseHour       = 20;
+input int             InpFridayCloseHour       = 17;
 
 input group "Trade management"
 input double          InpBreakEvenAtR          = 1.0;
@@ -398,10 +399,21 @@ int Signal()
       lower = MathMin(lower, iLow(_Symbol, InpSignalTimeframe, shift));
    }
 
+   // Require the breakout close to clear the channel by a fraction of ATR so
+   // marginal pokes through the range (the main source of whipsaw) are ignored.
+   double buffer = 0.0;
+   if(InpEntryBufferAtr > 0.0)
+   {
+      double atr1 = IndicatorValue(atrHandle, 1);
+      if(atr1 == EMPTY_VALUE || atr1 <= 0.0)
+         return 0;
+      buffer = InpEntryBufferAtr * atr1;
+   }
+
    double close1 = iClose(_Symbol, InpSignalTimeframe, 1);
-   if(InpAllowLong && close1 > upper && fast1 > slow1 && fast1 > fast2)
+   if(InpAllowLong && close1 > upper + buffer && fast1 > slow1 && fast1 > fast2)
       return 1;
-   if(InpAllowShort && close1 < lower && fast1 < slow1 && fast1 < fast2)
+   if(InpAllowShort && close1 < lower - buffer && fast1 < slow1 && fast1 < fast2)
       return -1;
    return 0;
 }
@@ -605,7 +617,8 @@ int OnInit()
    if(InpDonchianLookback < 2 || InpFastEmaPeriod < 2 ||
       InpSlowEmaPeriod <= InpFastEmaPeriod || InpAtrPeriod < 2 ||
       InpRiskPerTradePct <= 0.0 || InpStopAtrMultiple <= 0.0 ||
-      InpRewardRisk <= 0.0 || InpMaxTradesPerDay < 1 ||
+      InpRewardRisk <= 0.0 || InpEntryBufferAtr < 0.0 ||
+      InpMaxTradesPerDay < 1 ||
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
       InpTrailStartAtR < InpBreakEvenAtR || InpTrailAtrMultiple <= 0.0 ||

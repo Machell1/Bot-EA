@@ -37,6 +37,22 @@ class BacktestEngineTests(unittest.TestCase):
         config = Config(donchian=3, ema_fast=2, ema_slow=5)
         self.assertEqual(signal(19, bars, fast, slow, config), 1)
 
+    def test_entry_buffer_rejects_marginal_breakout(self) -> None:
+        start = datetime(2026, 1, 1)
+        bars = [
+            Bar(start + timedelta(hours=i), float(i), i + 0.2, i - 0.2, i + 0.1, 0.01)
+            for i in range(20)
+        ]
+        fast = [float(i) for i in range(20)]
+        slow = [float(i) - 1.0 for i in range(20)]
+        config = Config(donchian=3, ema_fast=2, ema_slow=5)
+        # Without an ATR series the buffer is inactive and the breakout signals.
+        self.assertEqual(signal(19, bars, fast, slow, config), 1)
+        # A wide ATR buffer (0.5 * 2.0) lifts the trigger above the breakout close.
+        self.assertEqual(signal(19, bars, fast, slow, config, [2.0] * 20), 0)
+        # A small ATR buffer (0.5 * 1.0) still permits the same breakout.
+        self.assertEqual(signal(19, bars, fast, slow, config, [1.0] * 20), 1)
+
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)
 
