@@ -36,6 +36,10 @@ def projected_risk_allowed(equity: float, risk_money: float, floor: float) -> bo
     return equity - risk_money * 1.15 > floor
 
 
+def reconstruct_reset_balance(current_balance: float, deal_deltas: list[float]) -> float:
+    return current_balance - sum(deal_deltas)
+
+
 class FtmoRiskModelTests(unittest.TestCase):
     def test_official_floors_for_100k_account(self) -> None:
         self.assertEqual(daily_floor(100_000, 100_000, 5), 95_000)
@@ -61,6 +65,12 @@ class FtmoRiskModelTests(unittest.TestCase):
 
     def test_equity_exactly_on_floor_is_not_safe(self) -> None:
         self.assertFalse(projected_risk_allowed(96_000, 0, 96_000))
+
+    def test_late_first_tick_reconstructs_midnight_balance(self) -> None:
+        self.assertEqual(
+            reconstruct_reset_balance(98_250, [-2_000, 300, -50]),
+            100_000,
+        )
 
 
 if __name__ == "__main__":

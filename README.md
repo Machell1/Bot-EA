@@ -35,13 +35,15 @@ before use.
 4. Set `InpChallengeInitialBalance` to the challenge's original balance.
 5. Convert FTMO's 00:00 CE(S)T reset to the broker server clock and set
    `InpDailyResetHourServer` and `InpDailyResetMinuteServer`.
+   Recheck this mapping at European and broker daylight-saving transitions.
 6. Use a dedicated challenge account. The default emergency action closes
    every account position because FTMO limits apply account-wide.
 
 If `InpChallengeInitialBalance` is zero, the EA stores the balance seen on its
 first launch. That is convenient for a fresh account but unsafe if the EA is
-first attached after trading has begun. State is persisted in MT5 terminal
-global variables with the `FTMOQ_<login>_` prefix.
+first attached after trading has begun. State is scoped by account login,
+broker server, and `InpStateId`. Assign a new ID (up to eight characters) to
+every challenge so an old baseline cannot be reused.
 
 ## Validate before use
 
@@ -52,7 +54,7 @@ and acceptance gates in [docs/VALIDATION.md](docs/VALIDATION.md).
 Run the dependency-free risk formula tests with:
 
 ```bash
-python -m unittest discover -s tests -v
+python3 -m unittest discover -s tests -v
 ```
 
 The Python tests are an executable specification for the monetary guard. The

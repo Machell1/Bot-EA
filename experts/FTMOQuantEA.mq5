@@ -39,7 +39,7 @@ input double          InpDailyProfitLockPct       = 1.0;
 input int             InpDailyResetHourServer    = 0;
 input int             InpDailyResetMinuteServer  = 0;
 input bool            InpEmergencyCloseAllAccountPositions = true;
-input string          InpStateId                  = "challenge1";
+input string          InpStateId                  = "ftmo1";
 
 input group "Trading window (server time)"
 input int             InpSessionStartHour      = 7;
@@ -72,6 +72,17 @@ string StateKey(const string suffix)
    return statePrefix + suffix;
 }
 
+uint StringHash(const string value)
+{
+   uint hash = 2166136261;
+   for(int i = 0; i < StringLen(value); ++i)
+   {
+      hash ^= (uint)StringGetCharacter(value, i);
+      hash *= 16777619;
+   }
+   return hash;
+}
+
 int TradingDayId(const datetime now)
 {
    datetime shifted = now - InpDailyResetHourServer * 3600
@@ -101,22 +112,26 @@ void RefreshDailyState()
    if(dayId == currentTradingDay)
       return;
 
-   currentTradingDay = dayId;
    // Reconstruct the balance at reset even when the first chart tick is late.
    datetime start = TradingDayStart(now);
    double balanceDelta = 0.0;
-   if(HistorySelect(start, now))
+   if(!HistorySelect(start, now))
    {
-      int deals = HistoryDealsTotal();
-      for(int i = 0; i < deals; ++i)
-      {
-         ulong ticket = HistoryDealGetTicket(i);
-         balanceDelta += HistoryDealGetDouble(ticket, DEAL_PROFIT);
-         balanceDelta += HistoryDealGetDouble(ticket, DEAL_SWAP);
-         balanceDelta += HistoryDealGetDouble(ticket, DEAL_COMMISSION);
-         balanceDelta += HistoryDealGetDouble(ticket, DEAL_FEE);
-      }
+      tradingLocked = true;
+      Print("Cannot reconstruct the FTMO reset balance; entries remain locked");
+      return;
    }
+   int deals = HistoryDealsTotal();
+   for(int i = 0; i < deals; ++i)
+   {
+      ulong ticket = HistoryDealGetTicket(i);
+      balanceDelta += HistoryDealGetDouble(ticket, DEAL_PROFIT);
+      balanceDelta += HistoryDealGetDouble(ticket, DEAL_SWAP);
+      balanceDelta += HistoryDealGetDouble(ticket, DEAL_COMMISSION);
+      balanceDelta += HistoryDealGetDouble(ticket, DEAL_FEE);
+   }
+
+   currentTradingDay = dayId;
    dayStartBalance = AccountInfoDouble(ACCOUNT_BALANCE) - balanceDelta;
    tradingLocked = false;
    if(emergencyMode)
@@ -129,8 +144,10 @@ void RefreshDailyState()
 
 void LoadState()
 {
+   uint serverHash = StringHash(AccountInfoString(ACCOUNT_SERVER));
    statePrefix = "FTMOQ_" + StringFormat("%I64d", AccountInfoInteger(ACCOUNT_LOGIN))
-               + "_" + InpStateId + "_";
+               + "_" + IntegerToString((int)serverHash) + "_"
+               + InpStateId + "_";
 
    if(InpChallengeInitialBalance > 0.0)
    {
@@ -505,7 +522,7 @@ void ManagePositions()
 
       // Before break-even, the original SL still encodes initial risk.
       double initialRisk = MathAbs(open - sl);
-      string riskKey = StateKey("risk_" + StringFormat("%I64d", ticket));
+      string riskKey = StateKey("risk_" + StringFormat("%I64u", ticket));
       if(GlobalVariableCheck(riskKey))
          initialRisk = GlobalVariableGet(riskKey);
       else
@@ -592,16 +609,20 @@ int OnInit()
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
       InpTrailStartAtR < InpBreakEvenAtR || InpTrailAtrMultiple <= 0.0 ||
+      InpChallengeInitialBalance < 0.0 ||
+      InpOfficialDailyLossPct <= 0.0 || InpOfficialDailyLossPct > 100.0 ||
+      InpOfficialTotalLossPct <= 0.0 || InpOfficialTotalLossPct > 100.0 ||
       InpSoftDailyLossPct <= 0.0 ||
       InpSoftDailyLossPct >= InpOfficialDailyLossPct ||
       InpSoftTotalLossPct <= 0.0 ||
       InpSoftTotalLossPct >= InpOfficialTotalLossPct ||
+      InpDailyProfitLockPct < 0.0 || InpDailyProfitLockPct > 100.0 ||
       InpDailyResetHourServer < 0 || InpDailyResetHourServer > 23 ||
       InpDailyResetMinuteServer < 0 || InpDailyResetMinuteServer > 59 ||
       InpSessionStartHour < 0 || InpSessionStartHour > 23 ||
       InpSessionEndHour < 0 || InpSessionEndHour > 23 ||
       InpFridayCloseHour < 0 || InpFridayCloseHour > 23 ||
-      StringLen(InpStateId) < 1 || StringLen(InpStateId) > 20)
+      StringLen(InpStateId) < 1 || StringLen(InpStateId) > 8)
    {
       Print("Invalid EA inputs");
       return INIT_PARAMETERS_INCORRECT;

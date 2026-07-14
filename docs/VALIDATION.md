@@ -17,7 +17,7 @@ warnings. In Strategy Tester, confirm that:
 - removing and reattaching the EA does not reset the initial balance or the
   current daily balance baseline.
 
-Run `python -m unittest discover -s tests -v` to check representative floor and
+Run `python3 -m unittest discover -s tests -v` to check representative floor and
 projected-risk calculations.
 
 ## 2. Historical test design
