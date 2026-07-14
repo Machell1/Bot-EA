@@ -240,6 +240,7 @@ def run_backtest(
     spread_multiplier: float,
     split_fraction: float,
     max_spread_points: float,
+    enforce_ftmo_guards: bool = True,
 ) -> dict:
     if len(bars) <= config.ema_slow + 10:
         raise ValueError("not enough H1 bars")
@@ -349,7 +350,10 @@ def run_backtest(
                     dollars_per_price = lots * dollars_per_price_per_lot
                     target = entry + side * initial_risk * config.reward_risk
                     projected = balance - risk_money * 1.15
-                    if projected > active_floor(initial_balance, day_start_balance, config):
+                    if (
+                        not enforce_ftmo_guards
+                        or projected > active_floor(initial_balance, day_start_balance, config)
+                    ):
                         position = Position(
                             side,
                             bar.time,
@@ -375,7 +379,10 @@ def run_backtest(
             )
             if adverse_equity <= official_floor(initial_balance, day_start_balance, config):
                 official_breach = True
-            if adverse_equity <= active_floor(initial_balance, day_start_balance, config):
+            if (
+                enforce_ftmo_guards
+                and adverse_equity <= active_floor(initial_balance, day_start_balance, config)
+            ):
                 close_position(adverse_price, bar, "soft_guard")
                 soft_guard_exits += 1
 
@@ -462,6 +469,7 @@ def run_backtest(
         "to": bars[-1].time.isoformat(sep=" "),
         "split_time": bars[split_index].time.isoformat(sep=" "),
         "spread_multiplier": spread_multiplier,
+        "ftmo_guards_enforced": enforce_ftmo_guards,
         "all": summarize(trades),
         "oos": summarize(oos),
         "ending_balance": balance,
@@ -522,6 +530,26 @@ def main() -> None:
             spread_multiplier=2.0,
             split_fraction=args.split,
             max_spread_points=args.max_spread_points,
+        ),
+        "edge_diagnostic": run_backtest(
+            bars,
+            meta,
+            config,
+            initial_balance=args.initial_balance,
+            spread_multiplier=1.0,
+            split_fraction=args.split,
+            max_spread_points=args.max_spread_points,
+            enforce_ftmo_guards=False,
+        ),
+        "edge_diagnostic_double_spread": run_backtest(
+            bars,
+            meta,
+            config,
+            initial_balance=args.initial_balance,
+            spread_multiplier=2.0,
+            split_fraction=args.split,
+            max_spread_points=args.max_spread_points,
+            enforce_ftmo_guards=False,
         ),
     }
     rendered = json.dumps(results, indent=2, sort_keys=True)
