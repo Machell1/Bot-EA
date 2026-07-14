@@ -3,25 +3,34 @@
 An MT5 Expert Advisor built around a testable trend-following hypothesis and
 conservative FTMO 2-Step account controls.
 
-> **Research status: revised, conditional.** The first defaults were rejected
-> for negative expectancy. The revised defaults add a breakout confirmation
-> buffer, a liquid-hours session, and a wider stop; they are FTMO-rule
-> compliant on the screening dataset with a positive out-of-sample expectancy,
-> but the full-period in-sample expectancy is still slightly negative. This is
-> a promising baseline to validate further, not a validated edge. See
+> **Research status: revised, promising on a small sample.** The first defaults
+> were rejected for negative expectancy. The revised defaults add breakout,
+> candlestick, higher-timeframe, session, and volatility confluence filters;
+> they are FTMO-rule compliant on the screening dataset with positive
+> in-sample, out-of-sample, and full-period expectancy and sub-2% drawdown.
+> The trade sample is small by design (quality over quantity), so this is a
+> promising baseline to validate on more data, not a validated edge. See
 > [the full result](docs/BACKTEST_RESULTS.md).
 
-The strategy buys or sells a 20-bar Donchian breakout only when the 50 EMA is
-on the correct side of the 200 EMA and is moving in the breakout direction. The
-breakout close must clear the channel by 0.5 ATR to filter marginal pokes
-through the range, and the breakout candle itself must be a decisive body that
-closes in the breakout direction with only a small rejection wick (a wick/body
-confirmation that discards doji and long-opposing-wick bars). Stops are
-volatility-scaled with ATR (2.5×), position size is calculated from the stop
-distance, and winners use break-even plus ATR trailing logic. Entries are
-restricted to the 08:00–17:00 server (London/New York) window. This is a
-classic, explainable source of potential trend premium—not a claim of
-guaranteed profits.
+The strategy buys or sells a 20-bar Donchian breakout only when a stack of
+confluences agrees:
+
+- The 50 EMA is on the correct side of the 200 EMA and moving in the breakout
+  direction.
+- The breakout close clears the channel by 0.5 ATR (filters marginal pokes).
+- The breakout candle is a decisive body that closes in the breakout direction
+  with only a small rejection wick (wick/body confirmation that discards doji
+  and long-opposing-wick bars).
+- Higher timeframes agree: the H4 **and** Daily 50/200 EMA stacks both point in
+  the breakout direction.
+- Volatility is not in a blow-off news spike (ATR within its normal range).
+
+Entries are restricted to the 08:00–17:00 server (London/New York) window and
+skip the midday lull. Stops are volatility-scaled with ATR (2.5×), position size
+is calculated from the stop distance, and winners use break-even plus ATR
+trailing logic. An optional market-structure filter (higher highs/higher lows)
+is available but off by default. This is a classic, explainable source of
+potential trend premium—not a claim of guaranteed profits.
 
 ## Safety defaults
 
