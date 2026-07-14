@@ -33,16 +33,29 @@ class Bar:
 
 @dataclass
 class Position:
+    """One trend unit. Lots are scaled out at TP1 and TP2; the remaining runner
+    trails until it is stopped or the trend flips."""
+
     side: int
     entry_time: datetime
     entry_index: int
     entry: float
     stop: float
-    target: float
     initial_risk: float
-    dollars_per_price: float
+    dollars_per_price_per_lot: float
     lots: float
+    original_lots: float
     risk_budget: float
+    tp1_price: float
+    tp2_price: float
+    tp1_lots: float
+    tp2_lots: float
+    tp1_done: bool = False
+    tp2_done: bool = False
+
+    @property
+    def dollars_per_price(self) -> float:
+        return self.lots * self.dollars_per_price_per_lot
 
 
 @dataclass(frozen=True)
@@ -66,6 +79,16 @@ class Config:
     atr_period: int = 14
     stop_atr: float = 2.5
     reward_risk: float = 2.2
+    # Scale-out and trend pyramiding. TP1 books the first partial and moves the
+    # stop to break-even; TP2 (reward_risk) books the second partial; the runner
+    # trails. After TP1 the EA re-enters on pullbacks and rides the trend until
+    # the EMA stack flips, capped at max_units concurrent adds.
+    tp1_r: float = 1.0
+    tp1_fraction: float = 0.4
+    tp2_fraction: float = 0.3
+    pyramid_enabled: bool = True
+    max_units: int = 3
+    pullback_atr: float = 0.5
     entry_buffer_atr: float = 0.5
     candle_body_min: float = 0.2
     candle_wick_max: float = 0.3
@@ -442,35 +465,111 @@ def run_backtest(
     current_day = None
     entries_today = 0
     losses_today = 0
-    position: Position | None = None
+    units: list[Position] = []
+    trend_side = 0
+    trend_extreme = 0.0
+    pullback_armed = False
     trades: list[Trade] = []
     official_breach = False
     soft_guard_exits = 0
     equity_curve: list[tuple[str, float]] = []
 
-    def close_position(exit_price: float, bar: Bar, reason: str) -> None:
-        nonlocal balance, position, losses_today
-        assert position is not None
-        gross = position.side * (exit_price - position.entry) * position.dollars_per_price
-        costs = 2.0 * commission_per_side * position.lots
-        pnl = gross - costs
+    def book(unit: Position, exit_price: float, close_lots: float, bar: Bar, reason: str) -> None:
+        nonlocal balance, losses_today
+        if close_lots <= 0.0:
+            return
+        dollars_per_price = close_lots * dollars_per_price_per_lot
+        gross = unit.side * (exit_price - unit.entry) * dollars_per_price
+        pnl = gross - 2.0 * commission_per_side * close_lots
         balance += pnl
         if pnl < 0.0:
             losses_today += 1
+        unit_risk = (
+            unit.risk_budget * (close_lots / unit.original_lots)
+            if unit.original_lots
+            else unit.risk_budget
+        )
         trades.append(
             Trade(
-                position.entry_time.isoformat(sep=" "),
+                unit.entry_time.isoformat(sep=" "),
                 bar.time.isoformat(sep=" "),
-                position.side,
-                position.entry,
+                unit.side,
+                unit.entry,
                 exit_price,
                 pnl,
-                pnl / position.risk_budget,
+                pnl / unit_risk if unit_risk else 0.0,
                 reason,
-                position.entry_index >= split_index,
+                unit.entry_index >= split_index,
             )
         )
-        position = None
+        unit.lots -= close_lots
+
+    def open_risk() -> float:
+        total = 0.0
+        for unit in units:
+            risk_price = unit.entry - unit.stop if unit.side > 0 else unit.stop - unit.entry
+            total += max(0.0, risk_price) * unit.lots * dollars_per_price_per_lot
+        return total
+
+    def flatten(bar: Bar, spread: float, reason: str, adverse: bool = False) -> None:
+        nonlocal trend_side, trend_extreme, pullback_armed
+        for unit in list(units):
+            if adverse:
+                price = bar.low if unit.side > 0 else bar.high + spread
+            else:
+                price = bar.open if unit.side > 0 else bar.open + spread
+            book(unit, price, unit.lots, bar, reason)
+        units.clear()
+        trend_side = 0
+        trend_extreme = 0.0
+        pullback_armed = False
+
+    def try_open(side: int, index: int, bar: Bar, spread: float) -> bool:
+        bid = bar.open
+        ask = bar.open + spread
+        entry = ask if side > 0 else bid
+        stop_distance = atr[index - 1] * config.stop_atr
+        stop = bid - stop_distance if side > 0 else ask + stop_distance
+        initial_risk = abs(entry - stop)
+        risk_money = balance * config.risk_pct / 100.0
+        raw_lots = (risk_money / config.sizing_cost_reserve) / (
+            initial_risk * dollars_per_price_per_lot
+        )
+        lots = floor_volume(raw_lots, volume_min, volume_max, volume_step)
+        if not lots:
+            return False
+        # The projected-risk gate covers the aggregate open risk plus this add,
+        # so pyramiding can never risk more than the FTMO floor allows.
+        projected = balance - (open_risk() + risk_money) * 1.15
+        if enforce_ftmo_guards and not (
+            projected > active_floor(initial_balance, day_start_balance, config)
+        ):
+            return False
+        tp1_price = entry + side * initial_risk * config.tp1_r
+        tp2_price = entry + side * initial_risk * config.reward_risk
+        tp1_lots = floor_volume(lots * config.tp1_fraction, 0.0, volume_max, volume_step)
+        tp2_lots = floor_volume(lots * config.tp2_fraction, 0.0, volume_max, volume_step)
+        if tp1_lots + tp2_lots > lots:
+            tp2_lots = max(0.0, lots - tp1_lots)
+        units.append(
+            Position(
+                side,
+                bar.time,
+                index,
+                entry,
+                stop,
+                initial_risk,
+                dollars_per_price_per_lot,
+                lots,
+                lots,
+                risk_money,
+                tp1_price,
+                tp2_price,
+                tp1_lots,
+                tp2_lots,
+            )
+        )
+        return True
 
     for index, raw_bar in enumerate(bars):
         spread = raw_bar.spread * spread_multiplier
@@ -489,127 +588,169 @@ def run_backtest(
             entries_today = 0
             losses_today = 0
 
-        if position is not None and bar.time.weekday() == 4 and bar.time.hour >= config.friday_close:
-            exit_price = bar.open if position.side > 0 else bar.open + spread
-            close_position(exit_price, bar, "weekend")
+        # Trend-change exit: flatten everything when the EMA stack flips against
+        # the open trend, then let a fresh signal start the next trend.
+        if units and index >= 1:
+            flipped = (trend_side > 0 and fast[index - 1] < slow[index - 1]) or (
+                trend_side < 0 and fast[index - 1] > slow[index - 1]
+            )
+            if flipped:
+                flatten(bar, spread, "trend_change")
 
-        if (
-            position is None
-            and in_session(bar.time, config)
-            and entries_today < config.max_trades_day
-            and losses_today < config.max_losses_day
-            and balance - day_start_balance < initial_balance * config.daily_profit_lock_pct / 100.0
-            and spread / point <= max_spread_points
-            and math.isfinite(atr[index - 1] if index else math.nan)
-        ):
-            side = signal(index, bars, fast, slow, config, atr)
-            if side and not context_ok(index, side):
-                side = 0
-            if side:
-                bid = bar.open
-                ask = bar.open + spread
-                entry = ask if side > 0 else bid
-                stop_distance = atr[index - 1] * config.stop_atr
-                stop = bid - stop_distance if side > 0 else ask + stop_distance
-                initial_risk = abs(entry - stop)
-                risk_money = balance * config.risk_pct / 100.0
-                raw_lots = (risk_money / config.sizing_cost_reserve) / (
-                    initial_risk * dollars_per_price_per_lot
-                )
-                lots = floor_volume(raw_lots, volume_min, volume_max, volume_step)
-                if lots:
-                    dollars_per_price = lots * dollars_per_price_per_lot
-                    target = entry + side * initial_risk * config.reward_risk
-                    projected = balance - risk_money * 1.15
-                    if (
-                        not enforce_ftmo_guards
-                        or projected > active_floor(initial_balance, day_start_balance, config)
-                    ):
-                        position = Position(
-                            side,
-                            bar.time,
-                            index,
-                            entry,
-                            stop,
-                            target,
-                            initial_risk,
-                            dollars_per_price,
-                            lots,
-                            risk_money,
-                        )
-                        entries_today += 1
+        if units and bar.time.weekday() == 4 and bar.time.hour >= config.friday_close:
+            flatten(bar, spread, "weekend")
 
-        if position is not None:
-            adverse_price = bar.low if position.side > 0 else bar.high + spread
-            adverse_equity = balance + position.side * (
-                adverse_price - position.entry
-            ) * position.dollars_per_price - commission_per_side * position.lots
+        # Aggregate FTMO account guard across every open unit.
+        if units:
+            adverse_equity = balance
+            for unit in units:
+                adverse_price = bar.low if unit.side > 0 else bar.high + spread
+                adverse_equity += unit.side * (
+                    adverse_price - unit.entry
+                ) * unit.lots * dollars_per_price_per_lot
+                adverse_equity -= commission_per_side * unit.lots
             max_daily_loss_pct = max(
                 max_daily_loss_pct,
                 100.0 * max(0.0, day_start_balance - adverse_equity) / initial_balance,
             )
             if adverse_equity <= official_floor(initial_balance, day_start_balance, config):
                 official_breach = True
-            if (
-                enforce_ftmo_guards
-                and adverse_equity <= active_floor(initial_balance, day_start_balance, config)
+            if enforce_ftmo_guards and adverse_equity <= active_floor(
+                initial_balance, day_start_balance, config
             ):
-                close_position(adverse_price, bar, "soft_guard")
+                flatten(bar, spread, "soft_guard", adverse=True)
                 soft_guard_exits += 1
 
-        if position is not None:
-            if position.side > 0:
-                stop_hit = bar.low <= position.stop
-                target_hit = bar.high >= position.target
+        # Per-unit scale-out and trailing (stop first for pessimism).
+        for unit in list(units):
+            if unit.side > 0:
+                stop_hit = bar.low <= unit.stop
             else:
-                stop_hit = bar.high + spread >= position.stop
-                target_hit = bar.low + spread <= position.target
-
+                stop_hit = bar.high + spread >= unit.stop
             if stop_hit:
-                close_position(position.stop, bar, "stop")
-            elif target_hit:
-                close_position(position.target, bar, "target")
+                book(unit, unit.stop, unit.lots, bar, "stop")
+                units.remove(unit)
+                continue
+
+            if not unit.tp1_done:
+                tp1_hit = (
+                    bar.high >= unit.tp1_price
+                    if unit.side > 0
+                    else bar.low + spread <= unit.tp1_price
+                )
+                if tp1_hit:
+                    book(unit, unit.tp1_price, min(unit.tp1_lots, unit.lots), bar, "tp1")
+                    unit.tp1_done = True
+                    unit.stop = unit.entry  # trail original order to break-even
+                    if unit.lots <= 0.0:
+                        units.remove(unit)
+                        continue
+
+            if unit.tp1_done and not unit.tp2_done:
+                tp2_hit = (
+                    bar.high >= unit.tp2_price
+                    if unit.side > 0
+                    else bar.low + spread <= unit.tp2_price
+                )
+                if tp2_hit:
+                    book(unit, unit.tp2_price, min(unit.tp2_lots, unit.lots), bar, "tp2")
+                    unit.tp2_done = True
+                    if unit.lots <= 0.0:
+                        units.remove(unit)
+                        continue
+
+            favorable = (
+                bar.high - unit.entry if unit.side > 0 else unit.entry - (bar.low + spread)
+            )
+            candidate = unit.stop
+            if favorable >= unit.initial_risk * config.break_even_r:
+                candidate = (
+                    max(candidate, unit.entry)
+                    if unit.side > 0
+                    else min(candidate, unit.entry)
+                )
+            if unit.tp2_done and favorable >= unit.initial_risk * config.trail_start_r:
+                trail = (
+                    bar.high - atr[index] * config.trail_atr
+                    if unit.side > 0
+                    else bar.low + spread + atr[index] * config.trail_atr
+                )
+                candidate = (
+                    max(candidate, trail) if unit.side > 0 else min(candidate, trail)
+                )
+            retraced = (
+                bar.low <= candidate if unit.side > 0 else bar.high + spread >= candidate
+            )
+            if retraced and candidate != unit.stop:
+                book(unit, candidate, unit.lots, bar, "trail")
+                units.remove(unit)
             else:
-                assert position is not None
-                favorable = (
-                    bar.high - position.entry
-                    if position.side > 0
-                    else position.entry - (bar.low + spread)
-                )
-                old_stop = position.stop
-                candidate = old_stop
-                if favorable >= position.initial_risk * config.break_even_r:
-                    candidate = (
-                        max(candidate, position.entry)
-                        if position.side > 0
-                        else min(candidate, position.entry)
-                    )
-                if favorable >= position.initial_risk * config.trail_start_r:
-                    trail = (
-                        bar.high - atr[index] * config.trail_atr
-                        if position.side > 0
-                        else bar.low + spread + atr[index] * config.trail_atr
-                    )
-                    candidate = (
-                        max(candidate, trail)
-                        if position.side > 0
-                        else min(candidate, trail)
-                    )
-                retraced = (
-                    bar.low <= candidate
-                    if position.side > 0
-                    else bar.high + spread >= candidate
-                )
-                if retraced and candidate != old_stop:
-                    close_position(candidate, bar, "trail")
-                else:
-                    position.stop = candidate
+                unit.stop = candidate
+
+        entry_ready = (
+            in_session(bar.time, config)
+            and losses_today < config.max_losses_day
+            and balance - day_start_balance
+            < initial_balance * config.daily_profit_lock_pct / 100.0
+            and spread / point <= max_spread_points
+            and index >= 2
+            and math.isfinite(atr[index - 1])
+        )
+
+        # New trend entry when flat.
+        if entry_ready and not units and entries_today < config.max_trades_day:
+            side = signal(index, bars, fast, slow, config, atr)
+            if side and not context_ok(index, side):
+                side = 0
+            if side and try_open(side, index, bar, spread):
+                trend_side = side
+                trend_extreme = bar.open
+                pullback_armed = False
+                entries_today += 1
+
+        # Pyramid add: after TP1 on the trend, buy the pullback resume.
+        elif (
+            entry_ready
+            and config.pyramid_enabled
+            and units
+            and trend_side != 0
+            and len(units) < config.max_units
+            and any(unit.tp1_done for unit in units)
+            and pullback_armed
+        ):
+            resume = (
+                bars[index - 1].close > bars[index - 2].high
+                if trend_side > 0
+                else bars[index - 1].close < bars[index - 2].low
+            )
+            ema_ok = (
+                fast[index - 1] > slow[index - 1] and fast[index - 1] > fast[index - 2]
+                if trend_side > 0
+                else fast[index - 1] < slow[index - 1] and fast[index - 1] < fast[index - 2]
+            )
+            if resume and ema_ok and try_open(trend_side, index, bar, spread):
+                pullback_armed = False
+                trend_extreme = bar.open
+
+        # Track the favorable extreme and arm the next pullback re-entry.
+        if units and trend_side != 0 and math.isfinite(atr[index]):
+            if trend_side > 0:
+                trend_extreme = max(trend_extreme, bar.high)
+                if trend_extreme - bar.low >= config.pullback_atr * atr[index]:
+                    pullback_armed = True
+            else:
+                trend_extreme = min(trend_extreme, bar.low)
+                if bar.high - trend_extreme >= config.pullback_atr * atr[index]:
+                    pullback_armed = True
+        elif not units:
+            trend_side = 0
+            pullback_armed = False
 
         equity = balance
-        if position is not None:
-            mark = bar.close if position.side > 0 else bar.close + spread
-            equity += position.side * (mark - position.entry) * position.dollars_per_price
-            equity -= commission_per_side * position.lots
+        for unit in units:
+            mark = bar.close if unit.side > 0 else bar.close + spread
+            equity += unit.side * (mark - unit.entry) * unit.lots * dollars_per_price_per_lot
+            equity -= commission_per_side * unit.lots
         peak_equity = max(peak_equity, equity)
         max_drawdown_pct = max(
             max_drawdown_pct,
@@ -621,13 +762,9 @@ def run_backtest(
         )
         equity_curve.append((bar.time.isoformat(sep=" "), equity))
 
-    if position is not None:
+    if units:
         last = bars[-1]
-        close_position(
-            last.close if position.side > 0 else last.close + last.spread * spread_multiplier,
-            last,
-            "end_of_data",
-        )
+        flatten(last, last.spread * spread_multiplier, "end_of_data")
 
     oos = [trade for trade in trades if trade.oos]
     years: dict[str, dict] = {}

@@ -11,9 +11,43 @@ from backtest.ftmo_quant_backtest import (
     floor_volume,
     htf_ema_aligned,
     in_session,
+    run_backtest,
     signal,
     sma,
 )
+
+_TEST_META = {
+    "point": 0.01,
+    "trade_tick_size": 0.01,
+    "trade_tick_value_loss": 1.0,
+    "volume_min": 0.01,
+    "volume_max": 100.0,
+    "volume_step": 0.01,
+}
+
+
+def _uptrend_bars(count: int) -> list:
+    """A steady uptrend with periodic shallow pullbacks, for exercising the
+    scale-out and pullback-pyramiding engine deterministically."""
+    start = datetime(2024, 1, 1, 0)  # Monday
+    bars = []
+    price = 100.0
+    for i in range(count):
+        step = -0.18 if i % 12 in (6, 7) else 0.15
+        open_ = price
+        close = price + step
+        bars.append(
+            Bar(
+                start + timedelta(hours=i),
+                open_,
+                max(open_, close) + 0.05,
+                min(open_, close) - 0.05,
+                close,
+                0.001,
+            )
+        )
+        price = close
+    return bars
 
 
 class BacktestEngineTests(unittest.TestCase):
@@ -100,6 +134,45 @@ class BacktestEngineTests(unittest.TestCase):
         self.assertTrue(in_session(monday_10, config))
         self.assertFalse(in_session(monday_12, config))
         self.assertFalse(in_session(monday_07, config))
+
+    def test_scale_out_books_tp1_and_tp2_partials(self) -> None:
+        bars = _uptrend_bars(400)
+        config = Config(
+            ema_fast=5, ema_slow=20, donchian=10, stop_atr=2.0, tp1_r=1.0, reward_risk=2.0,
+            entry_buffer_atr=0.0, candle_body_min=0.0, candle_wick_max=1.0,
+            htf_factor=0, htf2_factor=0, vol_avg_len=0, skip_hours=(),
+            session_start=0, session_end=0, friday_close=24,
+            daily_profit_lock_pct=100.0, max_trades_day=99, max_losses_day=99,
+        )
+        result = run_backtest(
+            bars, _TEST_META, config, initial_balance=100_000.0, spread_multiplier=1.0,
+            split_fraction=0.7, max_spread_points=1e9, enforce_ftmo_guards=False,
+        )
+        reasons = {trade["reason"] for trade in result["trades"]}
+        self.assertIn("tp1", reasons)
+        self.assertIn("tp2", reasons)
+
+    def test_pyramiding_opens_more_units_than_single_shot(self) -> None:
+        bars = _uptrend_bars(400)
+        base = dict(
+            ema_fast=5, ema_slow=20, donchian=10, stop_atr=2.0, tp1_r=1.0, reward_risk=2.0,
+            entry_buffer_atr=0.0, candle_body_min=0.0, candle_wick_max=1.0,
+            htf_factor=0, htf2_factor=0, vol_avg_len=0, skip_hours=(),
+            session_start=0, session_end=0, friday_close=24,
+            daily_profit_lock_pct=100.0, max_trades_day=99, max_losses_day=99,
+            pullback_atr=0.3,
+        )
+        run_kw = dict(
+            initial_balance=100_000.0, spread_multiplier=1.0, split_fraction=0.7,
+            max_spread_points=1e9, enforce_ftmo_guards=False,
+        )
+        with_pyramid = run_backtest(bars, _TEST_META, Config(**base, pyramid_enabled=True, max_units=3), **run_kw)
+        no_pyramid = run_backtest(bars, _TEST_META, Config(**base, pyramid_enabled=False, max_units=1), **run_kw)
+
+        def units(result):
+            return len({(t["entry_time"], t["entry"]) for t in result["trades"]})
+
+        self.assertGreater(units(with_pyramid), units(no_pyramid))
 
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)
