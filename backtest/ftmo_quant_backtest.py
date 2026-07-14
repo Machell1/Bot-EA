@@ -79,6 +79,27 @@ class Config:
     session_start: int = 8
     session_end: int = 17
     friday_close: int = 17
+    # Session behavior: hours (server time) to skip inside the window; the
+    # midday lull between the London morning and the New York session is the
+    # weakest hour for continuation breakouts.
+    skip_hours: tuple[int, ...] = (12,)
+    # Higher-timeframe confluence: the breakout is only taken when the primary
+    # (H4) and secondary (D1) fast/slow EMA stacks agree with its direction.
+    htf_factor: int = 4
+    htf_fast: int = 50
+    htf_slow: int = 200
+    htf2_factor: int = 24
+    htf2_fast: int = 50
+    htf2_slow: int = 200
+    # Volatility regime: current ATR relative to its own average must stay in
+    # [min, max]. The default only trims blow-off news-spike breakouts.
+    vol_avg_len: int = 50
+    vol_ratio_min: float = 0.0
+    vol_ratio_max: float = 2.5
+    # Market structure: when > 0, require the Donchian channel to be making
+    # higher highs and higher lows (or the mirror) over this lookback. Off by
+    # default because it reduced in-sample robustness on EURUSD H1.
+    ms_channel_lookback: int = 0
     daily_profit_lock_pct: float = 1.0
     official_daily_loss_pct: float = 5.0
     official_total_loss_pct: float = 10.0
@@ -161,6 +182,50 @@ def wilder_atr(bars: list[Bar], period: int) -> list[float]:
     return output
 
 
+def sma(values: list[float], period: int) -> list[float]:
+    output = [math.nan] * len(values)
+    if period <= 0:
+        return output
+    running = 0.0
+    for index, value in enumerate(values):
+        running += value
+        if index >= period:
+            running -= values[index - period]
+        if index >= period - 1:
+            output[index] = running / period
+    return output
+
+
+def htf_ema_aligned(
+    bars: list[Bar], factor: int, fast_period: int, slow_period: int
+) -> tuple[list[float], list[float]]:
+    """Aggregate H1 bars into a higher timeframe (``factor`` hours per bar) and
+    return, for every H1 bar, the fast/slow EMA of the last *completed* higher
+    timeframe bar. Using the previous HTF bar avoids look-ahead bias."""
+    order: list[tuple] = []
+    closes_by_key: dict[tuple, list[float]] = {}
+    keys: list[tuple] = []
+    for bar in bars:
+        key = (bar.time.year, bar.time.month, bar.time.day, bar.time.hour // factor)
+        if key not in closes_by_key:
+            closes_by_key[key] = []
+            order.append(key)
+        closes_by_key[key].append(bar.close)
+        keys.append(key)
+    htf_close = [closes_by_key[key][-1] for key in order]
+    htf_fast = ema(htf_close, fast_period)
+    htf_slow = ema(htf_close, slow_period)
+    position = {key: index for index, key in enumerate(order)}
+    fast_aligned = [math.nan] * len(bars)
+    slow_aligned = [math.nan] * len(bars)
+    for index in range(len(bars)):
+        bucket = position[keys[index]]
+        if bucket - 1 >= 0:
+            fast_aligned[index] = htf_fast[bucket - 1]
+            slow_aligned[index] = htf_slow[bucket - 1]
+    return fast_aligned, slow_aligned
+
+
 def signal(
     index: int,
     bars: list[Bar],
@@ -225,6 +290,8 @@ def in_session(moment: datetime, config: Config) -> bool:
     if moment.weekday() >= 5:
         return False
     if moment.weekday() == 4 and moment.hour >= config.friday_close:
+        return False
+    if moment.hour in config.skip_hours:
         return False
     if config.session_start == config.session_end:
         return True
@@ -308,6 +375,65 @@ def run_backtest(
     atr = wilder_atr(bars, config.atr_period)
     split_index = int(len(bars) * split_fraction)
 
+    # Higher-timeframe confluence stacks and the volatility-regime baseline are
+    # precomputed once; each references only completed higher-timeframe data.
+    htf_fast_al, htf_slow_al = (
+        htf_ema_aligned(bars, config.htf_factor, config.htf_fast, config.htf_slow)
+        if config.htf_factor
+        else (None, None)
+    )
+    htf2_fast_al, htf2_slow_al = (
+        htf_ema_aligned(bars, config.htf2_factor, config.htf2_fast, config.htf2_slow)
+        if config.htf2_factor
+        else (None, None)
+    )
+    atr_sma = (
+        sma([value if math.isfinite(value) else 0.0 for value in atr], config.vol_avg_len)
+        if config.vol_avg_len
+        else None
+    )
+
+    def context_ok(index: int, side: int) -> bool:
+        prev = index - 1
+        if config.htf_factor:
+            hf, hs = htf_fast_al[prev], htf_slow_al[prev]
+            if not (math.isfinite(hf) and math.isfinite(hs)):
+                return False
+            if side > 0 and not hf > hs:
+                return False
+            if side < 0 and not hf < hs:
+                return False
+        if config.htf2_factor:
+            hf2, hs2 = htf2_fast_al[prev], htf2_slow_al[prev]
+            if not (math.isfinite(hf2) and math.isfinite(hs2)):
+                return False
+            if side > 0 and not hf2 > hs2:
+                return False
+            if side < 0 and not hf2 < hs2:
+                return False
+        if config.vol_avg_len:
+            base = atr_sma[prev]
+            if not base or base <= 0.0:
+                return False
+            ratio = atr[prev] / base
+            if not config.vol_ratio_min <= ratio <= config.vol_ratio_max:
+                return False
+        if config.ms_channel_lookback:
+            lookback = config.ms_channel_lookback
+            if prev - lookback - config.donchian < 0:
+                return False
+            now = bars[index - config.donchian - 1 : prev]
+            then = bars[index - config.donchian - 1 - lookback : prev - lookback]
+            up_now = max(bar.high for bar in now)
+            up_then = max(bar.high for bar in then)
+            lo_now = min(bar.low for bar in now)
+            lo_then = min(bar.low for bar in then)
+            if side > 0 and not (up_now > up_then and lo_now > lo_then):
+                return False
+            if side < 0 and not (up_now < up_then and lo_now < lo_then):
+                return False
+        return True
+
     balance = initial_balance
     peak_equity = initial_balance
     max_drawdown_pct = 0.0
@@ -377,6 +503,8 @@ def run_backtest(
             and math.isfinite(atr[index - 1] if index else math.nan)
         ):
             side = signal(index, bars, fast, slow, config, atr)
+            if side and not context_ok(index, side):
+                side = 0
             if side:
                 bid = bar.open
                 ask = bar.open + spread

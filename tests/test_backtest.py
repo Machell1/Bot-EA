@@ -1,3 +1,4 @@
+import math
 import unittest
 from datetime import datetime, timedelta
 
@@ -6,8 +7,12 @@ from backtest.ftmo_quant_backtest import (
     Config,
     active_floor,
     aggregate_h1,
+    ema,
     floor_volume,
+    htf_ema_aligned,
+    in_session,
     signal,
+    sma,
 )
 
 
@@ -68,6 +73,33 @@ class BacktestEngineTests(unittest.TestCase):
         # the range was defended, so the trade is skipped.
         bars[18] = Bar(start + timedelta(hours=18), 18.0, 19.0, 17.95, 18.05, 0.01)
         self.assertEqual(signal(19, bars, fast, slow, config), 0)
+
+    def test_sma_uses_trailing_window(self) -> None:
+        result = sma([1.0, 2.0, 3.0, 4.0], 2)
+        self.assertTrue(math.isnan(result[0]))
+        self.assertEqual(result[1:], [1.5, 2.5, 3.5])
+
+    def test_htf_ema_aligned_uses_previous_completed_bar(self) -> None:
+        start = datetime(2026, 1, 5, 0)
+        bars = [
+            Bar(start + timedelta(hours=i), 1.0 + i, 1.0 + i, 1.0 + i, 1.0 + i, 0.01)
+            for i in range(6)
+        ]
+        fast_aligned, _ = htf_ema_aligned(bars, 1, 2, 3)
+        # The first bar has no completed higher-timeframe bar yet.
+        self.assertTrue(math.isnan(fast_aligned[0]))
+        # Later bars must reference the EMA through the *previous* bar (no peek).
+        full_fast = ema([bar.close for bar in bars], 2)
+        self.assertAlmostEqual(fast_aligned[3], full_fast[2])
+
+    def test_session_skips_configured_hours(self) -> None:
+        config = Config()  # skip_hours defaults to (12,), window 08:00-17:00
+        monday_10 = datetime(2026, 1, 5, 10)
+        monday_12 = datetime(2026, 1, 5, 12)
+        monday_07 = datetime(2026, 1, 5, 7)
+        self.assertTrue(in_session(monday_10, config))
+        self.assertFalse(in_session(monday_12, config))
+        self.assertFalse(in_session(monday_07, config))
 
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)

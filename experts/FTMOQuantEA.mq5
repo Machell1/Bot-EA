@@ -24,6 +24,19 @@ input double          InpCandleWickMax         = 0.3;
 input bool            InpAllowLong             = true;
 input bool            InpAllowShort            = true;
 
+input group "Confluence & regime filters"
+input bool            InpUseHtf1Confluence     = true;         // primary higher timeframe
+input ENUM_TIMEFRAMES InpHtf1Timeframe         = PERIOD_H4;
+input bool            InpUseHtf2Confluence     = true;         // secondary higher timeframe
+input ENUM_TIMEFRAMES InpHtf2Timeframe         = PERIOD_D1;
+input int             InpHtfFastEmaPeriod       = 50;
+input int             InpHtfSlowEmaPeriod       = 200;
+input int             InpSkipHour1             = 12;           // server hour to skip (-1 = none)
+input int             InpVolAvgLen             = 50;           // ATR average length (0 = off)
+input double          InpVolRatioMin           = 0.0;          // min ATR/avg at entry
+input double          InpVolRatioMax           = 2.5;          // max ATR/avg at entry
+input int             InpMsChannelLookback     = 0;            // market-structure lookback (0 = off)
+
 input group "Position risk"
 input double          InpRiskPerTradePct       = 0.35;
 input int             InpMaxTradesPerDay       = 2;
@@ -59,6 +72,10 @@ CTrade trade;
 int    fastEmaHandle = INVALID_HANDLE;
 int    slowEmaHandle = INVALID_HANDLE;
 int    atrHandle     = INVALID_HANDLE;
+int    htf1FastHandle = INVALID_HANDLE;
+int    htf1SlowHandle = INVALID_HANDLE;
+int    htf2FastHandle = INVALID_HANDLE;
+int    htf2SlowHandle = INVALID_HANDLE;
 double initialBalance = 0.0;
 double dayStartBalance = 0.0;
 int    currentTradingDay = 0;
@@ -368,6 +385,8 @@ bool IsTradingSession()
       return false;
    if(now.day_of_week == 5 && now.hour >= InpFridayCloseHour)
       return false;
+   if(InpSkipHour1 >= 0 && now.hour == InpSkipHour1)
+      return false;
 
    if(InpSessionStartHour == InpSessionEndHour)
       return true;
@@ -379,6 +398,60 @@ bool IsTradingSession()
 bool HasOpenSymbolPosition()
 {
    return PositionSelect(_Symbol);
+}
+
+bool HtfAgrees(const int fastHandle, const int slowHandle, const int direction)
+{
+   double f = IndicatorValue(fastHandle, 1);
+   double s = IndicatorValue(slowHandle, 1);
+   if(f == EMPTY_VALUE || s == EMPTY_VALUE)
+      return false;
+   return direction > 0 ? f > s : f < s;
+}
+
+// Higher-timeframe confluence, volatility regime and market-structure gates.
+// Each references only completed bars (shift 1) to avoid look-ahead.
+bool ConfluenceOK(const int direction)
+{
+   if(InpUseHtf1Confluence && !HtfAgrees(htf1FastHandle, htf1SlowHandle, direction))
+      return false;
+   if(InpUseHtf2Confluence && !HtfAgrees(htf2FastHandle, htf2SlowHandle, direction))
+      return false;
+
+   if(InpVolAvgLen > 0)
+   {
+      double atrBuf[];
+      if(CopyBuffer(atrHandle, 0, 1, InpVolAvgLen, atrBuf) != InpVolAvgLen)
+         return false;
+      double sum = 0.0;
+      for(int i = 0; i < InpVolAvgLen; ++i)
+         sum += atrBuf[i];
+      double avg = sum / InpVolAvgLen;
+      double atr1 = IndicatorValue(atrHandle, 1);
+      if(avg <= 0.0 || atr1 == EMPTY_VALUE)
+         return false;
+      double ratio = atr1 / avg;
+      if(ratio < InpVolRatioMin || ratio > InpVolRatioMax)
+         return false;
+   }
+
+   if(InpMsChannelLookback > 0)
+   {
+      int lb = InpMsChannelLookback;
+      double upNow = -DBL_MAX, upThen = -DBL_MAX, loNow = DBL_MAX, loThen = DBL_MAX;
+      for(int shift = 2; shift < InpDonchianLookback + 2; ++shift)
+      {
+         upNow  = MathMax(upNow,  iHigh(_Symbol, InpSignalTimeframe, shift));
+         loNow  = MathMin(loNow,  iLow(_Symbol, InpSignalTimeframe, shift));
+         upThen = MathMax(upThen, iHigh(_Symbol, InpSignalTimeframe, shift + lb));
+         loThen = MathMin(loThen, iLow(_Symbol, InpSignalTimeframe, shift + lb));
+      }
+      if(direction > 0 && !(upNow > upThen && loNow > loThen))
+         return false;
+      if(direction < 0 && !(upNow < upThen && loNow < loThen))
+         return false;
+   }
+   return true;
 }
 
 int Signal()
@@ -433,10 +506,10 @@ int Signal()
                         lowerWick / candleRange <= InpCandleWickMax;
 
    if(InpAllowLong && close1 > upper + buffer && fast1 > slow1 && fast1 > fast2 &&
-      bullishCandle)
+      bullishCandle && ConfluenceOK(1))
       return 1;
    if(InpAllowShort && close1 < lower - buffer && fast1 < slow1 && fast1 < fast2 &&
-      bearishCandle)
+      bearishCandle && ConfluenceOK(-1))
       return -1;
    return 0;
 }
@@ -643,6 +716,10 @@ int OnInit()
       InpRewardRisk <= 0.0 || InpEntryBufferAtr < 0.0 ||
       InpCandleBodyMin < 0.0 || InpCandleBodyMin > 1.0 ||
       InpCandleWickMax < 0.0 || InpCandleWickMax > 1.0 ||
+      InpHtfFastEmaPeriod < 2 || InpHtfSlowEmaPeriod <= InpHtfFastEmaPeriod ||
+      InpSkipHour1 > 23 || InpVolAvgLen < 0 ||
+      InpVolRatioMin < 0.0 || InpVolRatioMax < InpVolRatioMin ||
+      InpMsChannelLookback < 0 ||
       InpMaxTradesPerDay < 1 ||
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
@@ -676,6 +753,25 @@ int OnInit()
       atrHandle == INVALID_HANDLE)
       return INIT_FAILED;
 
+   if(InpUseHtf1Confluence)
+   {
+      htf1FastHandle = iMA(_Symbol, InpHtf1Timeframe, InpHtfFastEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      htf1SlowHandle = iMA(_Symbol, InpHtf1Timeframe, InpHtfSlowEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      if(htf1FastHandle == INVALID_HANDLE || htf1SlowHandle == INVALID_HANDLE)
+         return INIT_FAILED;
+   }
+   if(InpUseHtf2Confluence)
+   {
+      htf2FastHandle = iMA(_Symbol, InpHtf2Timeframe, InpHtfFastEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      htf2SlowHandle = iMA(_Symbol, InpHtf2Timeframe, InpHtfSlowEmaPeriod,
+                           0, MODE_EMA, PRICE_CLOSE);
+      if(htf2FastHandle == INVALID_HANDLE || htf2SlowHandle == INVALID_HANDLE)
+         return INIT_FAILED;
+   }
+
    trade.SetExpertMagicNumber(InpMagicNumber);
    trade.SetDeviationInPoints(InpSlippagePoints);
    trade.SetTypeFillingBySymbol(_Symbol);
@@ -698,6 +794,14 @@ void OnDeinit(const int reason)
       IndicatorRelease(slowEmaHandle);
    if(atrHandle != INVALID_HANDLE)
       IndicatorRelease(atrHandle);
+   if(htf1FastHandle != INVALID_HANDLE)
+      IndicatorRelease(htf1FastHandle);
+   if(htf1SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(htf1SlowHandle);
+   if(htf2FastHandle != INVALID_HANDLE)
+      IndicatorRelease(htf2FastHandle);
+   if(htf2SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(htf2SlowHandle);
 }
 
 void OnTimer()
