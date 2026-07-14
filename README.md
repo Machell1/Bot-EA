@@ -14,11 +14,14 @@ conservative FTMO 2-Step account controls.
 The strategy buys or sells a 20-bar Donchian breakout only when the 50 EMA is
 on the correct side of the 200 EMA and is moving in the breakout direction. The
 breakout close must clear the channel by 0.5 ATR to filter marginal pokes
-through the range. Stops are volatility-scaled with ATR (2.5×), position size is
-calculated from the stop distance, and winners use break-even plus ATR trailing
-logic. Entries are restricted to the 08:00–17:00 server (London/New York)
-window. This is a classic, explainable source of potential trend premium—not a
-claim of guaranteed profits.
+through the range, and the breakout candle itself must be a decisive body that
+closes in the breakout direction with only a small rejection wick (a wick/body
+confirmation that discards doji and long-opposing-wick bars). Stops are
+volatility-scaled with ATR (2.5×), position size is calculated from the stop
+distance, and winners use break-even plus ATR trailing logic. Entries are
+restricted to the 08:00–17:00 server (London/New York) window. This is a
+classic, explainable source of potential trend premium—not a claim of
+guaranteed profits.
 
 ## Safety defaults
 

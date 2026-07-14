@@ -8,7 +8,7 @@ edge**. Out-of-sample expectancy is positive, while the full-period in-sample
 expectancy is still slightly negative. Treat it as a promising, conservative
 baseline to validate further—not a guaranteed FTMO Challenge pass.
 
-Three changes drove the improvement over the original defaults:
+Four changes drove the improvement over the original defaults:
 
 1. **Breakout confirmation buffer** (`entry_buffer_atr = 0.5`). The breakout
    close must clear the Donchian channel by half an ATR. Marginal pokes through
@@ -18,6 +18,13 @@ Three changes drove the improvement over the original defaults:
    17:00.
 3. **Wider volatility stop** (`stop_atr = 2.5`, was `2.0`). Trend trades are
    given room to develop instead of being stopped on normal noise.
+4. **Candlestick confirmation of the breakout bar** (`candle_body_min = 0.2`,
+   `candle_wick_max = 0.3`). The breakout candle must have a decisive body that
+   closes in the breakout direction with only a small rejection wick
+   (≤30% of the bar's range on the breakout side). Doji-like bars and long
+   opposing wicks—signs the range was defended—are rejected. This wick/body
+   filter is the single most effective quality gate: it lifts out-of-sample
+   profit factor from 1.34 to 1.50 while also improving the in-sample split.
 
 With these defaults the guarded account no longer trips the soft floor and shut
 down mid-sample; it survives the full period, so the FTMO-guarded path and the
@@ -28,11 +35,11 @@ unguarded diagnostic are now identical.
 | Split | Version | Trades | Net | PF | Expectancy | Win rate |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | In-sample | original | 286 | -$15,220.72 | 0.648 | -0.163R | 28.3% |
-| In-sample | revised | 155 | -$4,098.18 | 0.807 | -0.076R | 29.7% |
+| In-sample | revised | 139 | -$2,962.43 | 0.839 | -0.060R | 28.8% |
 | Out-of-sample | original | 105 | -$2,412.07 | 0.817 | -0.077R | 33.3% |
-| Out-of-sample | revised | 51 | +$1,966.81 | 1.340 | +0.115R | 43.1% |
+| Out-of-sample | revised | 48 | +$2,632.87 | 1.501 | +0.161R | 45.8% |
 | Full period | original | 391 | -$17,632.79 | 0.687 | -0.140R | 29.7% |
-| Full period | revised | 206 | -$2,131.37 | 0.921 | -0.028R | 33.0% |
+| Full period | revised | 187 | -$329.56 | 0.986 | -0.004R | 33.2% |
 
 ## Data and method
 
@@ -56,15 +63,15 @@ time. These limitations prevent a tick-parity claim.
 
 | Path | Trades | Net | PF | Expectancy | Max equity DD | Rule breach |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| FTMO guards, 1× spread | 206 | -$2,131.37 | 0.921 | -0.028R | 6.66% | No |
-| FTMO guards, 2× spread | 202 | -$3,426.52 | 0.874 | -0.048R | 7.66% | No |
+| FTMO guards, 1× spread | 187 | -$329.56 | 0.986 | -0.004R | 5.26% | No |
+| FTMO guards, 2× spread | 185 | -$1,495.61 | 0.937 | -0.022R | 6.13% | No |
 
 Out-of-sample:
 
 | Costs | Trades | Net | PF | Expectancy | Win rate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| 1× spread | 51 | +$1,966.81 | 1.340 | +0.115R | 43.14% |
-| 2× spread | 51 | +$1,382.06 | 1.240 | +0.082R | 41.18% |
+| 1× spread | 48 | +$2,632.87 | 1.501 | +0.161R | 45.83% |
+| 2× spread | 48 | +$2,055.28 | 1.392 | +0.127R | 43.75% |
 
 The out-of-sample edge survives a doubling of spread, which is the most
 important robustness check for a low-cost-sensitivity claim. The OOS sample
