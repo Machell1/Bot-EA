@@ -1,0 +1,1837 @@
+{
+  "summary": {
+    "action_precision_10m": {
+      "action_bars": 186,
+      "action_units_that_still_won": 12,
+      "p_band_breach_close_basis_base_rate": 0.05054526570884542,
+      "p_band_breach_close_basis_given_action": 0.08064516129032258,
+      "p_band_breach_next10m_base_rate": 0.09113726847844902,
+      "p_band_breach_next10m_given_action": 0.11290322580645161,
+      "p_stop_touch_next10m_base_rate": 0.007270209451272287,
+      "p_stop_touch_next10m_given_action": 0.21505376344086022,
+      "stop_touch_matched_on_touch_prob": {
+        "0.00-0.05": {
+          "action": {
+            "n": 81,
+            "p_touch": 0.07407407407407407
+          },
+          "non_action": {
+            "n": 11339,
+            "p_touch": 0.0030866919481435753
+          }
+        },
+        "0.05-0.15": {
+          "action": {
+            "n": 58,
+            "p_touch": 0.22413793103448276
+          },
+          "non_action": {
+            "n": 17,
+            "p_touch": 0.17647058823529413
+          }
+        },
+        "0.15-0.25": {
+          "action": {
+            "n": 23,
+            "p_touch": 0.30434782608695654
+          },
+          "non_action": {
+            "n": 9,
+            "p_touch": 0.3333333333333333
+          }
+        },
+        "0.25-0.50": {
+          "action": {
+            "n": 23,
+            "p_touch": 0.5652173913043478
+          },
+          "non_action": {
+            "n": 2,
+            "p_touch": 1.0
+          }
+        },
+        "0.50-1.01": {
+          "action": {
+            "n": 1,
+            "p_touch": 1.0
+          },
+          "non_action": {
+            "n": 1,
+            "p_touch": 1.0
+          }
+        }
+      },
+      "units_with_any_action": 32
+    },
+    "action_timing_percentile_within_unit": {
+      "mean": 0.2283876707674136,
+      "median": 0.15449663561076604,
+      "note": "0.5 = neutral timing; <0.5 = ACTION exits at worse prices than the unit's average available exit",
+      "units": 32
+    },
+    "approximations": [
+      "current_stop = initial 2.5x SMA-ATR stop, to break-even after M5 first touches TP1; engine's post-TP2 ATR trail not modelled",
+      "constant spread (bid candles + fixed spread on the ask side); no ticks inside M5 bars",
+      "counterfactual P&L is gross R with config tranche weights (0.4/0.3/residual); commission, swap and volume flooring excluded",
+      "ledger exits are H1-stamped; counterfactual exits win same-hour ties (stop-first pessimism)",
+      "EMA/RSI computed on trailing windows seeded at the window start, not full history"
+    ],
+    "control_random_after_first_action": {
+      "actual_flatten_sum_r": 4.177700745856169,
+      "actual_percentile_in_control": 0.028,
+      "control_sum_r_mean": 6.164183838511067,
+      "control_sum_r_p5": 4.538068690613547,
+      "control_sum_r_p95": 7.8438804845996,
+      "note": "same information set: random live bar at/after the first ACTION in action units",
+      "seeds": 500
+    },
+    "control_signal_free_flatten_all_units": {
+      "actual_flatten_sum_r": 4.177700745856169,
+      "actual_percentile_in_control": 0.0,
+      "control_sum_r_mean": 13.88866174454577,
+      "control_sum_r_p5": 9.400702815945678,
+      "control_sum_r_p95": 18.39918856402975,
+      "note": "feasible signal-free policy: flatten every unit at a random live bar",
+      "seeds": 500
+    },
+    "counterfactual_gross_r": {
+      "all": {
+        "act_break_even": {
+          "max_dd_r": 7.526689912236527,
+          "mean_r": 0.0430852916093252,
+          "sum_r": 3.015970412652764
+        },
+        "act_flatten": {
+          "max_dd_r": 7.123682222504152,
+          "mean_r": 0.05968143922651669,
+          "sum_r": 4.177700745856169
+        },
+        "baseline": {
+          "max_dd_r": 11.072264421797259,
+          "mean_r": -0.030208129179722317,
+          "sum_r": -2.114569042580562
+        },
+        "units": 70
+      },
+      "in_sample": {
+        "act_break_even": {
+          "max_dd_r": 2.3522221834881676,
+          "mean_r": 0.018311797844787335,
+          "sum_r": 0.43948314827489604
+        },
+        "act_flatten": {
+          "max_dd_r": 2.0,
+          "mean_r": 0.050949844955888404,
+          "sum_r": 1.2227962789413216
+        },
+        "baseline": {
+          "max_dd_r": 3.063344231975952,
+          "mean_r": 0.005180608856117413,
+          "sum_r": 0.12433461254681791
+        },
+        "units": 24
+      },
+      "out_of_sample": {
+        "act_break_even": {
+          "max_dd_r": 7.526689912236527,
+          "mean_r": 0.0560105927038667,
+          "sum_r": 2.5764872643778682
+        },
+        "act_flatten": {
+          "max_dd_r": 7.123682222504151,
+          "mean_r": 0.06423705362858362,
+          "sum_r": 2.9549044669148463
+        },
+        "baseline": {
+          "max_dd_r": 11.072264421797259,
+          "mean_r": -0.048671818589725656,
+          "sum_r": -2.23890365512738
+        },
+        "units": 46
+      }
+    },
+    "lead_time_losing_stops": {
+      "action_lead_bars": {
+        "mean": 95.77777777777777,
+        "median": 6.5
+      },
+      "losing_stop_units": 28,
+      "warning_lead_bars": {
+        "mean": 163.57142857142858,
+        "median": 67.0
+      },
+      "with_action_before_stop": 18,
+      "with_warning_before_stop": 28
+    },
+    "per_unit_deltas_flatten": {
+      "changed_units": 31,
+      "hurt": 5,
+      "improved": 26,
+      "mean_delta_r": 0.089889568406239,
+      "median_delta_r_action_units": 0.21439135955886657,
+      "stdev_delta_r": 0.3230827549722114
+    },
+    "population": {
+      "m5_range": [
+        "2025-02-07 00:00:00",
+        "2026-07-09 00:55:00"
+      ],
+      "monitored_m5_bars": 11554,
+      "oos_units": 46,
+      "units_studied": 70
+    },
+    "status_distribution": {
+      "action": 186,
+      "ok": 4631,
+      "warning": 6737
+    }
+  },
+  "units": [
+    {
+      "baseline_r": -0.8612395929694545,
+      "cf_be_r": -0.8612395929694545,
+      "cf_flatten_r": -0.8612395929694545,
+      "first_action": 23,
+      "first_warning": 2,
+      "n_action": 1,
+      "n_bars": 24,
+      "n_ok": 9,
+      "n_warning": 14,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 2876.72,
+        "entry_time": "2025-02-07 15:00:00",
+        "initial_stop": 2858.1885714285713,
+        "ledger_pnl": -272.1699999999929,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.4648180376355695,
+      "cf_be_r": 1.4648180376355695,
+      "cf_flatten_r": 1.4648180376355695,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 192,
+      "n_ok": 89,
+      "n_warning": 103,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 2903.18,
+        "entry_time": "2025-02-10 10:00:00",
+        "initial_stop": 2886.5164285714286,
+        "ledger_pnl": 456.3942857142836,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.8532523738776758,
+      "first_action": 259,
+      "first_warning": 0,
+      "n_action": 3,
+      "n_bars": 287,
+      "n_ok": 114,
+      "n_warning": 170,
+      "stop_touch_bar": 2359,
+      "unit": {
+        "entry": 2928.04,
+        "entry_time": "2025-02-18 15:00:00",
+        "initial_stop": 2911.4532142857147,
+        "ledger_pnl": 115.15749999999692,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.7669937877014243,
+      "cf_flatten_r": -0.7669937877014243,
+      "first_action": 35,
+      "first_warning": 19,
+      "n_action": 10,
+      "n_bars": 71,
+      "n_ok": 24,
+      "n_warning": 37,
+      "stop_touch_bar": 2359,
+      "unit": {
+        "entry": 2945.6499999999996,
+        "entry_time": "2025-02-19 10:00:00",
+        "initial_stop": 2929.7828571428568,
+        "ledger_pnl": -318.3428571428576,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.002254369883663,
+      "cf_be_r": 1.002254369883663,
+      "cf_flatten_r": 1.002254369883663,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 300,
+      "n_ok": 105,
+      "n_warning": 195,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 2970.04,
+        "entry_time": "2025-03-13 15:00:00",
+        "initial_stop": 2950.363928571429,
+        "ledger_pnl": 314.7564285714263,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -0.20224128874101133,
+      "cf_be_r": -0.6128523901242996,
+      "cf_flatten_r": -0.6128523901242996,
+      "first_action": 65,
+      "first_warning": 5,
+      "n_action": 11,
+      "n_bars": 96,
+      "n_ok": 42,
+      "n_warning": 43,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 2993.0899999999997,
+        "entry_time": "2025-03-14 09:00:00",
+        "initial_stop": 2976.772857142857,
+        "ledger_pnl": -66.99999999999454,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.6429170339474848,
+      "cf_flatten_r": -0.6429170339474848,
+      "first_action": 46,
+      "first_warning": 1,
+      "n_action": 4,
+      "n_bars": 53,
+      "n_ok": 21,
+      "n_warning": 28,
+      "stop_touch_bar": 7033,
+      "unit": {
+        "entry": 2998.83,
+        "entry_time": "2025-03-14 10:00:00",
+        "initial_stop": 2982.218214285714,
+        "ledger_pnl": -316.5739285714305,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.5199004850099325,
+      "first_action": 271,
+      "first_warning": 1,
+      "n_action": 3,
+      "n_bars": 274,
+      "n_ok": 123,
+      "n_warning": 148,
+      "stop_touch_bar": 7790,
+      "unit": {
+        "entry": 3026.77,
+        "entry_time": "2025-03-18 09:00:00",
+        "initial_stop": 3012.5582142857143,
+        "ledger_pnl": 126.75607142857152,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 31,
+      "n_ok": 7,
+      "n_warning": 24,
+      "stop_touch_bar": 9499,
+      "unit": {
+        "entry": 3051.5299999999997,
+        "entry_time": "2025-03-27 11:00:00",
+        "initial_stop": 3035.405714285714,
+        "ledger_pnl": -323.4857142857127,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.356229135179136,
+      "cf_be_r": 1.356229135179136,
+      "cf_flatten_r": 1.1406799647893222,
+      "first_action": 186,
+      "first_warning": 6,
+      "n_action": 1,
+      "n_bars": 300,
+      "n_ok": 138,
+      "n_warning": 161,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3154.72,
+        "entry_time": "2025-04-10 15:00:00",
+        "initial_stop": 3111.7135714285714,
+        "ledger_pnl": 428.36285714285884,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.26853578086907404,
+      "cf_be_r": 0.26853578086907404,
+      "cf_flatten_r": 0.26853578086907404,
+      "first_action": null,
+      "first_warning": 7,
+      "n_action": 0,
+      "n_bars": 108,
+      "n_ok": 62,
+      "n_warning": 46,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3212.56,
+        "entry_time": "2025-04-11 08:00:00",
+        "initial_stop": 3172.714285714286,
+        "ledger_pnl": 85.20000000000218,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.17512587940140692,
+      "cf_be_r": 0.17512587940140692,
+      "cf_flatten_r": 0.17512587940140692,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 96,
+      "n_ok": 52,
+      "n_warning": 44,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3216.1299999999997,
+        "entry_time": "2025-04-11 09:00:00",
+        "initial_stop": 3175.4164285714282,
+        "ledger_pnl": 56.64000000000451,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.5470299977639999,
+      "cf_be_r": 1.5470299977639999,
+      "cf_flatten_r": 1.5470299977639999,
+      "first_action": null,
+      "first_warning": 4,
+      "n_action": 0,
+      "n_bars": 216,
+      "n_ok": 111,
+      "n_warning": 105,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3415.0699999999997,
+        "entry_time": "2025-04-21 13:00:00",
+        "initial_stop": 3384.7225,
+        "ledger_pnl": 468.98492857142764,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.06171493577287767,
+      "cf_be_r": 0.06171493577287767,
+      "cf_flatten_r": 0.06171493577287767,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 48,
+      "n_ok": 26,
+      "n_warning": 22,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3357.1499999999996,
+        "entry_time": "2025-05-23 13:00:00",
+        "initial_stop": 3327.011428571428,
+        "ledger_pnl": 18.10000000000582,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.5154556087396679,
+      "cf_flatten_r": -0.5154556087396679,
+      "first_action": 236,
+      "first_warning": 2,
+      "n_action": 3,
+      "n_bars": 286,
+      "n_ok": 86,
+      "n_warning": 197,
+      "stop_touch_bar": 21859,
+      "unit": {
+        "entry": 3316.68,
+        "entry_time": "2025-05-29 13:00:00",
+        "initial_stop": 3280.343214285714,
+        "ledger_pnl": -327.4810714285715,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.2766936605900603,
+      "cf_flatten_r": -0.2766936605900603,
+      "first_action": 211,
+      "first_warning": 2,
+      "n_action": 6,
+      "n_bars": 276,
+      "n_ok": 78,
+      "n_warning": 192,
+      "stop_touch_bar": 22409,
+      "unit": {
+        "entry": 3370.99,
+        "entry_time": "2025-06-02 14:00:00",
+        "initial_stop": 3340.9567857142856,
+        "ledger_pnl": -300.83214285714166,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.5607496131982056,
+      "cf_flatten_r": -0.5607496131982056,
+      "first_action": 47,
+      "first_warning": 4,
+      "n_action": 2,
+      "n_bars": 49,
+      "n_ok": 21,
+      "n_warning": 26,
+      "stop_touch_bar": 22962,
+      "unit": {
+        "entry": 3389.67,
+        "entry_time": "2025-06-05 10:00:00",
+        "initial_stop": 3369.126071428572,
+        "ledger_pnl": -329.50285714285275,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -0.06334423197595228,
+      "cf_be_r": -0.06334423197595228,
+      "cf_flatten_r": -0.06334423197595228,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 48,
+      "n_ok": 22,
+      "n_warning": 26,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3355.2599999999998,
+        "entry_time": "2025-07-11 13:00:00",
+        "initial_stop": 3333.6321428571428,
+        "ledger_pnl": -21.299999999998363,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.2640209310157182,
+      "cf_be_r": 0.2640209310157182,
+      "cf_flatten_r": 0.2640209310157182,
+      "first_action": null,
+      "first_warning": 11,
+      "n_action": 0,
+      "n_bars": 108,
+      "n_ok": 37,
+      "n_warning": 71,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3350.02,
+        "entry_time": "2025-07-18 08:00:00",
+        "initial_stop": 3336.2332142857144,
+        "ledger_pnl": 82.56999999999707,
+        "oos": false,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.5114306587117907,
+      "cf_be_r": 0.0,
+      "cf_flatten_r": 0.0443199805186747,
+      "first_action": 224,
+      "first_warning": 1,
+      "n_action": 5,
+      "n_bars": 300,
+      "n_ok": 116,
+      "n_warning": 179,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3387.42,
+        "entry_time": "2025-07-21 13:00:00",
+        "initial_stop": 3369.820714285714,
+        "ledger_pnl": 474.78428571429055,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 24,
+      "n_ok": 12,
+      "n_warning": 12,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3407.73,
+        "entry_time": "2025-07-22 13:00:00",
+        "initial_stop": 3390.977142857143,
+        "ledger_pnl": 116.3199999999991,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.7813894616499565,
+      "first_action": 188,
+      "first_warning": 2,
+      "n_action": 3,
+      "n_bars": 265,
+      "n_ok": 97,
+      "n_warning": 165,
+      "stop_touch_bar": 32232,
+      "unit": {
+        "entry": 3412.54,
+        "entry_time": "2025-07-22 14:00:00",
+        "initial_stop": 3395.0460714285714,
+        "ledger_pnl": 121.5575,
+        "oos": false,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 36,
+      "n_ok": 14,
+      "n_warning": 22,
+      "stop_touch_bar": 32231,
+      "unit": {
+        "entry": 3431.29,
+        "entry_time": "2025-07-23 10:00:00",
+        "initial_stop": 3414.608571428572,
+        "ledger_pnl": -317.89714285713416,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 4,
+      "n_ok": 1,
+      "n_warning": 3,
+      "stop_touch_bar": 35203,
+      "unit": {
+        "entry": 3396.3399999999997,
+        "entry_time": "2025-08-07 08:00:00",
+        "initial_stop": 3378.585357142857,
+        "ledger_pnl": -320.48357142856855,
+        "oos": false,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.210990269032628,
+      "cf_be_r": 1.210990269032628,
+      "cf_flatten_r": 1.210990269032628,
+      "first_action": null,
+      "first_warning": 4,
+      "n_action": 0,
+      "n_bars": 36,
+      "n_ok": 11,
+      "n_warning": 25,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3428.96,
+        "entry_time": "2025-08-29 14:00:00",
+        "initial_stop": 3413.9857142857145,
+        "ledger_pnl": 381.86428571428155,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.2091325751145794,
+      "cf_be_r": 0.2091325751145794,
+      "cf_flatten_r": 0.2091325751145794,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 12,
+      "n_ok": 0,
+      "n_warning": 12,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3445.68,
+        "entry_time": "2025-08-29 16:00:00",
+        "initial_stop": 3428.848571428571,
+        "ledger_pnl": 65.92999999999965,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.5535031614341681,
+      "first_action": 394,
+      "first_warning": 3,
+      "n_action": 2,
+      "n_bars": 398,
+      "n_ok": 157,
+      "n_warning": 239,
+      "stop_touch_bar": 40615,
+      "unit": {
+        "entry": 3520.5899999999997,
+        "entry_time": "2025-09-02 16:00:00",
+        "initial_stop": 3491.2746428571427,
+        "ledger_pnl": 116.71142857142804,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.5011275324558764,
+      "first_action": 121,
+      "first_warning": 6,
+      "n_action": 4,
+      "n_bars": 138,
+      "n_ok": 44,
+      "n_warning": 90,
+      "stop_touch_bar": 40595,
+      "unit": {
+        "entry": 3550.74,
+        "entry_time": "2025-09-03 13:00:00",
+        "initial_stop": 3526.8889285714286,
+        "ledger_pnl": 118.60535714285615,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.9259600968746414,
+      "cf_flatten_r": -0.9259600968746414,
+      "first_action": 141,
+      "first_warning": 0,
+      "n_action": 1,
+      "n_bars": 142,
+      "n_ok": 38,
+      "n_warning": 103,
+      "stop_touch_bar": 40611,
+      "unit": {
+        "entry": 3553.92,
+        "entry_time": "2025-09-03 14:00:00",
+        "initial_stop": 3529.1457142857143,
+        "ledger_pnl": -322.7157142857144,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.609747095212086,
+      "cf_be_r": 0.609747095212086,
+      "cf_flatten_r": 0.609747095212086,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 48,
+      "n_ok": 30,
+      "n_warning": 18,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3580.45,
+        "entry_time": "2025-09-05 13:00:00",
+        "initial_stop": 3556.259642857143,
+        "ledger_pnl": 191.1,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.5198014639526822,
+      "cf_be_r": 1.5198014639526822,
+      "cf_flatten_r": 1.5198014639526822,
+      "first_action": null,
+      "first_warning": 5,
+      "n_action": 0,
+      "n_bars": 264,
+      "n_ok": 102,
+      "n_warning": 162,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3609.67,
+        "entry_time": "2025-09-08 08:00:00",
+        "initial_stop": 3588.299285714286,
+        "ledger_pnl": 479.3080000000027,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.6752329713299103,
+      "first_action": 287,
+      "first_warning": 2,
+      "n_action": 4,
+      "n_bars": 291,
+      "n_ok": 121,
+      "n_warning": 166,
+      "stop_touch_bar": 41584,
+      "unit": {
+        "entry": 3633.5699999999997,
+        "entry_time": "2025-09-08 14:00:00",
+        "initial_stop": 3608.5439285714283,
+        "ledger_pnl": 124.48035714285706,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4,
+      "first_action": null,
+      "first_warning": 4,
+      "n_action": 0,
+      "n_bars": 271,
+      "n_ok": 115,
+      "n_warning": 156,
+      "stop_touch_bar": 41576,
+      "unit": {
+        "entry": 3640.8799999999997,
+        "entry_time": "2025-09-08 15:00:00",
+        "initial_stop": 3615.037857142857,
+        "ledger_pnl": 102.76857142857115,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.5416004239533635,
+      "cf_flatten_r": -0.5416004239533635,
+      "first_action": 60,
+      "first_warning": 0,
+      "n_action": 3,
+      "n_bars": 63,
+      "n_ok": 30,
+      "n_warning": 30,
+      "stop_touch_bar": 41584,
+      "unit": {
+        "entry": 3653.7599999999998,
+        "entry_time": "2025-09-09 10:00:00",
+        "initial_stop": 3630.8464285714285,
+        "ledger_pnl": -321.4899999999973,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 576,
+      "n_ok": 244,
+      "n_warning": 332,
+      "stop_touch_bar": 43269,
+      "unit": {
+        "entry": 3680.67,
+        "entry_time": "2025-09-15 16:00:00",
+        "initial_stop": 3656.720714285714,
+        "ledger_pnl": -311.99071428571676,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.36025732666191007,
+      "first_action": 144,
+      "first_warning": 2,
+      "n_action": 10,
+      "n_bars": 560,
+      "n_ok": 215,
+      "n_warning": 335,
+      "stop_touch_bar": 44629,
+      "unit": {
+        "entry": 3736.2999999999997,
+        "entry_time": "2025-09-22 16:00:00",
+        "initial_stop": 3710.3185714285714,
+        "ledger_pnl": 103.32571428571318,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.7314805248476078,
+      "cf_flatten_r": -0.7314805248476078,
+      "first_action": 119,
+      "first_warning": 5,
+      "n_action": 26,
+      "n_bars": 346,
+      "n_ok": 122,
+      "n_warning": 198,
+      "stop_touch_bar": 44607,
+      "unit": {
+        "entry": 3774.5,
+        "entry_time": "2025-09-23 09:00:00",
+        "initial_stop": 3750.3025000000002,
+        "ledger_pnl": -315.2174999999969,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 107,
+      "n_ok": 40,
+      "n_warning": 67,
+      "stop_touch_bar": 44380,
+      "unit": {
+        "entry": 3785.0099999999998,
+        "entry_time": "2025-09-23 10:00:00",
+        "initial_stop": 3758.4035714285715,
+        "ledger_pnl": -319.8771428571396,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.8470145180657102,
+      "cf_flatten_r": -0.8470145180657102,
+      "first_action": 76,
+      "first_warning": 2,
+      "n_action": 5,
+      "n_bars": 82,
+      "n_ok": 25,
+      "n_warning": 52,
+      "stop_touch_bar": 44607,
+      "unit": {
+        "entry": 3777.6099999999997,
+        "entry_time": "2025-09-24 08:00:00",
+        "initial_stop": 3751.4357142857143,
+        "ledger_pnl": -314.69142857142435,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -0.17907669396872386,
+      "cf_be_r": -0.17907669396872386,
+      "cf_flatten_r": -0.17907669396872386,
+      "first_action": null,
+      "first_warning": 5,
+      "n_action": 0,
+      "n_bars": 24,
+      "n_ok": 11,
+      "n_warning": 13,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3779.04,
+        "entry_time": "2025-09-26 15:00:00",
+        "initial_stop": 3752.18,
+        "ledger_pnl": -58.31999999999935,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 5,
+      "n_action": 0,
+      "n_bars": 47,
+      "n_ok": 14,
+      "n_warning": 33,
+      "stop_touch_bar": 45960,
+      "unit": {
+        "entry": 3893.16,
+        "entry_time": "2025-10-01 09:00:00",
+        "initial_stop": 3866.2303571428574,
+        "ledger_pnl": -323.75571428570913,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.3881299506371353,
+      "cf_be_r": 0.3881299506371353,
+      "cf_flatten_r": 0.3881299506371353,
+      "first_action": null,
+      "first_warning": 9,
+      "n_action": 0,
+      "n_bars": 48,
+      "n_ok": 31,
+      "n_warning": 17,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 3874.0699999999997,
+        "entry_time": "2025-10-03 13:00:00",
+        "initial_stop": 3849.181428571428,
+        "ledger_pnl": 124.93000000000401,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.44564632439995927,
+      "cf_flatten_r": -0.44564632439995927,
+      "first_action": 116,
+      "first_warning": 2,
+      "n_action": 2,
+      "n_bars": 133,
+      "n_ok": 43,
+      "n_warning": 88,
+      "stop_touch_bar": 47434,
+      "unit": {
+        "entry": 4049.44,
+        "entry_time": "2025-10-08 10:00:00",
+        "initial_stop": 4022.894285714286,
+        "ledger_pnl": -319.14857142856783,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.5075689856753103,
+      "cf_be_r": 1.5075689856753103,
+      "cf_flatten_r": 1.5075689856753103,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 180,
+      "n_ok": 107,
+      "n_warning": 73,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4094.2799999999997,
+        "entry_time": "2025-10-13 14:00:00",
+        "initial_stop": 4056.7074999999995,
+        "ledger_pnl": 445.7993571428584,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": 0.0,
+      "cf_flatten_r": 0.15483139163928814,
+      "first_action": 205,
+      "first_warning": 0,
+      "n_action": 3,
+      "n_bars": 218,
+      "n_ok": 74,
+      "n_warning": 141,
+      "stop_touch_bar": 49755,
+      "unit": {
+        "entry": 4323.68,
+        "entry_time": "2025-10-20 13:00:00",
+        "initial_stop": 4263.227142857143,
+        "ledger_pnl": -302.5142857142864,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.591102410045227,
+      "first_action": 304,
+      "first_warning": 3,
+      "n_action": 1,
+      "n_bars": 305,
+      "n_ok": 143,
+      "n_warning": 161,
+      "stop_touch_bar": 53958,
+      "unit": {
+        "entry": 4097.75,
+        "entry_time": "2025-11-10 13:00:00",
+        "initial_stop": 4066.0078571428576,
+        "ledger_pnl": 126.4685714285697,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.7532211692045564,
+      "cf_flatten_r": -0.7532211692045564,
+      "first_action": 75,
+      "first_warning": 7,
+      "n_action": 1,
+      "n_bars": 76,
+      "n_ok": 35,
+      "n_warning": 40,
+      "stop_touch_bar": 53957,
+      "unit": {
+        "entry": 4135.82,
+        "entry_time": "2025-11-11 09:00:00",
+        "initial_stop": 4108.988571428571,
+        "ledger_pnl": -322.57714285714394,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.8274200316760025,
+      "cf_flatten_r": -0.8274200316760025,
+      "first_action": 57,
+      "first_warning": 5,
+      "n_action": 6,
+      "n_bars": 63,
+      "n_ok": 25,
+      "n_warning": 32,
+      "stop_touch_bar": 53956,
+      "unit": {
+        "entry": 4142.0599999999995,
+        "entry_time": "2025-11-11 10:00:00",
+        "initial_stop": 4115.676785714286,
+        "ledger_pnl": -317.19857142856347,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4968165613859505,
+      "first_action": 260,
+      "first_warning": 0,
+      "n_action": 12,
+      "n_bars": 306,
+      "n_ok": 94,
+      "n_warning": 200,
+      "stop_touch_bar": 54547,
+      "unit": {
+        "entry": 4181.58,
+        "entry_time": "2025-11-12 16:00:00",
+        "initial_stop": 4141.6075,
+        "ledger_pnl": 119.51749999999956,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 68,
+      "n_ok": 22,
+      "n_warning": 46,
+      "stop_touch_bar": 54501,
+      "unit": {
+        "entry": 4232.97,
+        "entry_time": "2025-11-13 09:00:00",
+        "initial_stop": 4191.0082142857145,
+        "ledger_pnl": -294.08250000000015,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.74721629945512,
+      "cf_flatten_r": -0.74721629945512,
+      "first_action": 17,
+      "first_warning": 3,
+      "n_action": 3,
+      "n_bars": 20,
+      "n_ok": 4,
+      "n_warning": 13,
+      "stop_touch_bar": 54501,
+      "unit": {
+        "entry": 4242.75,
+        "entry_time": "2025-11-13 13:00:00",
+        "initial_stop": 4200.540000000001,
+        "ledger_pnl": -295.81999999999397,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 10,
+      "n_ok": 5,
+      "n_warning": 5,
+      "stop_touch_bar": 58299,
+      "unit": {
+        "entry": 4237.34,
+        "entry_time": "2025-12-03 14:00:00",
+        "initial_stop": 4208.563928571429,
+        "ledger_pnl": -317.08678571428555,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.5998579139622047,
+      "cf_be_r": 1.5998579139622047,
+      "cf_flatten_r": 1.5998579139622047,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 252,
+      "n_ok": 95,
+      "n_warning": 157,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4256.26,
+        "entry_time": "2025-12-11 16:00:00",
+        "initial_stop": 4219.008928571428,
+        "ledger_pnl": 476.36078571428936,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 76,
+      "n_ok": 31,
+      "n_warning": 45,
+      "stop_touch_bar": 60233,
+      "unit": {
+        "entry": 4308.3099999999995,
+        "entry_time": "2025-12-12 09:00:00",
+        "initial_stop": 4279.394642857142,
+        "ledger_pnl": 115.11142857143132,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4,
+      "first_action": null,
+      "first_warning": 5,
+      "n_action": 0,
+      "n_bars": 64,
+      "n_ok": 25,
+      "n_warning": 39,
+      "stop_touch_bar": 60233,
+      "unit": {
+        "entry": 4318.53,
+        "entry_time": "2025-12-12 10:00:00",
+        "initial_stop": 4290.669999999999,
+        "ledger_pnl": 110.89000000000233,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 16,
+      "n_ok": 6,
+      "n_warning": 10,
+      "stop_touch_bar": 60233,
+      "unit": {
+        "entry": 4341.23,
+        "entry_time": "2025-12-12 14:00:00",
+        "initial_stop": 4309.987857142856,
+        "ledger_pnl": -312.92142857143335,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.0721538310715309,
+      "cf_be_r": 0.0721538310715309,
+      "cf_flatten_r": 0.0721538310715309,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 12,
+      "n_ok": 6,
+      "n_warning": 6,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4347.94,
+        "entry_time": "2025-12-19 16:00:00",
+        "initial_stop": 4322.438928571429,
+        "ledger_pnl": 21.480000000001745,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -0.2870916981548045,
+      "cf_be_r": -0.2870916981548045,
+      "cf_flatten_r": -0.2870916981548045,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 12,
+      "n_ok": 7,
+      "n_warning": 5,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4546.74,
+        "entry_time": "2025-12-26 16:00:00",
+        "initial_stop": 4511.106785714286,
+        "ledger_pnl": -92.51999999999607,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.8122903968342904,
+      "cf_flatten_r": -0.8122903968342904,
+      "first_action": 162,
+      "first_warning": 2,
+      "n_action": 3,
+      "n_bars": 165,
+      "n_ok": 67,
+      "n_warning": 95,
+      "stop_touch_bar": 64479,
+      "unit": {
+        "entry": 4487.57,
+        "entry_time": "2026-01-06 15:00:00",
+        "initial_stop": 4446.143928571429,
+        "ledger_pnl": -290.3324999999974,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -0.17380671101991127,
+      "cf_be_r": -0.17380671101991127,
+      "cf_flatten_r": -0.17380671101991127,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 12,
+      "n_ok": 4,
+      "n_warning": 8,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4512.42,
+        "entry_time": "2026-01-09 16:00:00",
+        "initial_stop": 4477.956428571429,
+        "ledger_pnl": -54.35999999999804,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.7485358020026579,
+      "cf_flatten_r": -0.7485358020026579,
+      "first_action": 98,
+      "first_warning": 5,
+      "n_action": 17,
+      "n_bars": 1121,
+      "n_ok": 422,
+      "n_warning": 682,
+      "stop_touch_bar": 66523,
+      "unit": {
+        "entry": 4615.96,
+        "entry_time": "2026-01-12 14:00:00",
+        "initial_stop": 4566.810714285715,
+        "ledger_pnl": -295.1957142857089,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.833916902802896,
+      "cf_be_r": 1.833916902802896,
+      "cf_flatten_r": 1.833916902802896,
+      "first_action": null,
+      "first_warning": 0,
+      "n_action": 0,
+      "n_bars": 192,
+      "n_ok": 91,
+      "n_warning": 101,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4729.55,
+        "entry_time": "2026-01-20 09:00:00",
+        "initial_stop": 4698.166785714286,
+        "ledger_pnl": 575.042071428572,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.7341239692667647,
+      "cf_be_r": 1.7341239692667647,
+      "cf_flatten_r": 1.119388888066453,
+      "first_action": 215,
+      "first_warning": 5,
+      "n_action": 1,
+      "n_bars": 288,
+      "n_ok": 129,
+      "n_warning": 158,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4872.04,
+        "entry_time": "2026-01-22 16:00:00",
+        "initial_stop": 4823.790714285715,
+        "ledger_pnl": 527.6069999999983,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.9677601013656181,
+      "cf_be_r": 0.9677601013656181,
+      "cf_flatten_r": 0.9677601013656181,
+      "first_action": null,
+      "first_warning": 2,
+      "n_action": 0,
+      "n_bars": 72,
+      "n_ok": 53,
+      "n_warning": 19,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4930.05,
+        "entry_time": "2026-01-23 11:00:00",
+        "initial_stop": 4876.7775,
+        "ledger_pnl": 307.8849999999995,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.7674093584540674,
+      "cf_be_r": 0.7674093584540674,
+      "cf_flatten_r": 0.7674093584540674,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 48,
+      "n_ok": 36,
+      "n_warning": 12,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 4939.67,
+        "entry_time": "2026-01-23 13:00:00",
+        "initial_stop": 4886.517142857144,
+        "ledger_pnl": 244.43999999999977,
+        "oos": true,
+        "reasons": [
+          "weekend"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 1.9804790314685563,
+      "cf_be_r": 1.9804790314685563,
+      "cf_flatten_r": 1.9804790314685563,
+      "first_action": null,
+      "first_warning": 3,
+      "n_action": 0,
+      "n_bars": 180,
+      "n_ok": 67,
+      "n_warning": 113,
+      "stop_touch_bar": null,
+      "unit": {
+        "entry": 5290.5599999999995,
+        "entry_time": "2026-01-28 08:00:00",
+        "initial_stop": 5216.869642857143,
+        "ledger_pnl": 687.8119999999988,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "tp2",
+          "trail"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -1.0,
+      "cf_flatten_r": -1.0,
+      "first_action": null,
+      "first_warning": 4,
+      "n_action": 0,
+      "n_bars": 30,
+      "n_ok": 10,
+      "n_warning": 20,
+      "stop_touch_bar": 71422,
+      "unit": {
+        "entry": 5093.099999999999,
+        "entry_time": "2026-02-11 11:00:00",
+        "initial_stop": 5039.745357142857,
+        "ledger_pnl": -320.42785714285566,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": 0.4,
+      "cf_be_r": 0.4,
+      "cf_flatten_r": 0.4,
+      "first_action": null,
+      "first_warning": 1,
+      "n_action": 0,
+      "n_bars": 110,
+      "n_ok": 44,
+      "n_warning": 66,
+      "stop_touch_bar": 73720,
+      "unit": {
+        "entry": 5192.25,
+        "entry_time": "2026-02-23 15:00:00",
+        "initial_stop": 5137.479285714286,
+        "ledger_pnl": 109.2914285714287,
+        "oos": true,
+        "reasons": [
+          "tp1",
+          "stop"
+        ],
+        "side": 1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": -0.8042234931808425,
+      "cf_flatten_r": -0.8042234931808425,
+      "first_action": 71,
+      "first_warning": 4,
+      "n_action": 3,
+      "n_bars": 74,
+      "n_ok": 27,
+      "n_warning": 44,
+      "stop_touch_bar": 96911,
+      "unit": {
+        "entry": 4098.82,
+        "entry_time": "2026-06-23 08:00:00",
+        "initial_stop": 4144.279999999999,
+        "ledger_pnl": -318.56999999999397,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": -1
+      }
+    },
+    {
+      "baseline_r": -1.0,
+      "cf_be_r": 0.0,
+      "cf_flatten_r": 0.06028092878495972,
+      "first_action": 248,
+      "first_warning": 5,
+      "n_action": 27,
+      "n_bars": 506,
+      "n_ok": 202,
+      "n_warning": 277,
+      "stop_touch_bar": 97678,
+      "unit": {
+        "entry": 3988.02,
+        "entry_time": "2026-06-24 13:00:00",
+        "initial_stop": 4049.0675,
+        "ledger_pnl": -305.48750000000064,
+        "oos": true,
+        "reasons": [
+          "stop"
+        ],
+        "side": -1
+      }
+    }
+  ]
+}

@@ -187,21 +187,26 @@ def ema(values: list[float], period: int) -> list[float]:
     return output
 
 
-def wilder_atr(bars: list[Bar], period: int) -> list[float]:
-    output = [math.nan] * len(bars)
-    trs: list[float] = []
-    for index, bar in enumerate(bars):
-        previous_close = bars[index - 1].close if index else bar.close
-        tr = max(
-            bar.high - bar.low,
-            abs(bar.high - previous_close),
-            abs(bar.low - previous_close),
+def atr_sma_of_tr(bars: list[Bar], period: int) -> list[float]:
+    """ATR as a simple moving average of True Range, matching MetaTrader 5's
+    built-in ``iATR`` (which uses an SMA, not Wilder/SMMA smoothing). The first
+    True Range is ignored, as MT5 does, and the first ATR appears at index
+    ``period``."""
+    n = len(bars)
+    output = [math.nan] * n
+    tr = [0.0] * n
+    for index in range(1, n):
+        previous_close = bars[index - 1].close
+        tr[index] = max(bars[index].high, previous_close) - min(
+            bars[index].low, previous_close
         )
-        trs.append(tr)
-        if index == period - 1:
-            output[index] = sum(trs) / period
-        elif index >= period:
-            output[index] = ((period - 1) * output[index - 1] + tr) / period
+    running = 0.0
+    for index in range(n):
+        running += tr[index]
+        if index > period:
+            running -= tr[index - period]
+        if index >= period:
+            output[index] = running / period
     return output
 
 
@@ -395,7 +400,7 @@ def run_backtest(
     closes = [bar.close for bar in bars]
     fast = ema(closes, config.ema_fast)
     slow = ema(closes, config.ema_slow)
-    atr = wilder_atr(bars, config.atr_period)
+    atr = atr_sma_of_tr(bars, config.atr_period)
     split_index = int(len(bars) * split_fraction)
 
     # Higher-timeframe confluence stacks and the volatility-regime baseline are
@@ -512,17 +517,30 @@ def run_backtest(
         return total
 
     def flatten(bar: Bar, spread: float, reason: str, adverse: bool = False) -> None:
-        nonlocal trend_side, trend_extreme, pullback_armed
+        nonlocal trend_side, trend_extreme, pullback_armed, official_breach
         for unit in list(units):
             if adverse:
                 price = bar.low if unit.side > 0 else bar.high + spread
             else:
                 price = bar.open if unit.side > 0 else bar.open + spread
             book(unit, price, unit.lots, bar, reason)
+        # A weekend/trend-flip flatten can realize a loss below the FTMO floor
+        # (e.g. a gap). That is a real breach and must be flagged even though no
+        # unit is open by the time the guard block runs.
+        if balance <= official_floor(initial_balance, day_start_balance, config):
+            official_breach = True
         units.clear()
         trend_side = 0
         trend_extreme = 0.0
         pullback_armed = False
+
+    def account_equity(bar: Bar, spread: float) -> float:
+        equity = balance
+        for unit in units:
+            mark = bar.open if unit.side > 0 else bar.open + spread
+            equity += unit.side * (mark - unit.entry) * unit.lots * dollars_per_price_per_lot
+            equity -= commission_per_side * unit.lots
+        return equity
 
     def try_open(side: int, index: int, bar: Bar, spread: float) -> bool:
         bid = bar.open
@@ -531,7 +549,10 @@ def run_backtest(
         stop_distance = atr[index - 1] * config.stop_atr
         stop = bid - stop_distance if side > 0 else ask + stop_distance
         initial_risk = abs(entry - stop)
-        risk_money = balance * config.risk_pct / 100.0
+        # Size off live equity (matching the EA's ACCOUNT_EQUITY), not closed
+        # balance.
+        equity = account_equity(bar, spread)
+        risk_money = equity * config.risk_pct / 100.0
         raw_lots = (risk_money / config.sizing_cost_reserve) / (
             initial_risk * dollars_per_price_per_lot
         )
@@ -540,7 +561,7 @@ def run_backtest(
             return False
         # The projected-risk gate covers the aggregate open risk plus this add,
         # so pyramiding can never risk more than the FTMO floor allows.
-        projected = balance - (open_risk() + risk_money) * 1.15
+        projected = equity - (open_risk() + risk_money) * 1.15
         if enforce_ftmo_guards and not (
             projected > active_floor(initial_balance, day_start_balance, config)
         ):
@@ -551,6 +572,8 @@ def run_backtest(
         tp2_lots = floor_volume(lots * config.tp2_fraction, 0.0, volume_max, volume_step)
         if tp1_lots + tp2_lots > lots:
             tp2_lots = max(0.0, lots - tp1_lots)
+        # Dollars actually risked to the stop, so a full stop-out books -1R.
+        risk_budget = initial_risk * lots * dollars_per_price_per_lot
         units.append(
             Position(
                 side,
@@ -562,7 +585,7 @@ def run_backtest(
                 dollars_per_price_per_lot,
                 lots,
                 lots,
-                risk_money,
+                risk_budget,
                 tp1_price,
                 tp2_price,
                 tp1_lots,
@@ -588,9 +611,53 @@ def run_backtest(
             entries_today = 0
             losses_today = 0
 
-        # Trend-change exit: flatten everything when the EMA stack flips against
-        # the open trend, then let a fresh signal start the next trend.
-        if units and index >= 1:
+        entry_ready = (
+            in_session(bar.time, config)
+            and losses_today < config.max_losses_day
+            and balance - day_start_balance
+            < initial_balance * config.daily_profit_lock_pct / 100.0
+            and spread / point <= max_spread_points
+            and index >= 2
+            and math.isfinite(atr[index - 1])
+        )
+
+        # Entries are processed FIRST, filling at this bar's open, so the new
+        # unit is exposed to this same bar's stop/TP/guard below (no entry-bar
+        # immunity). Signals still reference only completed bars (index-1).
+        if entry_ready and not units and entries_today < config.max_trades_day:
+            side = signal(index, bars, fast, slow, config, atr)
+            if side and not context_ok(index, side):
+                side = 0
+            if side and try_open(side, index, bar, spread):
+                trend_side = side
+                trend_extreme = bar.open
+                pullback_armed = False
+                entries_today += 1
+        elif (
+            entry_ready
+            and config.pyramid_enabled
+            and units
+            and trend_side != 0
+            and len(units) < config.max_units
+            and any(unit.tp1_done for unit in units)
+            and pullback_armed
+        ):
+            resume = (
+                bars[index - 1].close > bars[index - 2].high
+                if trend_side > 0
+                else bars[index - 1].close < bars[index - 2].low
+            )
+            ema_ok = (
+                fast[index - 1] > slow[index - 1] and fast[index - 1] > fast[index - 2]
+                if trend_side > 0
+                else fast[index - 1] < slow[index - 1] and fast[index - 1] < fast[index - 2]
+            )
+            if resume and ema_ok and try_open(trend_side, index, bar, spread):
+                pullback_armed = False
+                trend_extreme = bar.open
+
+        # Trend-change exit: flatten when the EMA stack flips against the trend.
+        if units:
             flipped = (trend_side > 0 and fast[index - 1] < slow[index - 1]) or (
                 trend_side < 0 and fast[index - 1] > slow[index - 1]
             )
@@ -600,7 +667,8 @@ def run_backtest(
         if units and bar.time.weekday() == 4 and bar.time.hour >= config.friday_close:
             flatten(bar, spread, "weekend")
 
-        # Aggregate FTMO account guard across every open unit.
+        # Aggregate FTMO account guard across every open unit (entry-bar
+        # exposure included, since entries ran above).
         if units:
             adverse_equity = balance
             for unit in units:
@@ -625,10 +693,14 @@ def run_backtest(
         for unit in list(units):
             if unit.side > 0:
                 stop_hit = bar.low <= unit.stop
+                # Gaps fill at the worse of the stop and the bar's open.
+                stop_fill = min(unit.stop, bar.open) if bar.open < unit.stop else unit.stop
             else:
                 stop_hit = bar.high + spread >= unit.stop
+                open_ask = bar.open + spread
+                stop_fill = max(unit.stop, open_ask) if open_ask > unit.stop else unit.stop
             if stop_hit:
-                book(unit, unit.stop, unit.lots, bar, "stop")
+                book(unit, stop_fill, unit.lots, bar, "stop")
                 units.remove(unit)
                 continue
 
@@ -643,6 +715,17 @@ def run_backtest(
                     unit.tp1_done = True
                     unit.stop = unit.entry  # trail original order to break-even
                     if unit.lots <= 0.0:
+                        units.remove(unit)
+                        continue
+                    # Enforce the break-even stop within the TP1 bar: if price
+                    # already returned to entry this bar, the runner is cut flat.
+                    be_hit = (
+                        bar.low <= unit.stop
+                        if unit.side > 0
+                        else bar.high + spread >= unit.stop
+                    )
+                    if be_hit:
+                        book(unit, unit.stop, unit.lots, bar, "trail")
                         units.remove(unit)
                         continue
 
@@ -669,11 +752,13 @@ def run_backtest(
                     if unit.side > 0
                     else min(candidate, unit.entry)
                 )
+            # Trailing uses the last completed bar's ATR (index-1), matching the
+            # EA's IndicatorValue(atrHandle, 1) and avoiding intrabar look-ahead.
             if unit.tp2_done and favorable >= unit.initial_risk * config.trail_start_r:
                 trail = (
-                    bar.high - atr[index] * config.trail_atr
+                    bar.high - atr[index - 1] * config.trail_atr
                     if unit.side > 0
-                    else bar.low + spread + atr[index] * config.trail_atr
+                    else bar.low + spread + atr[index - 1] * config.trail_atr
                 )
                 candidate = (
                     max(candidate, trail) if unit.side > 0 else min(candidate, trail)
@@ -687,60 +772,21 @@ def run_backtest(
             else:
                 unit.stop = candidate
 
-        entry_ready = (
-            in_session(bar.time, config)
-            and losses_today < config.max_losses_day
-            and balance - day_start_balance
-            < initial_balance * config.daily_profit_lock_pct / 100.0
-            and spread / point <= max_spread_points
-            and index >= 2
-            and math.isfinite(atr[index - 1])
-        )
-
-        # New trend entry when flat.
-        if entry_ready and not units and entries_today < config.max_trades_day:
-            side = signal(index, bars, fast, slow, config, atr)
-            if side and not context_ok(index, side):
-                side = 0
-            if side and try_open(side, index, bar, spread):
-                trend_side = side
-                trend_extreme = bar.open
-                pullback_armed = False
-                entries_today += 1
-
-        # Pyramid add: after TP1 on the trend, buy the pullback resume.
-        elif (
-            entry_ready
-            and config.pyramid_enabled
-            and units
+        # Track the favorable extreme and arm the next pullback re-entry. Only
+        # in-session bars are folded in, matching the EA's session-gated update.
+        if (
+            units
             and trend_side != 0
-            and len(units) < config.max_units
-            and any(unit.tp1_done for unit in units)
-            and pullback_armed
+            and in_session(bar.time, config)
+            and math.isfinite(atr[index - 1])
         ):
-            resume = (
-                bars[index - 1].close > bars[index - 2].high
-                if trend_side > 0
-                else bars[index - 1].close < bars[index - 2].low
-            )
-            ema_ok = (
-                fast[index - 1] > slow[index - 1] and fast[index - 1] > fast[index - 2]
-                if trend_side > 0
-                else fast[index - 1] < slow[index - 1] and fast[index - 1] < fast[index - 2]
-            )
-            if resume and ema_ok and try_open(trend_side, index, bar, spread):
-                pullback_armed = False
-                trend_extreme = bar.open
-
-        # Track the favorable extreme and arm the next pullback re-entry.
-        if units and trend_side != 0 and math.isfinite(atr[index]):
             if trend_side > 0:
                 trend_extreme = max(trend_extreme, bar.high)
-                if trend_extreme - bar.low >= config.pullback_atr * atr[index]:
+                if trend_extreme - bar.low >= config.pullback_atr * atr[index - 1]:
                     pullback_armed = True
             else:
                 trend_extreme = min(trend_extreme, bar.low)
-                if bar.high - trend_extreme >= config.pullback_atr * atr[index]:
+                if bar.high - trend_extreme >= config.pullback_atr * atr[index - 1]:
                     pullback_armed = True
         elif not units:
             trend_side = 0

@@ -2,17 +2,44 @@
 
 ## Verdict
 
-The **revised** default strategy is FTMO-rule compliant on this dataset and
-turns a net profit with a small equity drawdown. It scales out at two targets
-and rides the trend by pyramiding on pullbacks. The guarded account returns
-**+4.03%** over the sample with a **2.86%** maximum equity drawdown and no rule
-breach; the edge stays positive and compliant under a doubling of spread.
+**Corrected engine (2026-07-14).** After the adversarial audit
+(`backtest/results/engine_audit_findings.json`), the screening engine was fixed
+so it stops flattering the results and actually measures the EA as shipped (see
+"Engine corrections" below). The honest EURUSD number is now **+1.28%** return
+over the full sample (was a flattered +4.03%), with a **4.31%** maximum equity
+drawdown and no detected rule breach.
 
-The important caveat is unchanged: the confluence filters are deliberately
-selective, so the sample is small (105 units / 185 scale-out tranches). Treat
-this as a promising, conservative baseline to validate on more history and more
-symbols—not a guaranteed FTMO Challenge pass. Pyramiding raises exposure, so the
-MetaTrader 5 tick backtest matters even more before any live use.
+The edge is marginal and does not clearly hold: in-sample expectancy is
+**negative** (PF 0.89), the out-of-sample split is positive (PF 1.89), and the
+full period is only slightly positive. The cross-symbol picture is worse
+(GBPUSD −1.01%, USDJPY −5.46%, XAUUSD +2.47% but OOS negative). This is **not a
+validated edge** — do not use it for a funded/challenge decision. The only
+credible next step is MetaTrader 5 real-tick validation on the target broker's
+feed with a hedging account.
+
+## Engine corrections (2026-07-14)
+
+The audit confirmed the earlier numbers were produced by a screen that
+under-detected risk and did not match the EA. Fixed in `ftmo_quant_backtest.py`:
+
+- **Entry-bar immunity removed** — entries are now processed first and exposed
+  to their own bar's stop/TP and the intrabar FTMO guard.
+- **ATR parity** — the screen now uses an SMA of True Range (matching MT5's
+  `iATR`), not Wilder smoothing.
+- **Gap fills** — stops fill at the worse of the stop and the bar open.
+- **Breach-by-flatten flagged** — weekend/trend-flip flattens that realize a
+  loss below the FTMO floor now set `official_rule_breach`.
+- **Causal trailing** — the trail uses the last completed bar's ATR (index-1),
+  matching the EA and removing intrabar look-ahead.
+- **Equity-based sizing** — sizing and the projected-risk gate use live equity,
+  like the EA's `ACCOUNT_EQUITY`.
+- **Break-even within the TP1 bar** and a **true-R denominator** (a full stop
+  now books −1R, not −0.91R); **pullback arming is session-gated** to match the
+  EA.
+
+Still unmodeled (documented limitations, not fixed): swap/financing, and minor
+timing nuances (H4 staleness at boundary hours, per-day counter treatment of
+adds). These remain reasons the screen is not tick parity.
 
 Changes over the original defaults, in the order they were added:
 
@@ -59,12 +86,26 @@ The source file has no historical spread column. The 10-point EURUSD spread
 is an explicit assumption, and source timestamps are treated as EA server
 time. These limitations prevent a tick-parity claim.
 
-## Account-level results (FTMO guards)
+## Account-level results (FTMO guards, corrected engine)
+
+EURUSD (`backtest/data/derivM15/EURUSD.csv`, SHA-256 `2f308538…`):
 
 | Path | Return | Max equity DD | Max daily loss | Rule breach |
 | --- | ---: | ---: | ---: | --- |
-| 1× spread | +4.03% | 2.86% | 1.16% | No |
-| 2× spread | +1.42% | 3.24% | 1.13% | No |
+| 1× spread | +1.28% | 4.31% | 0.79% | No |
+| 2× spread | +0.41% | 4.21% | 0.77% | No |
+
+Cross-symbol (FTMO-guarded, 1× / 2× return; see `docs/DATA.md` for commands):
+
+| Symbol | 1× return | Max equity DD | 2× return | OOS split (1×) |
+| --- | ---: | ---: | ---: | --- |
+| EURUSD | +1.28% | 4.31% | +0.41% | +$2,362 (PF 1.89) |
+| GBPUSD | −1.01% | 4.21% | −2.59% | +$723 (PF 1.22) |
+| USDJPY | −5.46% | 6.45% | −3.37% | −$1,426 (PF 0.72) |
+| XAUUSD | +2.47% | 4.00% | +3.45% | −$770 (PF 0.88) |
+
+Only EURUSD is positive at both cost levels, and even there the in-sample half
+loses money. The edge does not generalize.
 
 ## Booked profit by split
 
@@ -72,34 +113,32 @@ Rows count scale-out tranches (TP1, TP2, runner, and stop closes are separate
 rows), so trade counts are higher than the number of trades a single-exit model
 would report. Profit factor is tranche-level.
 
+EURUSD, rows count scale-out tranches (TP1/TP2/runner/stop are separate rows),
+so counts exceed round-turn trades and PF is tranche-level:
+
 | Split | 1× net | 1× PF | 2× net | 2× PF |
 | --- | ---: | ---: | ---: | ---: |
-| In-sample | +$1,737.39 | 1.165 | -$131.28 | 0.988 |
-| Out-of-sample | +$2,294.98 | 1.739 | +$1,554.33 | 1.459 |
-| Full period | +$4,032.38 | 1.296 | +$1,423.05 | 1.098 |
+| In-sample | -$1,084.37 | 0.894 | -$1,366.37 | 0.869 |
+| Out-of-sample | +$2,361.84 | 1.891 | +$1,780.17 | 1.604 |
+| Full period | +$1,277.47 | 1.099 | +$413.80 | 1.031 |
 
-The full period is profitable and compliant at both cost levels. At 2× spread
-the in-sample split is roughly break-even—pyramiding books more tranches and so
-pays more spread—while the out-of-sample split stays clearly positive. The
-sample is small by design, so collect more history and more symbols before
-trusting it live.
+In-sample is now negative; the full-period profit comes entirely from the
+out-of-sample window. On one symbol and this small a sample that is
+encouraging at best, not evidence of an edge.
 
 ## Reproduction
 
-```bash
-git clone https://github.com/Machell1/Scalp-trader-.git
-cd Scalp-trader-
-git lfs pull
-python3 backtest/verify_data.py
+The datasets are bundled in the repo (`backtest/data/derivM15/`); see
+`docs/DATA.md`. No external repo or Git LFS is needed.
 
-cd /path/to/Bot-EA
+```bash
 python3 backtest/ftmo_quant_backtest.py \
-  --data /path/to/Scalp-trader-/backtest/data/derivM15_diverse/EURUSD.csv \
-  --broker-meta /path/to/Scalp-trader-/backtest/h1_universe_broker_meta.json \
+  --data backtest/data/derivM15/EURUSD.csv \
+  --broker-meta backtest/deriv_broker_meta.json \
   --symbol EURUSD \
   --fallback-spread-points 10 \
-  --output backtest/results/eurusd_h1.json
+  --output backtest/results/EURUSD.json
 ```
 
 The full configuration, yearly breakdown, and trade ledger are stored in
-`backtest/results/eurusd_h1.json`.
+`backtest/results/EURUSD.json` (and `eurusd_h1.json`, identical).
