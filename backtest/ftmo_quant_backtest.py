@@ -67,6 +67,8 @@ class Config:
     stop_atr: float = 2.5
     reward_risk: float = 2.2
     entry_buffer_atr: float = 0.5
+    candle_body_min: float = 0.2
+    candle_wick_max: float = 0.3
     risk_pct: float = 0.35
     sizing_cost_reserve: float = 1.10
     break_even_r: float = 1.0
@@ -181,16 +183,39 @@ def signal(
         if not math.isfinite(recent_atr):
             return 0
         buffer = config.entry_buffer_atr * recent_atr
+    # Candlestick confirmation on the breakout bar: demand a decisive body that
+    # closes in the breakout direction with only a small rejection wick. A doji
+    # or a long opposing wick means the range was defended, so skip the trade.
+    breakout = bars[index - 1]
+    candle_range = breakout.high - breakout.low
+    if candle_range <= 0.0:
+        return 0
+    body = abs(breakout.close - breakout.open)
+    upper_wick = breakout.high - max(breakout.open, breakout.close)
+    lower_wick = min(breakout.open, breakout.close) - breakout.low
+    strong_body = body / candle_range >= config.candle_body_min
+    bullish_candle = (
+        strong_body
+        and breakout.close > breakout.open
+        and upper_wick / candle_range <= config.candle_wick_max
+    )
+    bearish_candle = (
+        strong_body
+        and breakout.close < breakout.open
+        and lower_wick / candle_range <= config.candle_wick_max
+    )
     if (
         close > upper + buffer
         and fast[index - 1] > slow[index - 1]
         and fast[index - 1] > fast[index - 2]
+        and bullish_candle
     ):
         return 1
     if (
         close < lower - buffer
         and fast[index - 1] < slow[index - 1]
         and fast[index - 1] < fast[index - 2]
+        and bearish_candle
     ):
         return -1
     return 0

@@ -53,6 +53,22 @@ class BacktestEngineTests(unittest.TestCase):
         # A small ATR buffer (0.5 * 1.0) still permits the same breakout.
         self.assertEqual(signal(19, bars, fast, slow, config, [1.0] * 20), 1)
 
+    def test_candlestick_rejects_weak_breakout_bar(self) -> None:
+        start = datetime(2026, 1, 1)
+        bars = [
+            Bar(start + timedelta(hours=i), float(i), i + 0.2, i - 0.2, i + 0.1, 0.01)
+            for i in range(20)
+        ]
+        fast = [float(i) for i in range(20)]
+        slow = [float(i) - 1.0 for i in range(20)]
+        config = Config(donchian=3, ema_fast=2, ema_slow=5)
+        # A decisive momentum candle passes the confirmation filter.
+        self.assertEqual(signal(19, bars, fast, slow, config), 1)
+        # Same breakout close but a long upper rejection wick and a tiny body:
+        # the range was defended, so the trade is skipped.
+        bars[18] = Bar(start + timedelta(hours=18), 18.0, 19.0, 17.95, 18.05, 0.01)
+        self.assertEqual(signal(19, bars, fast, slow, config), 0)
+
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)
 

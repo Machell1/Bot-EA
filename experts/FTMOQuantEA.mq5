@@ -19,6 +19,8 @@ input int             InpAtrPeriod             = 14;
 input double          InpStopAtrMultiple       = 2.5;
 input double          InpRewardRisk            = 2.2;
 input double          InpEntryBufferAtr        = 0.5;
+input double          InpCandleBodyMin         = 0.2;
+input double          InpCandleWickMax         = 0.3;
 input bool            InpAllowLong             = true;
 input bool            InpAllowShort            = true;
 
@@ -410,10 +412,31 @@ int Signal()
       buffer = InpEntryBufferAtr * atr1;
    }
 
+   // Candlestick confirmation on the completed breakout bar (shift 1): demand a
+   // decisive body that closes in the breakout direction with only a small
+   // rejection wick. A doji or a long opposing wick means the range was
+   // defended, so skip the trade.
+   double open1  = iOpen(_Symbol, InpSignalTimeframe, 1);
+   double high1  = iHigh(_Symbol, InpSignalTimeframe, 1);
+   double low1   = iLow(_Symbol, InpSignalTimeframe, 1);
    double close1 = iClose(_Symbol, InpSignalTimeframe, 1);
-   if(InpAllowLong && close1 > upper + buffer && fast1 > slow1 && fast1 > fast2)
+   double candleRange = high1 - low1;
+   if(candleRange <= 0.0)
+      return 0;
+   double body      = MathAbs(close1 - open1);
+   double upperWick = high1 - MathMax(open1, close1);
+   double lowerWick = MathMin(open1, close1) - low1;
+   bool strongBody  = body / candleRange >= InpCandleBodyMin;
+   bool bullishCandle = strongBody && close1 > open1 &&
+                        upperWick / candleRange <= InpCandleWickMax;
+   bool bearishCandle = strongBody && close1 < open1 &&
+                        lowerWick / candleRange <= InpCandleWickMax;
+
+   if(InpAllowLong && close1 > upper + buffer && fast1 > slow1 && fast1 > fast2 &&
+      bullishCandle)
       return 1;
-   if(InpAllowShort && close1 < lower - buffer && fast1 < slow1 && fast1 < fast2)
+   if(InpAllowShort && close1 < lower - buffer && fast1 < slow1 && fast1 < fast2 &&
+      bearishCandle)
       return -1;
    return 0;
 }
@@ -618,6 +641,8 @@ int OnInit()
       InpSlowEmaPeriod <= InpFastEmaPeriod || InpAtrPeriod < 2 ||
       InpRiskPerTradePct <= 0.0 || InpStopAtrMultiple <= 0.0 ||
       InpRewardRisk <= 0.0 || InpEntryBufferAtr < 0.0 ||
+      InpCandleBodyMin < 0.0 || InpCandleBodyMin > 1.0 ||
+      InpCandleWickMax < 0.0 || InpCandleWickMax > 1.0 ||
       InpMaxTradesPerDay < 1 ||
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
