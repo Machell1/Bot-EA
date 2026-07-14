@@ -3,14 +3,14 @@
 An MT5 Expert Advisor built around a testable trend-following hypothesis and
 conservative FTMO 2-Step account controls.
 
-> **Research status: revised, promising on a small sample.** The first defaults
-> were rejected for negative expectancy. The revised defaults add breakout,
-> candlestick, higher-timeframe, session, and volatility confluences plus a
-> two-target scale-out that pyramids on pullbacks. They are FTMO-rule compliant
-> on the screening dataset, returning +4.03% with a 2.86% maximum drawdown and
-> staying positive under doubled spread. The trade sample is small by design
-> (quality over quantity), so this is a promising baseline to validate on more
-> data, not a validated edge. See [the full result](docs/BACKTEST_RESULTS.md).
+> **Research status: not a validated edge.** After an adversarial audit
+> (`backtest/results/engine_audit_findings.json`) the screening engine was
+> corrected to stop under-detecting risk and to match the EA as shipped. On the
+> corrected engine EURUSD returns only **+1.28%** (was a flattered +4.03%) with
+> a losing in-sample half, and the strategy is negative on GBPUSD and USDJPY and
+> in-sample-only on XAUUSD. Do not use it for a funded/challenge decision; the
+> only credible next step is MetaTrader 5 real-tick validation. See
+> [the full result](docs/BACKTEST_RESULTS.md) and [the data brief](docs/DATA.md).
 
 The strategy buys or sells a 20-bar Donchian breakout only when a stack of
 confluences agrees:

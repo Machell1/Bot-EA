@@ -8,16 +8,20 @@ backtest loader). No historical spread column exists, so runs use
 treated as EA server time by the session filter — flag, not fact, for any other
 broker.
 
+SHA-256 of the files **as committed** (LF-normalized on commit, so these differ
+from the CRLF source exports; the candle data is identical and the results
+reproduce from these files):
+
 | File | SHA-256 | M15 rows | Range |
 | --- | --- | ---: | --- |
-| EURUSD.csv | `af36bd1495021d0cd364653f5b396710cec67bf7db38d6aeb5c4ed9ee259b747` | 70,000 | 2023-09-05 → 2026-06-30 |
-| GBPUSD.csv | `33e95f524ae3c37601bdfbd77f919231ad4fbc52aa2b1e8167e6375ee7d9dfae` | 70,000 | 2023-09-04 → 2026-06-30 |
-| USDJPY.csv | `4a984d48c1a830c09e07471019de1c20ef2f8846adb3a1e7d29981f3a8c05d89` | 70,000 | 2023-09-04 → 2026-06-30 |
-| XAUUSD.csv | `d241deb31291cec034e43bea348fc9d1638e641c602772387fe4476c174058bf` | 70,000 | 2023-07-12 → 2026-06-30 |
+| EURUSD.csv | `2f3085387597148cf46540a9228361f5ce3d535fe6462b475e47eedba97aef97` | 70,000 | 2023-09-05 → 2026-06-30 |
+| GBPUSD.csv | `bf2194feacd6675f225c289570b7138b732fe66482dee30304f9eeb8a0af57bf` | 70,000 | 2023-09-04 → 2026-06-30 |
+| USDJPY.csv | `28352202272acca5152363d646aecc4dc26c9093e0268c3abe03c45f463a39c2` | 70,000 | 2023-09-04 → 2026-06-30 |
+| XAUUSD.csv | `de56dbf24c512ca72f6716da1a80566e37b4087ea316bfebbe0987fec7348cd4` | 70,000 | 2023-07-12 → 2026-06-30 |
 
-EURUSD.csv is byte-identical to the file the published result in
-[BACKTEST_RESULTS.md](BACKTEST_RESULTS.md) used (same SHA-256), so that run is
-directly reproducible from this repo alone.
+EURUSD.csv holds the same candles as the original Git-LFS export (`Machell1/
+Scalp-trader-`, whose CRLF file hashes `af36bd14…`); only the line endings
+differ, so the EURUSD result reproduces from this repo alone.
 
 Integrity (verified 2026-07-13): zero duplicate timestamps, strictly
 increasing, all rows quarter-aligned (:00/:15/:30/:45). XAUUSD has 171
@@ -65,23 +69,31 @@ the default 25-pt `--max-spread-points` entry gate and books **zero trades**;
 the relaxed-gate run above is the real cost stress. Run the unit tests with
 `python3 -m unittest discover -s tests -v` (20 tests).
 
-## Results summary (2026-07-13, $100k, FTMO-guarded)
+## Results summary (2026-07-14, corrected engine, $100k, FTMO-guarded)
+
+These numbers are from the **corrected** engine (see the engine-corrections
+section of [BACKTEST_RESULTS.md](BACKTEST_RESULTS.md)); they replace the flattered
+2026-07-13 figures.
 
 | Symbol | 1× return / maxDD | 2× return | OOS split (1×) | Verdict |
 | --- | --- | --- | --- | --- |
-| EURUSD | +4.03% / 2.86% | +1.42% | +$2,295 (PF 1.74) | reproduces the docs; small sample (105 units) |
-| GBPUSD | +1.73% / 3.44% | −0.24% | +$1,546 (PF 1.77) | marginal; dies at 2× spread |
-| USDJPY | −0.84% / 3.63% | −2.66% | +$1,333 (PF 1.38) | no edge; Deriv spread too heavy |
-| XAUUSD | +8.19% / 3.45% | +6.94% | **−$770 (PF 0.88)** | in-sample only; OOS negative |
+| EURUSD | +1.28% / 4.31% | +0.41% | +$2,362 (PF 1.89) | marginal; in-sample negative |
+| GBPUSD | −1.01% / 4.21% | −2.59% | +$723 (PF 1.22) | no edge |
+| USDJPY | −5.46% / 6.45% | −3.37% | −$1,426 (PF 0.72) | no edge |
+| XAUUSD | +2.47% / 4.00% | +3.45% | **−$770 (PF 0.88)** | in-sample only; OOS negative |
 
-No `official_rule_breach` on any run; `trend_change` exits never fired on any
-symbol. Cross-symbol conclusion: the edge does **not** generalize — treat the
-EURUSD result as screening-positive on one small sample, not a validated edge.
+No `official_rule_breach` on any run. Cross-symbol conclusion: the edge does
+**not** generalize — the corrected EURUSD result is only marginally positive on
+one small sample with a losing in-sample half, not a validated edge.
 
 ## Read before trusting the screen
 
 `backtest/results/engine_audit_findings.json` — a 25-agent adversarial audit
 (2026-07-13) of `ftmo_quant_backtest.py`: 20 confirmed findings, 0 refuted.
+**Status (2026-07-14):** the high-impact findings below have since been fixed;
+see the "Engine corrections" section of
+[BACKTEST_RESULTS.md](BACKTEST_RESULTS.md) for the list and the resulting
+(lower, honest) numbers. Swap and a few timing nuances remain unmodeled.
 Highlights for anyone (including Cursor) working on this engine or EA:
 
 1. **Entry-bar immunity** — stops/TPs/FTMO-guard are evaluated before entries,
