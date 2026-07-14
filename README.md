@@ -5,12 +5,12 @@ conservative FTMO 2-Step account controls.
 
 > **Research status: revised, promising on a small sample.** The first defaults
 > were rejected for negative expectancy. The revised defaults add breakout,
-> candlestick, higher-timeframe, session, and volatility confluence filters;
-> they are FTMO-rule compliant on the screening dataset with positive
-> in-sample, out-of-sample, and full-period expectancy and sub-2% drawdown.
-> The trade sample is small by design (quality over quantity), so this is a
-> promising baseline to validate on more data, not a validated edge. See
-> [the full result](docs/BACKTEST_RESULTS.md).
+> candlestick, higher-timeframe, session, and volatility confluences plus a
+> two-target scale-out that pyramids on pullbacks. They are FTMO-rule compliant
+> on the screening dataset, returning +4.03% with a 2.86% maximum drawdown and
+> staying positive under doubled spread. The trade sample is small by design
+> (quality over quantity), so this is a promising baseline to validate on more
+> data, not a validated edge. See [the full result](docs/BACKTEST_RESULTS.md).
 
 The strategy buys or sells a 20-bar Donchian breakout only when a stack of
 confluences agrees:
@@ -26,23 +26,32 @@ confluences agrees:
 - Volatility is not in a blow-off news spike (ATR within its normal range).
 
 Entries are restricted to the 08:00–17:00 server (London/New York) window and
-skip the midday lull. Stops are volatility-scaled with ATR (2.5×), position size
-is calculated from the stop distance, and winners use break-even plus ATR
-trailing logic. An optional market-structure filter (higher highs/higher lows)
-is available but off by default. This is a classic, explainable source of
-potential trend premium—not a claim of guaranteed profits.
+skip the midday lull. Stops are volatility-scaled with ATR (2.5×) and position
+size is calculated from the stop distance. Each unit **scales out at two
+targets**: TP1 (1.0R) books the first partial and moves the original order to
+break-even, TP2 (2.2R) books a second partial, and the remaining runner trails
+by ATR. Once TP1 is booked the EA **buys the pullback**—a retrace of 0.5 ATR
+followed by a momentum resume adds another unit in the trend direction (up to
+three concurrent units)—and rides the trend, adding on each pullback until the
+EMA stack flips and every unit is flattened, or the units are stopped out. An
+optional market-structure filter (higher highs/higher lows) is available but off
+by default. This is a classic, explainable source of potential trend premium—not
+a claim of guaranteed profits.
 
 ## Safety defaults
 
-- 0.35% account-equity risk per trade
-- One open position on the chart symbol
-- At most two entries and two losing exits per trading day
+- 0.35% account-equity risk per trade (per unit)
+- Up to three concurrent trend units, added only on pullbacks after TP1
+- At most two new trend entries and two losing exits per trading day
+- The pre-trade gate bounds *aggregate* open risk, so pyramiding can never risk
+  more than the FTMO floor allows
 - New entries stop at 4% daily or 8% total drawdown
 - Account positions are flattened at the soft protection floor
 - A 15% cost/slippage reserve is included in the pre-trade risk gate
 - Trading stops after 1% closed profit in a day
 - Spread, session, and weekend filters
-- No grid, martingale, averaging down, or recovery sizing
+- Adds are made only to winning trends (each with its own stop); no martingale,
+  averaging down, or recovery sizing
 
 The official FTMO 2-Step defaults encoded by the EA are 5% Maximum Daily Loss
 and 10% Maximum Loss. Confirm the current objectives for your specific account
@@ -54,6 +63,8 @@ before use.
    `MQL5/Experts/FTMOQuantEA/` directory.
 2. Open the file in MetaEditor and compile it.
 3. In MT5, attach the EA to one liquid symbol chart. Start with EURUSD H1.
+   Use a **hedging** account: the pullback pyramiding holds several units on the
+   same symbol at once, which a netting account cannot represent.
 4. Set `InpChallengeInitialBalance` to the challenge's original balance.
 5. Convert FTMO's 00:00 CE(S)T reset to the broker server clock and set
    `InpDailyResetHourServer` and `InpDailyResetMinuteServer`.
