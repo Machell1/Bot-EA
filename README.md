@@ -112,6 +112,15 @@ The source repository stores candles in Git LFS. Run `git lfs pull` there
 before the backtest. The command tests both measured and doubled spread with a
 chronological 70/30 split and records the input SHA-256 hash.
 
+**Update 2026-07-13:** the historical data is now bundled directly in this
+repo — real Deriv M15 candles for EURUSD, GBPUSD, USDJPY, and XAUUSD (~2.8–3
+years each) at `backtest/data/derivM15/`, plus the symbol specs at
+`backtest/deriv_broker_meta.json`. No LFS or external clone needed. See
+[docs/DATA.md](docs/DATA.md) for provenance, exact run commands per symbol,
+the four-symbol results summary, and the engine audit findings
+(`backtest/results/engine_audit_findings.json`) that anyone modifying the
+engine or EA should read first.
+
 ## Important limitations
 
 No EA can guarantee an FTMO Challenge pass. Market regimes change, fills can

@@ -1,0 +1,41 @@
+{
+  "_provenance": "EURUSD entry matches the task/docs example (h1_universe_broker_meta.json snapshot). GBPUSD/USDJPY/XAUUSD from nasdaq-orb/data/specs.json, captured from the live Deriv MT5 terminal (real account) in a prior session. Commission $2.50/side/lot = FTMO snapshot assumption applied to all symbols. USDJPY trade_tick_value_loss is a point-in-time USD conversion (JPY-quote symbol); treated as constant over the sample.",
+  "symbols": {
+    "EURUSD": {
+      "point": 0.00001,
+      "trade_tick_size": 0.00001,
+      "trade_tick_value_loss": 1.0,
+      "volume_min": 0.01,
+      "volume_max": 50.0,
+      "volume_step": 0.01,
+      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+    },
+    "GBPUSD": {
+      "point": 0.00001,
+      "trade_tick_size": 0.00001,
+      "trade_tick_value_loss": 1.0,
+      "volume_min": 0.01,
+      "volume_max": 20.0,
+      "volume_step": 0.01,
+      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+    },
+    "USDJPY": {
+      "point": 0.001,
+      "trade_tick_size": 0.001,
+      "trade_tick_value_loss": 0.6197437979139424,
+      "volume_min": 0.01,
+      "volume_max": 20.0,
+      "volume_step": 0.01,
+      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+    },
+    "XAUUSD": {
+      "point": 0.01,
+      "trade_tick_size": 0.01,
+      "trade_tick_value_loss": 1.0,
+      "volume_min": 0.01,
+      "volume_max": 10.0,
+      "volume_step": 0.01,
+      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+    }
+  }
+}
