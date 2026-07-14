@@ -3,6 +3,10 @@
 An MT5 Expert Advisor built around a testable trend-following hypothesis and
 conservative FTMO 2-Step account controls.
 
+> **Research status: rejected.** The first EURUSD H1 screening backtest found
+> negative in-sample and out-of-sample expectancy. Do not deploy the current
+> strategy defaults. See [the full result](docs/BACKTEST_RESULTS.md).
+
 The strategy buys or sells a 20-bar Donchian breakout only when the 50 EMA is
 on the correct side of the 200 EMA and is moving in the breakout direction.
 Stops are volatility-scaled with ATR, position size is calculated from the
