@@ -25,6 +25,18 @@ confluences agrees:
   the breakout direction.
 - Volatility is not in a blow-off news spike (ATR within its normal range).
 
+Once a unit is filled, an optional **post-fill lower-timeframe monitor** watches
+M5 and M15: it flags price/RSI momentum divergence against the position, checks
+that each lower timeframe's fast/slow EMA stack still agrees with the H1 trend,
+and projects the next ~10 minutes of price variance (an adverse band plus a
+seeded Monte-Carlo estimate of the probability price touches the stop). It grades
+the open trend `OK` / `WARNING` (close monitoring, alert only) / `ACTION`
+(H1 alignment broken on M15 and near-term variance/divergence threatens the
+stop) and, in `act` mode, moves stops to break-even on `ACTION`. The decision
+logic lives in `backtest/lower_tf_monitor.py` (unit-tested) and is mirrored live
+in the EA; the H1 screening backtest cannot exercise the M5 layer (no M5 data),
+so it needs MT5 tick validation.
+
 Entries are restricted to the 08:00–17:00 server (London/New York) window and
 skip the midday lull. Stops are volatility-scaled with ATR (2.5×) and position
 size is calculated from the stop distance. Each unit **scales out at two

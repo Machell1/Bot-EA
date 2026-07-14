@@ -76,6 +76,17 @@ input bool            InpPyramidEnabled        = true;  // add on pullbacks whil
 input int             InpMaxUnits              = 3;     // max concurrent units
 input double          InpPullbackAtr           = 0.5;   // pullback depth (ATR) to arm a re-entry
 
+input group "Post-fill lower-timeframe monitor"
+input bool            InpMonitorEnabled        = true;  // watch M5/M15 while a unit is open
+input int             InpMonitorMode           = 0;     // 0 = warn only, 1 = act (move stops to BE on ACTION)
+input int             InpMonitorRsiPeriod      = 14;
+input int             InpMonitorFastEma        = 8;
+input int             InpMonitorSlowEma        = 21;
+input int             InpMonitorDivLookback    = 6;     // bars back for price/RSI slope divergence
+input int             InpMonitorHorizonMin     = 10;    // variance projection horizon (minutes)
+input int             InpMonitorVarWindow      = 20;    // M5 bars for return-volatility estimate
+input double          InpMonitorVarZ           = 2.0;   // projection band width in sigmas
+
 CTrade trade;
 int    fastEmaHandle = INVALID_HANDLE;
 int    slowEmaHandle = INVALID_HANDLE;
@@ -84,6 +95,13 @@ int    htf1FastHandle = INVALID_HANDLE;
 int    htf1SlowHandle = INVALID_HANDLE;
 int    htf2FastHandle = INVALID_HANDLE;
 int    htf2SlowHandle = INVALID_HANDLE;
+int    m5RsiHandle = INVALID_HANDLE;
+int    m15RsiHandle = INVALID_HANDLE;
+int    m5FastHandle = INVALID_HANDLE;
+int    m5SlowHandle = INVALID_HANDLE;
+int    m15FastHandle = INVALID_HANDLE;
+int    m15SlowHandle = INVALID_HANDLE;
+datetime lastMonitorBar = 0;
 double initialBalance = 0.0;
 double dayStartBalance = 0.0;
 int    currentTradingDay = 0;
@@ -906,6 +924,167 @@ void HandleWeekendExit()
 }
 
 //+------------------------------------------------------------------+
+//| Post-fill lower-timeframe monitor                                |
+//+------------------------------------------------------------------+
+double LowerTfReturnSigma(const ENUM_TIMEFRAMES tf, const int window)
+{
+   int need = window + 1;
+   double closes[];
+   if(CopyClose(_Symbol, tf, 1, need, closes) != need)
+      return 0.0;
+   int count = need - 1;
+   double mean = 0.0;
+   double rets[];
+   ArrayResize(rets, count);
+   int m = 0;
+   for(int i = 1; i < need; ++i)
+   {
+      if(closes[i - 1] != 0.0)
+      {
+         rets[m] = (closes[i] - closes[i - 1]) / closes[i - 1];
+         mean += rets[m];
+         m++;
+      }
+   }
+   if(m < 2)
+      return 0.0;
+   mean /= m;
+   double var = 0.0;
+   for(int i = 0; i < m; ++i)
+      var += (rets[i] - mean) * (rets[i] - mean);
+   return MathSqrt(var / (m - 1));
+}
+
+bool MonitorDivergence(const int rsiHandle, const ENUM_TIMEFRAMES tf,
+                       const int side, const int look)
+{
+   double priceNow = iClose(_Symbol, tf, 1);
+   double priceThen = iClose(_Symbol, tf, 1 + look);
+   double rsiNow = IndicatorValue(rsiHandle, 1);
+   double rsiThen = IndicatorValue(rsiHandle, 1 + look);
+   if(rsiNow == EMPTY_VALUE || rsiThen == EMPTY_VALUE ||
+      priceNow <= 0.0 || priceThen <= 0.0)
+      return false;
+   if(side > 0)
+      return priceNow > priceThen && rsiNow < rsiThen;
+   return priceNow < priceThen && rsiNow > rsiThen;
+}
+
+bool MonitorAligned(const int fastHandle, const int slowHandle, const int side)
+{
+   double f = IndicatorValue(fastHandle, 1);
+   double s = IndicatorValue(slowHandle, 1);
+   if(f == EMPTY_VALUE || s == EMPTY_VALUE)
+      return true;  // insufficient data: do not raise a false misalignment
+   return side > 0 ? f > s : f < s;
+}
+
+// 0 = OK, 1 = WARNING (close monitoring), 2 = ACTION (immediate).
+int AssessLowerTf(const int side, const double stop, string &reason)
+{
+   bool div5 = MonitorDivergence(m5RsiHandle, PERIOD_M5, side, InpMonitorDivLookback);
+   bool div15 = MonitorDivergence(m15RsiHandle, PERIOD_M15, side, InpMonitorDivLookback);
+   bool aligned5 = MonitorAligned(m5FastHandle, m5SlowHandle, side);
+   bool aligned15 = MonitorAligned(m15FastHandle, m15SlowHandle, side);
+
+   double price = iClose(_Symbol, PERIOD_M5, 1);
+   double sigma = LowerTfReturnSigma(PERIOD_M5, InpMonitorVarWindow);
+   int steps = MathMax(1, InpMonitorHorizonMin / 5);
+   double move = InpMonitorVarZ * sigma * MathSqrt((double)steps) * price;
+   double adverse = side > 0 ? price - move : price + move;
+   bool breach = side > 0 ? adverse <= stop : adverse >= stop;
+
+   reason = "";
+   if(div5)   reason += "M5 divergence; ";
+   if(div15)  reason += "M15 divergence; ";
+   if(!aligned5)  reason += "M5 EMA against trend; ";
+   if(!aligned15) reason += "M15 EMA against trend; ";
+   if(breach) reason += "projected 10m variance reaches stop; ";
+
+   bool threat = div5 || div15 || breach;
+   if(!aligned15 && threat)
+      return 2;
+   if(div5 || div15 || breach || !aligned5)
+      return 1;
+   reason = "aligned with H1; variance within tolerance";
+   return 0;
+}
+
+void MoveAllStopsToBreakEven()
+{
+   int digits = (int)SymbolInfoInteger(_Symbol, SYMBOL_DIGITS);
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket == 0 ||
+         PositionGetInteger(POSITION_MAGIC) != InpMagicNumber ||
+         PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      double open = PositionGetDouble(POSITION_PRICE_OPEN);
+      double sl = PositionGetDouble(POSITION_SL);
+      ENUM_POSITION_TYPE type = (ENUM_POSITION_TYPE)PositionGetInteger(POSITION_TYPE);
+      double be = NormalizeDouble(open, digits);
+      bool improves = type == POSITION_TYPE_BUY ? be > sl + _Point : be < sl - _Point;
+      if(improves && PositionSelectByTicket(ticket))
+         trade.PositionModify(ticket, be, 0.0);
+   }
+}
+
+void RunLowerTfMonitor()
+{
+   if(!InpMonitorEnabled || CountUnits() == 0)
+      return;
+   int side = TrendSide();
+   if(side == 0)
+      return;
+   datetime m5bar = iTime(_Symbol, PERIOD_M5, 0);
+   if(m5bar <= 0 || m5bar == lastMonitorBar)
+      return;
+   lastMonitorBar = m5bar;
+
+   // Watch the stop most likely to be hit first (nearest to price).
+   double nearest = 0.0;
+   bool have = false;
+   for(int i = PositionsTotal() - 1; i >= 0; --i)
+   {
+      ulong ticket = PositionGetTicket(i);
+      if(ticket == 0 ||
+         PositionGetInteger(POSITION_MAGIC) != InpMagicNumber ||
+         PositionGetString(POSITION_SYMBOL) != _Symbol)
+         continue;
+      double sl = PositionGetDouble(POSITION_SL);
+      if(sl <= 0.0)
+         continue;
+      if(!have)
+      {
+         nearest = sl;
+         have = true;
+      }
+      else
+         nearest = side > 0 ? MathMax(nearest, sl) : MathMin(nearest, sl);
+   }
+   if(!have)
+      return;
+
+   string reason;
+   int status = AssessLowerTf(side, nearest, reason);
+   if(status == 2)
+   {
+      Comment("FTMOQ lower-TF monitor: ACTION - ", reason);
+      Print("Lower-TF ACTION: ", reason);
+      if(InpMonitorMode == 1)
+         MoveAllStopsToBreakEven();
+   }
+   else if(status == 1)
+   {
+      Comment("FTMOQ lower-TF monitor: WARNING - ", reason);
+      Print("Lower-TF WARNING: ", reason);
+   }
+   else
+      Comment("FTMOQ lower-TF monitor: OK");
+}
+
+//+------------------------------------------------------------------+
 //| Expert lifecycle                                                 |
 //+------------------------------------------------------------------+
 int OnInit()
@@ -924,6 +1103,11 @@ int OnInit()
       InpTp1Fraction < 0.0 || InpTp2Fraction < 0.0 ||
       InpTp1Fraction + InpTp2Fraction > 1.0 ||
       InpMaxUnits < 1 || InpPullbackAtr < 0.0 ||
+      InpMonitorMode < 0 || InpMonitorMode > 1 ||
+      InpMonitorRsiPeriod < 2 || InpMonitorFastEma < 2 ||
+      InpMonitorSlowEma <= InpMonitorFastEma ||
+      InpMonitorDivLookback < 1 || InpMonitorHorizonMin < 1 ||
+      InpMonitorVarWindow < 2 || InpMonitorVarZ < 0.0 ||
       InpMaxTradesPerDay < 1 ||
       InpMaxLosingTradesPerDay < 1 || InpMaxSpreadPoints < 0.0 ||
       InpSlippagePoints < 0 || InpBreakEvenAtR <= 0.0 ||
@@ -975,6 +1159,19 @@ int OnInit()
       if(htf2FastHandle == INVALID_HANDLE || htf2SlowHandle == INVALID_HANDLE)
          return INIT_FAILED;
    }
+   if(InpMonitorEnabled)
+   {
+      m5RsiHandle  = iRSI(_Symbol, PERIOD_M5, InpMonitorRsiPeriod, PRICE_CLOSE);
+      m15RsiHandle = iRSI(_Symbol, PERIOD_M15, InpMonitorRsiPeriod, PRICE_CLOSE);
+      m5FastHandle  = iMA(_Symbol, PERIOD_M5, InpMonitorFastEma, 0, MODE_EMA, PRICE_CLOSE);
+      m5SlowHandle  = iMA(_Symbol, PERIOD_M5, InpMonitorSlowEma, 0, MODE_EMA, PRICE_CLOSE);
+      m15FastHandle = iMA(_Symbol, PERIOD_M15, InpMonitorFastEma, 0, MODE_EMA, PRICE_CLOSE);
+      m15SlowHandle = iMA(_Symbol, PERIOD_M15, InpMonitorSlowEma, 0, MODE_EMA, PRICE_CLOSE);
+      if(m5RsiHandle == INVALID_HANDLE || m15RsiHandle == INVALID_HANDLE ||
+         m5FastHandle == INVALID_HANDLE || m5SlowHandle == INVALID_HANDLE ||
+         m15FastHandle == INVALID_HANDLE || m15SlowHandle == INVALID_HANDLE)
+         return INIT_FAILED;
+   }
 
    trade.SetExpertMagicNumber(InpMagicNumber);
    trade.SetDeviationInPoints(InpSlippagePoints);
@@ -1006,6 +1203,18 @@ void OnDeinit(const int reason)
       IndicatorRelease(htf2FastHandle);
    if(htf2SlowHandle != INVALID_HANDLE)
       IndicatorRelease(htf2SlowHandle);
+   if(m5RsiHandle != INVALID_HANDLE)
+      IndicatorRelease(m5RsiHandle);
+   if(m15RsiHandle != INVALID_HANDLE)
+      IndicatorRelease(m15RsiHandle);
+   if(m5FastHandle != INVALID_HANDLE)
+      IndicatorRelease(m5FastHandle);
+   if(m5SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(m5SlowHandle);
+   if(m15FastHandle != INVALID_HANDLE)
+      IndicatorRelease(m15FastHandle);
+   if(m15SlowHandle != INVALID_HANDLE)
+      IndicatorRelease(m15SlowHandle);
 }
 
 void OnTimer()
@@ -1020,6 +1229,7 @@ void OnTick()
    bool accountSafe = CheckAccountGuard();
    HandleWeekendExit();
    ManagePositions();
+   RunLowerTfMonitor();
 
    int units = CountUnits();
    if(units == 0)
