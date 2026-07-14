@@ -1,5 +1,12 @@
 # Lower-timeframe monitor — event-study results (XAUUSD)
 
+> **Status: the monitor was REMOVED from the EA and the codebase on
+> 2026-07-14 based on this study.** `backtest/lower_tf_monitor.py`, its tests,
+> the EA's monitor block, and the study harness
+> (`backtest/monitor_event_study.py`) are recoverable from git history at
+> commit `0d9495d`. This document and the results JSONs are kept as the
+> record of why.
+
 **Verdict: do not ship `act` mode; the alert itself is a stop-proximity
 detector, not incremental signal.** On 70 real H1 units replayed over real M5
 data, acting on ACTION beats the do-nothing baseline in this window, but a
