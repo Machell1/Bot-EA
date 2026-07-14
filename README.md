@@ -60,6 +60,25 @@ python3 -m unittest discover -s tests -v
 The Python tests are an executable specification for the monetary guard. The
 EA itself must still be compiled and tested in MetaTrader 5.
 
+## Reproduce the screening backtest
+
+`backtest/ftmo_quant_backtest.py` mirrors the default EA on complete H1 bars
+aggregated from M15 candles. It uses pessimistic stop-first intrabar ordering
+and requires no third-party Python packages.
+
+```bash
+python3 backtest/ftmo_quant_backtest.py \
+  --data /path/to/Scalp-trader-/backtest/data/derivM15_diverse/EURUSD.csv \
+  --broker-meta /path/to/Scalp-trader-/backtest/h1_universe_broker_meta.json \
+  --symbol EURUSD \
+  --fallback-spread-points 10 \
+  --output backtest/results/eurusd_h1.json
+```
+
+The source repository stores candles in Git LFS. Run `git lfs pull` there
+before the backtest. The command tests both measured and doubled spread with a
+chronological 70/30 split and records the input SHA-256 hash.
+
 ## Important limitations
 
 No EA can guarantee an FTMO Challenge pass. Market regimes change, fills can
@@ -67,3 +86,7 @@ gap beyond stops, terminal/VPS outages can prevent the EA from enforcing a
 limit, and a backtest can overfit. FTMO evaluates account equity including
 open P/L, swaps, and commissions. Keep FTMO's own risk dashboard and hard
 broker-side stops as independent controls.
+
+The Python backtest is a screening model, not MT5 execution parity. M15-derived
+H1 bars cannot establish tick order, the EURUSD source has no historical
+spread column, and source timestamps are assumed to match EA server time.
