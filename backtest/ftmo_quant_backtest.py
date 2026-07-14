@@ -52,6 +52,7 @@ class Position:
     tp2_lots: float
     tp1_done: bool = False
     tp2_done: bool = False
+    swap_accrued: float = 0.0
 
     @property
     def dollars_per_price(self) -> float:
@@ -423,8 +424,13 @@ def run_backtest(
 
     def context_ok(index: int, side: int) -> bool:
         prev = index - 1
+        # The aligned HTF arrays already hold the last *completed* bucket for
+        # each bar, so they are read at ``index`` (the decision bar): this is
+        # the EA's shift-1 read at signal time. Reading them at ``prev`` made
+        # the filter a full extra HTF bar stale at bucket-boundary hours
+        # (08:00/16:00 for H4).
         if config.htf_factor:
-            hf, hs = htf_fast_al[prev], htf_slow_al[prev]
+            hf, hs = htf_fast_al[index], htf_slow_al[index]
             if not (math.isfinite(hf) and math.isfinite(hs)):
                 return False
             if side > 0 and not hf > hs:
@@ -432,7 +438,7 @@ def run_backtest(
             if side < 0 and not hf < hs:
                 return False
         if config.htf2_factor:
-            hf2, hs2 = htf2_fast_al[prev], htf2_slow_al[prev]
+            hf2, hs2 = htf2_fast_al[index], htf2_slow_al[index]
             if not (math.isfinite(hf2) and math.isfinite(hs2)):
                 return False
             if side > 0 and not hf2 > hs2:
@@ -462,6 +468,17 @@ def run_backtest(
                 return False
         return True
 
+    # Overnight financing: MT5-style swap points per lot per night from the
+    # broker meta (absent = 0). The rollover crossing into
+    # ``triple_rollover_weekday`` charges 3x (Wednesday-night triple, i.e. the
+    # new day is Thursday, weekday 3). Units are never held over weekends
+    # (Friday-close flatten), so multi-night gaps do not occur.
+    swap_cfg = meta.get("swap") or {}
+    swap_long_points = float(swap_cfg.get("long_points", 0.0))
+    swap_short_points = float(swap_cfg.get("short_points", 0.0))
+    triple_weekday = int(swap_cfg.get("triple_rollover_weekday", 3))
+    swap_dollars_per_point_per_lot = point * dollars_per_price_per_lot
+
     balance = initial_balance
     peak_equity = initial_balance
     max_drawdown_pct = 0.0
@@ -470,6 +487,7 @@ def run_backtest(
     current_day = None
     entries_today = 0
     losses_today = 0
+    profit_locked_today = False
     units: list[Position] = []
     trend_side = 0
     trend_extreme = 0.0
@@ -487,7 +505,14 @@ def run_backtest(
         gross = unit.side * (exit_price - unit.entry) * dollars_per_price
         pnl = gross - 2.0 * commission_per_side * close_lots
         balance += pnl
-        if pnl < 0.0:
+        # Swap was already charged to the balance at each rollover; attribute
+        # the unit's accrued swap to its final closing tranche so the trade
+        # ledger reconciles with the balance and PF/R include financing.
+        reported = pnl
+        if unit.lots - close_lots <= 1e-12 and unit.swap_accrued:
+            reported += unit.swap_accrued
+            unit.swap_accrued = 0.0
+        if reported < 0.0:
             losses_today += 1
         unit_risk = (
             unit.risk_budget * (close_lots / unit.original_lots)
@@ -501,8 +526,8 @@ def run_backtest(
                 unit.side,
                 unit.entry,
                 exit_price,
-                pnl,
-                pnl / unit_risk if unit_risk else 0.0,
+                reported,
+                reported / unit_risk if unit_risk else 0.0,
                 reason,
                 unit.entry_index >= split_index,
             )
@@ -606,16 +631,32 @@ def run_backtest(
         )
         day = bar.time.date()
         if day != current_day:
+            # Swap books at the rollover, before the FTMO day-start snapshot.
+            if current_day is not None and units and (swap_long_points or swap_short_points):
+                mult = 3.0 if bar.time.weekday() == triple_weekday else 1.0
+                for unit in units:
+                    points = swap_long_points if unit.side > 0 else swap_short_points
+                    charge = points * swap_dollars_per_point_per_lot * unit.lots * mult
+                    balance += charge
+                    unit.swap_accrued += charge
             current_day = day
             day_start_balance = balance
             entries_today = 0
             losses_today = 0
+            profit_locked_today = False
+
+        # The EA latches the daily profit lock for the rest of the trading
+        # day; giving profit back later the same day does not re-arm entries.
+        if (
+            balance - day_start_balance
+            >= initial_balance * config.daily_profit_lock_pct / 100.0
+        ):
+            profit_locked_today = True
 
         entry_ready = (
             in_session(bar.time, config)
             and losses_today < config.max_losses_day
-            and balance - day_start_balance
-            < initial_balance * config.daily_profit_lock_pct / 100.0
+            and not profit_locked_today
             and spread / point <= max_spread_points
             and index >= 2
             and math.isfinite(atr[index - 1])
@@ -655,9 +696,16 @@ def run_backtest(
             if resume and ema_ok and try_open(trend_side, index, bar, spread):
                 pullback_armed = False
                 trend_extreme = bar.open
+                # The EA counts every opening deal (adds included) toward the
+                # daily entry cap that gates fresh trend entries.
+                entries_today += 1
 
-        # Trend-change exit: flatten when the EMA stack flips against the trend.
-        if units:
+        # Trend-change exit: flatten when the EMA stack flips against the
+        # trend. The EA gates this close behind accountSafe (mq5 OnTick), and
+        # the daily profit lock latches accountSafe false for the rest of the
+        # day WITHOUT flattening - so on a locked day the EA rides units on
+        # their stops through an EMA flip. Mirror that here.
+        if units and not profit_locked_today:
             flipped = (trend_side > 0 and fast[index - 1] < slow[index - 1]) or (
                 trend_side < 0 and fast[index - 1] > slow[index - 1]
             )

@@ -194,6 +194,166 @@ class BacktestEngineTests(unittest.TestCase):
 
         self.assertGreater(units(with_pyramid), units(no_pyramid))
 
+    def test_swap_reconciles_ledger_with_balance_and_costs_longs(self) -> None:
+        bars = _uptrend_bars(400)
+        config = Config(
+            ema_fast=5, ema_slow=20, donchian=10, stop_atr=2.0, tp1_r=1.0, reward_risk=2.0,
+            entry_buffer_atr=0.0, candle_body_min=0.0, candle_wick_max=1.0,
+            htf_factor=0, htf2_factor=0, vol_avg_len=0, skip_hours=(),
+            session_start=0, session_end=0, friday_close=24,
+            daily_profit_lock_pct=100.0, max_trades_day=99, max_losses_day=99,
+        )
+        run_kw = dict(
+            initial_balance=100_000.0, spread_multiplier=1.0, split_fraction=0.7,
+            max_spread_points=1e9, enforce_ftmo_guards=False,
+        )
+        no_swap = run_backtest(bars, _TEST_META, config, **run_kw)
+        meta = dict(_TEST_META)
+        meta["swap"] = {"long_points": -50.0, "short_points": 10.0}
+        with_swap = run_backtest(bars, meta, config, **run_kw)
+        # Ledger must reconcile with the account for both runs.
+        for result in (no_swap, with_swap):
+            ledger = sum(t["pnl"] for t in result["trades"])
+            self.assertAlmostEqual(
+                ledger, result["ending_balance"] - 100_000.0, places=6
+            )
+        # Long-only uptrend with negative long swap: financing is a real cost.
+        self.assertLess(
+            with_swap["all"]["net_profit"], no_swap["all"]["net_profit"]
+        )
+
+    def test_daily_profit_lock_blocks_later_entries_that_day(self) -> None:
+        # Once the day's closed profit reaches the lock, no further entries
+        # are taken that day (the lock is latched, mirroring the EA; with the
+        # break-even floor after TP1 a give-back below the threshold requires
+        # a surviving pre-TP1 unit, so the latch and the per-bar check differ
+        # only on multi-unit give-back days on real data).
+        start = datetime(2024, 1, 1, 0)  # Monday
+        closes = []
+        price = 100.0
+        for _ in range(30):            # establish the channel/EMAs
+            price += 0.05
+            closes.append(price)
+        for _ in range(6):             # strong rally: entry + TP1/TP2 profits
+            price += 1.2
+            closes.append(price)
+        for _ in range(6):             # sharp give-back: stops out, day pnl ~ flat
+            price -= 1.4
+            closes.append(price)
+        for _ in range(8):             # fresh breakout, still the same day
+            price += 1.3
+            closes.append(price)
+        bars = []
+        prev = 100.0
+        for i, close in enumerate(closes):
+            bars.append(
+                Bar(
+                    start + timedelta(minutes=90 * i),  # 16 bars/day
+                    prev,
+                    max(prev, close) + 0.02,
+                    min(prev, close) - 0.02,
+                    close,
+                    0.001,
+                )
+            )
+            prev = close
+        base = dict(
+            ema_fast=3, ema_slow=8, donchian=5, stop_atr=1.5, tp1_r=0.5,
+            # The runner must SURVIVE the lock (far TP2, no break-even, no
+            # trail) so the crash can realize a loss that drags the day's pnl
+            # back below the lock threshold while a later signal is available.
+            reward_risk=5.0, break_even_r=1e9, trail_start_r=1e9,
+            entry_buffer_atr=0.0, candle_body_min=0.0, candle_wick_max=1.0,
+            htf_factor=0, htf2_factor=0, vol_avg_len=0, skip_hours=(),
+            session_start=0, session_end=0, friday_close=24,
+            max_trades_day=99, max_losses_day=99, pyramid_enabled=False,
+        )
+        run_kw = dict(
+            initial_balance=100_000.0, spread_multiplier=1.0, split_fraction=0.7,
+            max_spread_points=1e9, enforce_ftmo_guards=False,
+        )
+        locked = run_backtest(
+            bars, _TEST_META, Config(**base, daily_profit_lock_pct=0.05), **run_kw
+        )
+        unlocked = run_backtest(
+            bars, _TEST_META, Config(**base, daily_profit_lock_pct=10_000.0), **run_kw
+        )
+        def entries_by_day(result):
+            days = {}
+            for t in result["trades"]:
+                days.setdefault(t["entry_time"][:10], set()).add(t["entry_time"])
+            return {d: len(s) for d, s in days.items()}
+        locked_days = entries_by_day(locked)
+        unlocked_days = entries_by_day(unlocked)
+        # The give-back day: the locked run books TP1 past the lock, the
+        # runner stops out (day pnl falls back below the lock), and the fresh
+        # breakout later the same day must still be refused (latched), while
+        # the unlocked run takes it.
+        giveback_day = "2024-01-03"
+        self.assertEqual(locked_days.get(giveback_day), 1)
+        self.assertGreater(unlocked_days.get(giveback_day, 0), 1)
+
+    def test_profit_lock_suppresses_trend_change_flatten(self) -> None:
+        # The EA gates the EMA-flip flatten behind accountSafe, which the
+        # daily profit lock latches false for the rest of the day - so on a
+        # locked day units ride their stops through a trend flip. Scenario
+        # (from the parity verification): flat warmup -> rally whose TP1/TP2
+        # bank far past the lock the same day (runner survives, BE stop well
+        # below) -> same-day gentle decline flips the EMA stack without
+        # touching the runner's stop.
+        start = datetime(2024, 1, 1, 0)  # Monday, 16 bars/day at 90 min
+        bars = []
+
+        def add(open_, high, low, close):
+            bars.append(
+                Bar(start + timedelta(minutes=90 * len(bars)), open_, high, low, close, 0.001)
+            )
+
+        price = 100.0
+        for i in range(30):  # flat warmup: no breakout, small ATR
+            close = 100.04 if i % 2 == 0 else 100.00
+            add(price, max(price, close) + 0.02, min(price, close) - 0.02, close)
+            price = close
+        for _ in range(5):   # rally; lows never dip below opens
+            close = price + 1.2
+            add(price, close + 0.02, price, close)
+            price = close
+        for _ in range(8):   # same-day decline: flips EMA3<EMA8 above BE stop
+            close = price - 0.8
+            add(price, price + 0.02, close - 0.02, close)
+            price = close
+        for _ in range(6):   # tail
+            close = price - 0.02
+            add(price, price + 0.02, close - 0.02, close)
+            price = close
+
+        base = dict(
+            ema_fast=3, ema_slow=8, donchian=5, stop_atr=1.5,
+            tp1_r=15.0, reward_risk=20.0, break_even_r=1e9, trail_start_r=1e9,
+            entry_buffer_atr=0.0, candle_body_min=0.0, candle_wick_max=1.0,
+            htf_factor=0, htf2_factor=0, vol_avg_len=0, skip_hours=(),
+            session_start=0, session_end=0, friday_close=24,
+            max_trades_day=99, max_losses_day=99, pyramid_enabled=False,
+        )
+        run_kw = dict(
+            initial_balance=100_000.0, spread_multiplier=1.0, split_fraction=0.7,
+            max_spread_points=1e9, enforce_ftmo_guards=False,
+        )
+        locked = run_backtest(
+            bars, _TEST_META, Config(**base, daily_profit_lock_pct=0.05), **run_kw
+        )
+        unlocked = run_backtest(
+            bars, _TEST_META, Config(**base, daily_profit_lock_pct=10_000.0), **run_kw
+        )
+        unlocked_tc = [t for t in unlocked["trades"] if t["reason"] == "trend_change"]
+        self.assertTrue(unlocked_tc)  # the flip does fire when not locked
+        flip_day = unlocked_tc[0]["exit_time"][:10]
+        locked_tc_that_day = [
+            t for t in locked["trades"]
+            if t["reason"] == "trend_change" and t["exit_time"][:10] == flip_day
+        ]
+        self.assertEqual(locked_tc_that_day, [])  # locked day: no flip flatten
+
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)
 
