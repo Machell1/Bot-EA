@@ -1,23 +1,39 @@
 {
-  "_provenance": "EURUSD entry matches the task/docs example (h1_universe_broker_meta.json snapshot). GBPUSD/USDJPY/XAUUSD from nasdaq-orb/data/specs.json, captured from the live Deriv MT5 terminal (real account) in a prior session. Commission $2.50/side/lot = FTMO snapshot assumption applied to all symbols. USDJPY trade_tick_value_loss is a point-in-time USD conversion (JPY-quote symbol); treated as constant over the sample.",
+  "_provenance": "EURUSD entry matches the task/docs example (h1_universe_broker_meta.json snapshot). GBPUSD/USDJPY/XAUUSD from nasdaq-orb/data/specs.json, captured from the live Deriv MT5 terminal (real account) in a prior session. Commission $2.50/side/lot = FTMO snapshot assumption applied to all symbols. USDJPY trade_tick_value_loss is a point-in-time USD conversion (JPY-quote symbol); treated as constant over the sample. SWAP blocks are APPROXIMATE mid-2025 FTMO-style overnight points (long/short per lot per night, Wednesday-night triple = rollover into weekday 3); real swaps change daily and must be confirmed on the target broker before any live claim.",
   "symbols": {
     "EURUSD": {
-      "point": 0.00001,
-      "trade_tick_size": 0.00001,
+      "point": 1e-05,
+      "trade_tick_size": 1e-05,
       "trade_tick_value_loss": 1.0,
       "volume_min": 0.01,
       "volume_max": 50.0,
       "volume_step": 0.01,
-      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 2.5
+      },
+      "swap": {
+        "long_points": -6.5,
+        "short_points": 2.0,
+        "triple_rollover_weekday": 3
+      }
     },
     "GBPUSD": {
-      "point": 0.00001,
-      "trade_tick_size": 0.00001,
+      "point": 1e-05,
+      "trade_tick_size": 1e-05,
       "trade_tick_value_loss": 1.0,
       "volume_min": 0.01,
       "volume_max": 20.0,
       "volume_step": 0.01,
-      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 2.5
+      },
+      "swap": {
+        "long_points": -4.5,
+        "short_points": -1.0,
+        "triple_rollover_weekday": 3
+      }
     },
     "USDJPY": {
       "point": 0.001,
@@ -26,7 +42,15 @@
       "volume_min": 0.01,
       "volume_max": 20.0,
       "volume_step": 0.01,
-      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 2.5
+      },
+      "swap": {
+        "long_points": 15.0,
+        "short_points": -25.0,
+        "triple_rollover_weekday": 3
+      }
     },
     "XAUUSD": {
       "point": 0.01,
@@ -35,7 +59,15 @@
       "volume_min": 0.01,
       "volume_max": 10.0,
       "volume_step": 0.01,
-      "commission": {"kind": "usd_per_lot", "per_side_usd_per_lot": 2.5}
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 2.5
+      },
+      "swap": {
+        "long_points": -45.0,
+        "short_points": 20.0,
+        "triple_rollover_weekday": 3
+      }
     }
   }
 }

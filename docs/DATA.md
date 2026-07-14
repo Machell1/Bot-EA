@@ -38,8 +38,11 @@ published run; GBPUSD/USDJPY/XAUUSD come from a live Deriv terminal
   conservative if metals are commission-free on the target broker).
 - USDJPY `trade_tick_value_loss` = 0.6197 USD is a point-in-time JPY→USD
   conversion, held constant across the sample.
-- Fallback spreads used for the 2026-07-13 runs: EURUSD 10 pts, GBPUSD 15 pts,
+- Fallback spreads used for the runs: EURUSD 10 pts, GBPUSD 15 pts,
   USDJPY 28 pts, XAUUSD 16 pts (live Deriv snapshot values).
+- Overnight swap points (charged nightly, 3× Wednesday night) are an
+  APPROXIMATE mid-2025 FTMO-style snapshot — confirm on the target broker
+  before any live claim.
 
 ## Reproduce the 2026-07-13 runs
 
@@ -71,16 +74,16 @@ the relaxed-gate run above is the real cost stress. Run the unit tests with
 
 ## Results summary (2026-07-14, corrected engine, $100k, FTMO-guarded)
 
-These numbers are from the **corrected** engine (see the engine-corrections
+These numbers are from the **corrected** engine (second pass: swap, H4 boundary, add counting, latched profit lock) (see the engine-corrections
 section of [BACKTEST_RESULTS.md](BACKTEST_RESULTS.md)); they replace the flattered
 2026-07-13 figures.
 
 | Symbol | 1× return / maxDD | 2× return | OOS split (1×) | Verdict |
 | --- | --- | --- | --- | --- |
-| EURUSD | +1.28% / 4.31% | +0.41% | +$2,362 (PF 1.89) | marginal; in-sample negative |
-| GBPUSD | −1.01% / 4.21% | −2.59% | +$723 (PF 1.22) | no edge |
-| USDJPY | −5.46% / 6.45% | −3.37% | −$1,426 (PF 0.72) | no edge |
-| XAUUSD | +2.47% / 4.00% | +3.45% | **−$770 (PF 0.88)** | in-sample only; OOS negative |
+| EURUSD | +1.06% / 4.47% | +0.18% | +$2,278 (PF 1.84) | marginal; in-sample negative |
+| GBPUSD | −1.23% / 4.23% | −2.81% | +$668 (PF 1.20) | no edge |
+| USDJPY | −4.21% / 5.28% | −2.21% | −$841 (PF 0.83) | no edge |
+| XAUUSD | +1.73% / 4.09% | +2.76% | **−$899 (PF 0.86)** | in-sample only; OOS negative |
 
 No `official_rule_breach` on any run. Cross-symbol conclusion: the edge does
 **not** generalize — the corrected EURUSD result is only marginally positive on

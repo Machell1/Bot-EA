@@ -6,9 +6,10 @@ conservative FTMO 2-Step account controls.
 > **Research status: not a validated edge.** After an adversarial audit
 > (`backtest/results/engine_audit_findings.json`) the screening engine was
 > corrected to stop under-detecting risk and to match the EA as shipped. On the
-> corrected engine EURUSD returns only **+1.28%** (was a flattered +4.03%) with
-> a losing in-sample half, and the strategy is negative on GBPUSD and USDJPY and
-> in-sample-only on XAUUSD. Do not use it for a funded/challenge decision; the
+> corrected engine (now including approximate overnight swap and the remaining
+> EA-parity nuances) EURUSD returns only **+1.06%** (was a flattered +4.03%)
+> with a losing in-sample half, and the strategy is negative on GBPUSD and
+> USDJPY and in-sample-only on XAUUSD. Do not use it for a funded/challenge decision; the
 > only credible next step is MetaTrader 5 real-tick validation. See
 > [the full result](docs/BACKTEST_RESULTS.md) and [the data brief](docs/DATA.md).
 

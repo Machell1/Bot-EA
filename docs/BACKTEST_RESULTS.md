@@ -2,17 +2,20 @@
 
 ## Verdict
 
-**Corrected engine (2026-07-14).** After the adversarial audit
+**Corrected engine (2026-07-14, second pass).** After the adversarial audit
 (`backtest/results/engine_audit_findings.json`), the screening engine was fixed
 so it stops flattering the results and actually measures the EA as shipped (see
-"Engine corrections" below). The honest EURUSD number is now **+1.28%** return
-over the full sample (was a flattered +4.03%), with a **4.31%** maximum equity
-drawdown and no detected rule breach.
+"Engine corrections" below). A second pass closed the remaining documented
+parity gaps (overnight swap, H4 boundary staleness, per-day counting of
+pyramid adds, the latched daily profit lock and its suppression of the
+trend-flip flatten). The honest EURUSD number is now **+1.06%** return over
+the full sample (was a flattered +4.03%, then +1.28% before swap), with a
+**4.47%** maximum equity drawdown and no detected rule breach.
 
 The edge is marginal and does not clearly hold: in-sample expectancy is
-**negative** (PF 0.89), the out-of-sample split is positive (PF 1.89), and the
+**negative** (PF 0.88), the out-of-sample split is positive (PF 1.84), and the
 full period is only slightly positive. The cross-symbol picture is worse
-(GBPUSD −1.01%, USDJPY −5.46%, XAUUSD +2.47% but OOS negative). This is **not a
+(GBPUSD −1.23%, USDJPY −4.21%, XAUUSD +1.73% but OOS negative). This is **not a
 validated edge** — do not use it for a funded/challenge decision. The only
 credible next step is MetaTrader 5 real-tick validation on the target broker's
 feed with a hedging account.
@@ -37,9 +40,29 @@ under-detected risk and did not match the EA. Fixed in `ftmo_quant_backtest.py`:
   now books −1R, not −0.91R); **pullback arming is session-gated** to match the
   EA.
 
-Still unmodeled (documented limitations, not fixed): swap/financing, and minor
-timing nuances (H4 staleness at boundary hours, per-day counter treatment of
-adds). These remain reasons the screen is not tick parity.
+**Second pass (2026-07-14, verified by a follow-up adversarial workflow):**
+
+- **Overnight swap modeled** — MT5-style swap points per lot per night from
+  the broker meta, charged at each day rollover for open units, 3× on the
+  Wednesday-night rollover, attributed to the unit's final closing tranche so
+  the ledger reconciles with the balance. The bundled rates are an
+  **approximate mid-2025 FTMO-style snapshot** (see
+  `backtest/deriv_broker_meta.json`); real swaps change daily.
+- **H4 boundary staleness fixed** — the HTF confluence now reads the aligned
+  arrays at the decision bar, matching the EA's shift-1 read at 08:00/16:00
+  instead of using a one-H4-bar-stale stack.
+- **Pyramid adds count toward the daily entry cap**, matching the EA's
+  `DEAL_ENTRY_IN` counting (the cap still gates only fresh trend entries).
+- **Daily profit lock latches for the day** (giving profit back intraday does
+  not re-arm entries) and, matching the EA's `accountSafe` gating, a latched
+  lock **suppresses the trend-flip flatten** — units ride their stops through
+  an EMA flip on locked days.
+
+Still unmodeled (documented limitations, not fixed): the FTMO CE(S)T daily
+reset (the screen resets on server calendar days), single-side commission in
+intrabar equity marks, dataset-seeded EMA warmup vs the EA's full-history
+indicators, and tranche-level summary statistics. These remain reasons the
+screen is not tick parity.
 
 Changes over the original defaults, in the order they were added:
 
@@ -92,17 +115,17 @@ EURUSD (`backtest/data/derivM15/EURUSD.csv`, SHA-256 `2f308538…`):
 
 | Path | Return | Max equity DD | Max daily loss | Rule breach |
 | --- | ---: | ---: | ---: | --- |
-| 1× spread | +1.28% | 4.31% | 0.79% | No |
-| 2× spread | +0.41% | 4.21% | 0.77% | No |
+| 1× spread | +1.06% | 4.47% | 0.79% | No |
+| 2× spread | +0.18% | 4.38% | 0.77% | No |
 
 Cross-symbol (FTMO-guarded, 1× / 2× return; see `docs/DATA.md` for commands):
 
 | Symbol | 1× return | Max equity DD | 2× return | OOS split (1×) |
 | --- | ---: | ---: | ---: | --- |
-| EURUSD | +1.28% | 4.31% | +0.41% | +$2,362 (PF 1.89) |
-| GBPUSD | −1.01% | 4.21% | −2.59% | +$723 (PF 1.22) |
-| USDJPY | −5.46% | 6.45% | −3.37% | −$1,426 (PF 0.72) |
-| XAUUSD | +2.47% | 4.00% | +3.45% | −$770 (PF 0.88) |
+| EURUSD | +1.06% | 4.47% | +0.18% | +$2,278 (PF 1.84) |
+| GBPUSD | −1.23% | 4.23% | −2.81% | +$668 (PF 1.20) |
+| USDJPY | −4.21% | 5.28% | −2.21% | −$841 (PF 0.83) |
+| XAUUSD | +1.73% | 4.09% | +2.76% | −$899 (PF 0.86) |
 
 Only EURUSD is positive at both cost levels, and even there the in-sample half
 loses money. The edge does not generalize.
@@ -118,9 +141,9 @@ so counts exceed round-turn trades and PF is tranche-level:
 
 | Split | 1× net | 1× PF | 2× net | 2× PF |
 | --- | ---: | ---: | ---: | ---: |
-| In-sample | -$1,084.37 | 0.894 | -$1,366.37 | 0.869 |
-| Out-of-sample | +$2,361.84 | 1.891 | +$1,780.17 | 1.604 |
-| Full period | +$1,277.47 | 1.099 | +$413.80 | 1.031 |
+| In-sample | -$1,215.19 | 0.883 | -$1,515.67 | 0.857 |
+| Out-of-sample | +$2,277.68 | 1.838 | +$1,690.76 | 1.560 |
+| Full period | +$1,062.49 | 1.081 | +$175.08 | 1.013 |
 
 In-sample is now negative; the full-period profit comes entirely from the
 out-of-sample window. On one symbol and this small a sample that is
