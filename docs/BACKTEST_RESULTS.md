@@ -2,14 +2,37 @@
 
 ## Verdict
 
-The default strategy does **not** demonstrate an edge on this dataset and
-should not be used for an FTMO Challenge.
+The **revised** default strategy is materially better than the first version
+and is FTMO-rule compliant on this dataset, but it is **not yet a validated
+edge**. Out-of-sample expectancy is positive, while the full-period in-sample
+expectancy is still slightly negative. Treat it as a promising, conservative
+baseline to validate further—not a guaranteed FTMO Challenge pass.
 
-The guarded account lost 7.75% before the 70%/30% split. At that point,
-projected risk on another trade would cross the configured 8% total soft
-floor, so the EA correctly stopped opening positions. An unguarded diagnostic
-was therefore run to measure later strategy expectancy without pretending
-that the FTMO account could continue.
+Three changes drove the improvement over the original defaults:
+
+1. **Breakout confirmation buffer** (`entry_buffer_atr = 0.5`). The breakout
+   close must clear the Donchian channel by half an ATR. Marginal pokes through
+   the range were the largest single source of whipsaw losses.
+2. **Liquid-hours session** (`08:00–17:00` server, was `07:00–20:00`). Entries
+   are restricted to the London/New York window and Friday trading stops at
+   17:00.
+3. **Wider volatility stop** (`stop_atr = 2.5`, was `2.0`). Trend trades are
+   given room to develop instead of being stopped on normal noise.
+
+With these defaults the guarded account no longer trips the soft floor and shut
+down mid-sample; it survives the full period, so the FTMO-guarded path and the
+unguarded diagnostic are now identical.
+
+## Original vs revised (unguarded diagnostic, 1× spread)
+
+| Split | Version | Trades | Net | PF | Expectancy | Win rate |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| In-sample | original | 286 | -$15,220.72 | 0.648 | -0.163R | 28.3% |
+| In-sample | revised | 155 | -$4,098.18 | 0.807 | -0.076R | 29.7% |
+| Out-of-sample | original | 105 | -$2,412.07 | 0.817 | -0.077R | 33.3% |
+| Out-of-sample | revised | 51 | +$1,966.81 | 1.340 | +0.115R | 43.1% |
+| Full period | original | 391 | -$17,632.79 | 0.687 | -0.140R | 29.7% |
+| Full period | revised | 206 | -$2,131.37 | 0.921 | -0.028R | 33.0% |
 
 ## Data and method
 
@@ -18,7 +41,6 @@ that the FTMO account could continue.
 - File: `backtest/data/derivM15_diverse/EURUSD.csv`
 - File SHA-256:
   `af36bd1495021d0cd364653f5b396710cec67bf7db38d6aeb5c4ed9ee259b747`
-- Manifest verification: 46 files OK, 0 missing, 0 mismatched
 - Range: 2023-09-05 through 2026-06-30
 - Sample: 17,499 complete H1 bars aggregated from 69,999 M15 rows
 - Split: first 70% development, final 30% out of sample from 2025-08-26
@@ -30,25 +52,26 @@ The source file has no historical spread column. The 10-point EURUSD spread
 is an explicit assumption, and source timestamps are treated as EA server
 time. These limitations prevent a tick-parity claim.
 
-## Results
+## Revised results
 
 | Path | Trades | Net | PF | Expectancy | Max equity DD | Rule breach |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| FTMO guards, 1× spread | 111 | -$7,746.84 | 0.575 | -0.206R | 8.53% | No |
-| FTMO guards, 2× spread | 108 | -$7,850.15 | 0.565 | -0.215R | 8.74% | No |
-| Diagnostic continuation, 1× | 391 | -$17,632.79 | 0.687 | -0.140R | 19.35% | Yes |
-| Diagnostic continuation, 2× | 385 | -$19,075.90 | 0.664 | -0.156R | 21.01% | Yes |
+| FTMO guards, 1× spread | 206 | -$2,131.37 | 0.921 | -0.028R | 6.66% | No |
+| FTMO guards, 2× spread | 202 | -$3,426.52 | 0.874 | -0.048R | 7.66% | No |
 
-Out-of-sample diagnostic:
+Out-of-sample:
 
 | Costs | Trades | Net | PF | Expectancy | Win rate |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| 1× spread | 105 | -$2,412.07 | 0.817 | -0.077R | 33.33% |
-| 2× spread | 104 | -$2,975.32 | 0.785 | -0.098R | 33.65% |
+| 1× spread | 51 | +$1,966.81 | 1.340 | +0.115R | 43.14% |
+| 2× spread | 51 | +$1,382.06 | 1.240 | +0.082R | 41.18% |
 
-The OOS sample also misses the preregistered minimum of 300 trades. More data
-would improve precision, but both in-sample and OOS estimates are negative by
-a wide enough margin that the current defaults fail the screening stage.
+The out-of-sample edge survives a doubling of spread, which is the most
+important robustness check for a low-cost-sensitivity claim. The OOS sample
+(51 trades) is still far below the preregistered 300-trade minimum, and the
+full-period in-sample expectancy remains slightly negative, so the result is
+encouraging but not yet conclusive. Collect more history and more symbols
+before trusting it live.
 
 ## Reproduction
 

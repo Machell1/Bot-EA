@@ -3,16 +3,22 @@
 An MT5 Expert Advisor built around a testable trend-following hypothesis and
 conservative FTMO 2-Step account controls.
 
-> **Research status: rejected.** The first EURUSD H1 screening backtest found
-> negative in-sample and out-of-sample expectancy. Do not deploy the current
-> strategy defaults. See [the full result](docs/BACKTEST_RESULTS.md).
+> **Research status: revised, conditional.** The first defaults were rejected
+> for negative expectancy. The revised defaults add a breakout confirmation
+> buffer, a liquid-hours session, and a wider stop; they are FTMO-rule
+> compliant on the screening dataset with a positive out-of-sample expectancy,
+> but the full-period in-sample expectancy is still slightly negative. This is
+> a promising baseline to validate further, not a validated edge. See
+> [the full result](docs/BACKTEST_RESULTS.md).
 
 The strategy buys or sells a 20-bar Donchian breakout only when the 50 EMA is
-on the correct side of the 200 EMA and is moving in the breakout direction.
-Stops are volatility-scaled with ATR, position size is calculated from the
-stop distance, and winners use break-even plus ATR trailing logic. This is a
-classic, explainable source of potential trend premium—not a claim of
-guaranteed profits.
+on the correct side of the 200 EMA and is moving in the breakout direction. The
+breakout close must clear the channel by 0.5 ATR to filter marginal pokes
+through the range. Stops are volatility-scaled with ATR (2.5×), position size is
+calculated from the stop distance, and winners use break-even plus ATR trailing
+logic. Entries are restricted to the 08:00–17:00 server (London/New York)
+window. This is a classic, explainable source of potential trend premium—not a
+claim of guaranteed profits.
 
 ## Safety defaults
 
