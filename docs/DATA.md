@@ -89,6 +89,21 @@ No `official_rule_breach` on any run. Cross-symbol conclusion: the edge does
 **not** generalize — the corrected EURUSD result is only marginally positive on
 one small sample with a losing in-sample half, not a validated edge.
 
+**Low-cap extension (2026-07-14):** the EA was also screened on the venue's
+low-cap equity assets (Deriv offers no individual stock CFDs; the small-cap
+asset is the Russell-2000-proxy index CFD). `US_Small_Cap_2000.csv` carries
+REAL per-bar historical spreads (`spread_price` column, median 20 pts) —
+the most realistic cost basis in the repo; `US_Mid_Cap_400.csv` uses the
+402-pt snapshot fallback. Results (measured / 2×): **US Small Cap 2000
+−5.41% / −4.93%** (103 units, IS −$5.4k), **US Mid Cap 400 −8.56% / −7.85%**
+(8.66% maxDD — near the FTMO floor). The audited trend baselines also fail
+here: EMA50/200 long/flat loses ~−6.3…−6.8% on both (H1 whipsaw + financing),
+and risk-scaled buy-and-hold "wins" (+13.5%/+10.2%) only with 15–19% drawdowns
+and $7–10k of swap — market beta minus CFD financing, not an edge and not
+FTMO-survivable. Note the EA's 08:00–17:00 server session covers mostly
+pre-US hours for these indices; that is the EA as shipped, not a tuning
+opportunity.
+
 ## Read before trusting the screen
 
 `backtest/results/engine_audit_findings.json` — a 25-agent adversarial audit

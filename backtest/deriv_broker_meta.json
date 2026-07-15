@@ -68,6 +68,40 @@
         "short_points": 20.0,
         "triple_rollover_weekday": 3
       }
+    },
+    "US_Small_Cap_2000": {
+      "point": 0.01,
+      "trade_tick_size": 0.01,
+      "trade_tick_value_loss": 1.0,
+      "volume_min": 0.1,
+      "volume_max": 150.0,
+      "volume_step": 0.1,
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 0.0
+      },
+      "swap": {
+        "long_points": -49.0,
+        "short_points": 13.0,
+        "triple_rollover_weekday": 5
+      }
+    },
+    "US_Mid_Cap_400": {
+      "point": 0.01,
+      "trade_tick_size": 0.01,
+      "trade_tick_value_loss": 1.0,
+      "volume_min": 0.1,
+      "volume_max": 150.0,
+      "volume_step": 0.1,
+      "commission": {
+        "kind": "usd_per_lot",
+        "per_side_usd_per_lot": 0.0
+      },
+      "swap": {
+        "long_points": -70.0,
+        "short_points": 18.0,
+        "triple_rollover_weekday": 5
+      }
     }
   }
 }
