@@ -1,0 +1,58 @@
+{
+  "EURUSD": {
+    "bull_bars": 8645,
+    "bear_bars": 8644,
+    "long_fires": 194,
+    "short_fires": 192,
+    "p_long_uncond": 0.022440717177559282,
+    "p_short_uncond": 0.022211938917167977,
+    "bull_bars_insess": 2896,
+    "bear_bars_insess": 2869,
+    "long_fires_insess": 132,
+    "short_fires_insess": 129,
+    "p_long_insess": 0.04558011049723757,
+    "p_short_insess": 0.04496340188218892
+  },
+  "GBPUSD": {
+    "bull_bars": 8820,
+    "bear_bars": 8469,
+    "long_fires": 217,
+    "short_fires": 184,
+    "p_long_uncond": 0.024603174603174603,
+    "p_short_uncond": 0.02172629590270398,
+    "bull_bars_insess": 2938,
+    "bear_bars_insess": 2830,
+    "long_fires_insess": 145,
+    "short_fires_insess": 119,
+    "p_long_insess": 0.04935330156569095,
+    "p_short_insess": 0.04204946996466431
+  },
+  "USDJPY": {
+    "bull_bars": 10643,
+    "bear_bars": 6645,
+    "long_fires": 272,
+    "short_fires": 136,
+    "p_long_uncond": 0.02555670393685991,
+    "p_short_uncond": 0.020466516177577127,
+    "bull_bars_insess": 3559,
+    "bear_bars_insess": 2209,
+    "long_fires_insess": 150,
+    "short_fires_insess": 50,
+    "p_long_insess": 0.04214667041303737,
+    "p_short_insess": 0.022634676324128564
+  },
+  "XAUUSD": {
+    "bull_bars": 10646,
+    "bear_bars": 6520,
+    "long_fires": 314,
+    "short_fires": 124,
+    "p_long_uncond": 0.029494645876385495,
+    "p_short_uncond": 0.01901840490797546,
+    "bull_bars_insess": 3766,
+    "bear_bars_insess": 2289,
+    "long_fires_insess": 162,
+    "short_fires_insess": 67,
+    "p_long_insess": 0.043016463090812536,
+    "p_short_insess": 0.02927042376583661
+  }
+}

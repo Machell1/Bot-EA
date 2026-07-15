@@ -1,0 +1,104 @@
+{
+ "multiplicity_ladder": {
+  "4": {
+   "bonferroni_z_required_5pct_two_sided": 2.497705474412374,
+   "expected_max_null_t": 1.0521228241893006
+  },
+  "8": {
+   "bonferroni_z_required_5pct_two_sided": 2.7343687865331767,
+   "expected_max_null_t": 1.4590140774418097
+  },
+  "9": {
+   "bonferroni_z_required_5pct_two_sided": 2.7729212946086634,
+   "expected_max_null_t": 1.520778190702801
+  },
+  "13": {
+   "bonferroni_z_required_5pct_two_sided": 2.8905115606917393,
+   "expected_max_null_t": 1.703333547149684
+  },
+  "24": {
+   "bonferroni_z_required_5pct_two_sided": 3.078088072842161,
+   "expected_max_null_t": 1.9797731141615635
+  },
+  "36": {
+   "bonferroni_z_required_5pct_two_sided": 3.1969502291312546,
+   "expected_max_null_t": 2.147531942453467
+  },
+  "50": {
+   "bonferroni_z_required_5pct_two_sided": 3.2905267314919255,
+   "expected_max_null_t": 2.2763030934203483
+  },
+  "100": {
+   "bonferroni_z_required_5pct_two_sided": 3.4807564043462422,
+   "expected_max_null_t": 2.5306028932016846
+  }
+ },
+ "documented_trials_floor": {
+  "design_decisions_sequential": 9,
+  "symbols_screened": 4,
+  "cost_levels_reported": 2,
+  "engine_rescreens": 3,
+  "gate_variants": "GBPUSD relaxedgate exists alongside GBPUSD.json",
+  "note": "9 decisions x 4 symbols = 36 implicit trials is a conservative mid estimate; rejected parameter values were not logged so the true count is unbounded above."
+ },
+ "resplit_EURUSD": {
+  "n_units": 100,
+  "n_is": 72,
+  "n_oos": 28,
+  "obs_is_mean_r": -0.051950522633844996,
+  "obs_oos_mean_r": 0.2586942720128399,
+  "perm_unit": {
+   "p_oos_ge_obs": 0.0736,
+   "p_joint_pattern": 0.0736,
+   "p_any_signflip": 0.2796,
+   "n_perm": 10000,
+   "seed": 7,
+   "p_oos_ge_obs_seed_range": [
+    0.061,
+    0.094
+   ]
+  },
+  "perm_weekblock": {
+   "p_oos_ge_obs": 0.1068,
+   "p_joint_pattern": 0.1068,
+   "p_any_signflip": 0.3104,
+   "n_perm": 10000,
+   "seed": 7,
+   "n_blocks": 52,
+   "p_oos_ge_obs_seed_range": [
+    0.078,
+    0.133
+   ]
+  }
+ },
+ "resplit_XAUUSD": {
+  "n_units": 158,
+  "n_is": 112,
+  "n_oos": 46,
+  "obs_is_mean_r": 0.07612866307316322,
+  "obs_oos_mean_r": -0.05709134653037803,
+  "perm_unit": {
+   "p_oos_ge_obs": 0.779,
+   "p_joint_pattern": 0.779,
+   "p_any_signflip": 0.2251,
+   "n_perm": 10000,
+   "seed": 7,
+   "p_oos_ge_obs_seed_range": [
+    0.743,
+    0.806
+   ]
+  },
+  "perm_weekblock": {
+   "p_oos_ge_obs": 0.7222,
+   "p_joint_pattern": 0.7155,
+   "p_any_signflip": 0.3008,
+   "n_perm": 10000,
+   "seed": 7,
+   "n_blocks": 67,
+   "p_oos_ge_obs_seed_range": [
+    0.683,
+    0.769
+   ]
+  }
+ }
+}

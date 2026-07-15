@@ -1,0 +1,166 @@
+{
+  "EURUSD": {
+    "h4": {
+      "actual_mean": 0.20653882018992087,
+      "boot90_lo": -0.16949636369368107,
+      "boot90_hi": 0.5701656181038305,
+      "pop_ctrl_mean": -0.13348526650657142,
+      "excess": 0.3400240866964923,
+      "ci_excludes_ctrl": false,
+      "actual_median": 0.11801755170364589,
+      "ctrl_median": -0.1654357459377925,
+      "excess_median": 0.2834532976414384,
+      "excess_altfill": 0.33868843329053333,
+      "excess_nocost": 0.33569956987508964
+    },
+    "h24": {
+      "actual_mean": 0.3110589726556557,
+      "boot90_lo": -0.2773680190124785,
+      "boot90_hi": 0.916894157369058,
+      "pop_ctrl_mean": -0.16537419305348008,
+      "excess": 0.47643316570913574,
+      "ci_excludes_ctrl": false,
+      "actual_median": -0.168152109328619,
+      "ctrl_median": -0.256598240469188,
+      "excess_median": 0.08844613114056901,
+      "excess_altfill": 0.47630721810520094,
+      "excess_nocost": 0.47210864888773313
+    },
+    "h72": {
+      "actual_mean": -0.9915236071966378,
+      "boot90_lo": -2.005055577087768,
+      "boot90_hi": 0.06113934123097392,
+      "pop_ctrl_mean": -0.43018275870621964,
+      "excess": -0.5613408484904181,
+      "ci_excludes_ctrl": false,
+      "actual_median": -0.9717513477191602,
+      "ctrl_median": -0.5406504065041414,
+      "excess_median": -0.43110094121501874,
+      "excess_altfill": -0.5603348280963611,
+      "excess_nocost": -0.5656653653118209
+    }
+  },
+  "GBPUSD": {
+    "h4": {
+      "actual_mean": 0.21361680601597383,
+      "boot90_lo": -0.18126326283520747,
+      "boot90_hi": 0.5884352426220977,
+      "pop_ctrl_mean": -0.18982840005522533,
+      "excess": 0.40344520607119916,
+      "ci_excludes_ctrl": true,
+      "actual_median": 0.12981455064200556,
+      "ctrl_median": -0.2031776170664824,
+      "excess_median": 0.33299216770848794,
+      "excess_altfill": 0.40340138981314927,
+      "excess_nocost": 0.41103680668183806
+    },
+    "h24": {
+      "actual_mean": 0.24118743063060186,
+      "boot90_lo": -0.5195573717589905,
+      "boot90_hi": 0.9917255457694065,
+      "pop_ctrl_mean": -0.2292823620975587,
+      "excess": 0.4704697927281606,
+      "ci_excludes_ctrl": false,
+      "actual_median": 0.35538461538444166,
+      "ctrl_median": -0.26074617523014615,
+      "excess_median": 0.6161307906145879,
+      "excess_altfill": 0.4714275517866269,
+      "excess_nocost": 0.4780613933387995
+    },
+    "h72": {
+      "actual_mean": 0.19800488500773072,
+      "boot90_lo": -1.0865763593390878,
+      "boot90_hi": 1.5254114845952642,
+      "pop_ctrl_mean": -0.24910481890492875,
+      "excess": 0.4471097039126595,
+      "ci_excludes_ctrl": false,
+      "actual_median": -1.0405405405405725,
+      "ctrl_median": -0.467542434579169,
+      "excess_median": -0.5729981059614035,
+      "excess_altfill": 0.4468499268073808,
+      "excess_nocost": 0.4547013045232985
+    }
+  },
+  "USDJPY": {
+    "h4": {
+      "actual_mean": 0.014333923476344738,
+      "boot90_lo": -0.22064964259593586,
+      "boot90_hi": 0.2458049197966646,
+      "pop_ctrl_mean": -0.20781360243386182,
+      "excess": 0.22214752591020656,
+      "ci_excludes_ctrl": false,
+      "actual_median": -0.0267972033154402,
+      "ctrl_median": -0.13961003496989294,
+      "excess_median": 0.11281283165445274,
+      "excess_altfill": 0.22412500500729024,
+      "excess_nocost": 0.27623392484879583
+    },
+    "h24": {
+      "actual_mean": -1.1475125760462035,
+      "boot90_lo": -2.051782706862903,
+      "boot90_hi": -0.298001206313293,
+      "pop_ctrl_mean": -0.22510373057125324,
+      "excess": -0.9224088454749503,
+      "ci_excludes_ctrl": true,
+      "actual_median": 0.19545131948383443,
+      "ctrl_median": -0.18524463082079246,
+      "excess_median": 0.3806959503046269,
+      "excess_altfill": -0.9229872498090783,
+      "excess_nocost": -0.8683224465363609
+    },
+    "h72": {
+      "actual_mean": -1.4144716442208598,
+      "boot90_lo": -2.8058455418049846,
+      "boot90_hi": 0.08900051157410732,
+      "pop_ctrl_mean": -0.12259102602160087,
+      "excess": -1.291880618199259,
+      "ci_excludes_ctrl": false,
+      "actual_median": -0.5141317218983248,
+      "ctrl_median": 0.31015045906387817,
+      "excess_median": -0.824282180962203,
+      "excess_altfill": -1.2910393365868966,
+      "excess_nocost": -1.23779421926067
+    }
+  },
+  "XAUUSD": {
+    "h4": {
+      "actual_mean": 0.3279119492443055,
+      "boot90_lo": 0.0620797043111568,
+      "boot90_hi": 0.5663756182272893,
+      "pop_ctrl_mean": 0.04649240281546738,
+      "excess": 0.2814195464288381,
+      "ci_excludes_ctrl": true,
+      "actual_median": 0.35360219660017866,
+      "ctrl_median": 0.06332236842109432,
+      "excess_median": 0.2902798281790844,
+      "excess_altfill": 0.28174205705014516,
+      "excess_nocost": 0.28182725741320686
+    },
+    "h24": {
+      "actual_mean": 0.9698119997128247,
+      "boot90_lo": 0.40339288153775654,
+      "boot90_hi": 1.5118921314105933,
+      "pop_ctrl_mean": 0.33126421509078546,
+      "excess": 0.6385477846220393,
+      "ci_excludes_ctrl": true,
+      "actual_median": 0.8174118515344255,
+      "ctrl_median": 0.059722715961710714,
+      "excess_median": 0.7576891355727148,
+      "excess_altfill": 0.6412664365703376,
+      "excess_nocost": 0.6389554956064082
+    },
+    "h72": {
+      "actual_mean": 2.9231923455042668,
+      "boot90_lo": 1.7425579412575791,
+      "boot90_hi": 4.032533224738952,
+      "pop_ctrl_mean": 0.8359019292171248,
+      "excess": 2.087290416287142,
+      "ci_excludes_ctrl": true,
+      "actual_median": 2.307032251874652,
+      "ctrl_median": 0.32367121696196877,
+      "excess_median": 1.9833610349126833,
+      "excess_altfill": 2.08790233598134,
+      "excess_nocost": 2.0876981272715103
+    }
+  }
+}

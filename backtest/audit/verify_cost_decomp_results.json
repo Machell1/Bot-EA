@@ -1,0 +1,349 @@
+{
+  "initial": 100000.0,
+  "split": 0.7,
+  "symbols": {
+    "EURUSD": {
+      "fallback_pts": 10.0,
+      "reproduction": {
+        "canonical_net_usd": 1062.49,
+        "rerun_net_usd": 1062.49,
+        "tranches": 172,
+        "identical_tranche_ledgers": true
+      },
+      "frictionless_gross": {
+        "net_usd": 1791.99,
+        "all": {
+          "units": 102,
+          "net_usd": 1791.99,
+          "mean_unit_r": 0.0567,
+          "mean_rb_usd": 316.81
+        },
+        "is": {
+          "units": 75,
+          "net_usd": -651.07,
+          "mean_unit_r": -0.0257,
+          "mean_rb_usd": 316.91
+        },
+        "oos": {
+          "units": 27,
+          "net_usd": 2443.05,
+          "mean_unit_r": 0.2857,
+          "mean_rb_usd": 316.53
+        }
+      },
+      "same_path_attribution": {
+        "all": {
+          "units": 100,
+          "gross_ex_spread_usd": 2963.68,
+          "spread_bill_usd": 1119.5,
+          "commission_usd": 559.75,
+          "swap_cost_usd": 221.94,
+          "net_usd": 1062.49,
+          "per_unit_r": {
+            "gross_ex_spread": 0.0935,
+            "spread": 0.0353,
+            "commission": 0.0177,
+            "swap": 0.007,
+            "net": 0.0335,
+            "total_costs": 0.06
+          }
+        },
+        "is": {
+          "units": 72,
+          "gross_ex_spread_usd": 101.76,
+          "spread_bill_usd": 786.8,
+          "commission_usd": 393.4,
+          "swap_cost_usd": 136.75,
+          "net_usd": -1215.19,
+          "per_unit_r": {
+            "gross_ex_spread": 0.0044,
+            "spread": 0.0344,
+            "commission": 0.0172,
+            "swap": 0.006,
+            "net": -0.0531,
+            "total_costs": 0.0575
+          }
+        },
+        "oos": {
+          "units": 28,
+          "gross_ex_spread_usd": 2861.92,
+          "spread_bill_usd": 332.7,
+          "commission_usd": 166.35,
+          "swap_cost_usd": 85.19,
+          "net_usd": 2277.68,
+          "per_unit_r": {
+            "gross_ex_spread": 0.3251,
+            "spread": 0.0378,
+            "commission": 0.0189,
+            "swap": 0.0097,
+            "net": 0.2587,
+            "total_costs": 0.0664
+          }
+        }
+      }
+    },
+    "GBPUSD": {
+      "fallback_pts": 15.0,
+      "reproduction": {
+        "canonical_net_usd": -1232.75,
+        "rerun_net_usd": -1232.75,
+        "tranches": 171,
+        "identical_tranche_ledgers": true
+      },
+      "frictionless_gross": {
+        "net_usd": -1093.29,
+        "all": {
+          "units": 105,
+          "net_usd": -1093.29,
+          "mean_unit_r": -0.0302,
+          "mean_rb_usd": 315.24
+        },
+        "is": {
+          "units": 82,
+          "net_usd": -2387.09,
+          "mean_unit_r": -0.0907,
+          "mean_rb_usd": 315.88
+        },
+        "oos": {
+          "units": 23,
+          "net_usd": 1293.8,
+          "mean_unit_r": 0.1855,
+          "mean_rb_usd": 312.97
+        }
+      },
+      "same_path_attribution": {
+        "all": {
+          "units": 105,
+          "gross_ex_spread_usd": 938.88,
+          "spread_bill_usd": 1463.55,
+          "commission_usd": 487.85,
+          "swap_cost_usd": 220.23,
+          "net_usd": -1232.75,
+          "per_unit_r": {
+            "gross_ex_spread": 0.0283,
+            "spread": 0.0441,
+            "commission": 0.0147,
+            "swap": 0.0066,
+            "net": -0.0372,
+            "total_costs": 0.0655
+          }
+        },
+        "is": {
+          "units": 83,
+          "gross_ex_spread_usd": -139.45,
+          "spread_bill_usd": 1191.45,
+          "commission_usd": 397.15,
+          "swap_cost_usd": 173.08,
+          "net_usd": -1901.13,
+          "per_unit_r": {
+            "gross_ex_spread": -0.0053,
+            "spread": 0.0454,
+            "commission": 0.0151,
+            "swap": 0.0066,
+            "net": -0.0725,
+            "total_costs": 0.0671
+          }
+        },
+        "oos": {
+          "units": 22,
+          "gross_ex_spread_usd": 1078.33,
+          "spread_bill_usd": 272.1,
+          "commission_usd": 90.7,
+          "swap_cost_usd": 47.16,
+          "net_usd": 668.37,
+          "per_unit_r": {
+            "gross_ex_spread": 0.1561,
+            "spread": 0.0394,
+            "commission": 0.0131,
+            "swap": 0.0068,
+            "net": 0.0967,
+            "total_costs": 0.0593
+          }
+        }
+      }
+    },
+    "USDJPY": {
+      "fallback_pts": 28.0,
+      "reproduction": {
+        "canonical_net_usd": -4213.07,
+        "rerun_net_usd": -4213.07,
+        "tranches": 142,
+        "identical_tranche_ledgers": true
+      },
+      "frictionless_gross": {
+        "net_usd": -6097.33,
+        "all": {
+          "units": 99,
+          "net_usd": -6097.33,
+          "mean_unit_r": -0.1993,
+          "mean_rb_usd": 307.79
+        },
+        "is": {
+          "units": 64,
+          "net_usd": -5229.81,
+          "mean_unit_r": -0.2637,
+          "mean_rb_usd": 311.21
+        },
+        "oos": {
+          "units": 35,
+          "net_usd": -867.52,
+          "mean_unit_r": -0.0815,
+          "mean_rb_usd": 301.54
+        }
+      },
+      "same_path_attribution": {
+        "all": {
+          "units": 96,
+          "gross_ex_spread_usd": -2816.22,
+          "spread_bill_usd": 2074.01,
+          "commission_usd": 597.6,
+          "swap_cost_usd": -1274.75,
+          "net_usd": -4213.07,
+          "per_unit_r": {
+            "gross_ex_spread": -0.0942,
+            "spread": 0.0694,
+            "commission": 0.02,
+            "swap": -0.0427,
+            "net": -0.141,
+            "total_costs": 0.0467
+          }
+        },
+        "is": {
+          "units": 61,
+          "gross_ex_spread_usd": -2382.82,
+          "spread_bill_usd": 1290.01,
+          "commission_usd": 371.7,
+          "swap_cost_usd": -672.08,
+          "net_usd": -3372.44,
+          "per_unit_r": {
+            "gross_ex_spread": -0.1244,
+            "spread": 0.0674,
+            "commission": 0.0194,
+            "swap": -0.0351,
+            "net": -0.1761,
+            "total_costs": 0.0517
+          }
+        },
+        "oos": {
+          "units": 35,
+          "gross_ex_spread_usd": -433.4,
+          "spread_bill_usd": 784.0,
+          "commission_usd": 225.9,
+          "swap_cost_usd": -602.67,
+          "net_usd": -840.63,
+          "per_unit_r": {
+            "gross_ex_spread": -0.0404,
+            "spread": 0.073,
+            "commission": 0.021,
+            "swap": -0.0561,
+            "net": -0.0783,
+            "total_costs": 0.0379
+          }
+        }
+      }
+    },
+    "XAUUSD": {
+      "fallback_pts": 16.0,
+      "reproduction": {
+        "canonical_net_usd": 1728.9,
+        "rerun_net_usd": 1728.9,
+        "tranches": 253,
+        "identical_tranche_ledgers": true
+      },
+      "frictionless_gross": {
+        "net_usd": -50.78,
+        "all": {
+          "units": 154,
+          "net_usd": -50.78,
+          "mean_unit_r": 0.0023,
+          "mean_rb_usd": 309.02
+        },
+        "is": {
+          "units": 108,
+          "net_usd": 288.53,
+          "mean_unit_r": 0.0093,
+          "mean_rb_usd": 311.81
+        },
+        "oos": {
+          "units": 46,
+          "net_usd": -339.31,
+          "mean_unit_r": -0.0143,
+          "mean_rb_usd": 302.48
+        }
+      },
+      "same_path_attribution": {
+        "all": {
+          "units": 158,
+          "gross_ex_spread_usd": 3200.28,
+          "spread_bill_usd": 531.68,
+          "commission_usd": 166.15,
+          "swap_cost_usd": 773.55,
+          "net_usd": 1728.9,
+          "per_unit_r": {
+            "gross_ex_spread": 0.0641,
+            "spread": 0.0106,
+            "commission": 0.0033,
+            "swap": 0.0155,
+            "net": 0.0346,
+            "total_costs": 0.0295
+          }
+        },
+        "is": {
+          "units": 112,
+          "gross_ex_spread_usd": 3870.52,
+          "spread_bill_usd": 456.0,
+          "commission_usd": 142.5,
+          "swap_cost_usd": 644.35,
+          "net_usd": 2627.67,
+          "per_unit_r": {
+            "gross_ex_spread": 0.1087,
+            "spread": 0.0128,
+            "commission": 0.004,
+            "swap": 0.0181,
+            "net": 0.0738,
+            "total_costs": 0.0349
+          }
+        },
+        "oos": {
+          "units": 46,
+          "gross_ex_spread_usd": -670.24,
+          "spread_bill_usd": 75.68,
+          "commission_usd": 23.65,
+          "swap_cost_usd": 129.2,
+          "net_usd": -898.77,
+          "per_unit_r": {
+            "gross_ex_spread": -0.0468,
+            "spread": 0.0053,
+            "commission": 0.0016,
+            "swap": 0.009,
+            "net": -0.0627,
+            "total_costs": 0.0159
+          }
+        }
+      }
+    }
+  },
+  "eurusd_breakeven": {
+    "full_cost_net_by_spread_pts": {
+      "8": -109.06,
+      "12": 1020.46,
+      "16": 1163.73,
+      "18": 1295.46,
+      "19": 1009.95,
+      "20": 175.08,
+      "21": -156.74,
+      "22": -173.05,
+      "24": -412.01,
+      "28": -381.65
+    },
+    "analytic_same_path_be_pts": 19.49
+  },
+  "xauusd_fullcost_net_by_spread_pts": {
+    "0": -830.08,
+    "4": -835.29,
+    "8": -863.42,
+    "12": 1747.47,
+    "16": 1728.9,
+    "20": 2260.93
+  }
+}

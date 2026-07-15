@@ -1,0 +1,2366 @@
+{
+  "EURUSD": {
+    "R0_raw_breakout": {
+      "guarded": {
+        "return_pct": -7.7826,
+        "tranche": {
+          "all": {
+            "tranches": 257,
+            "net": -7782.56,
+            "pf": 0.697
+          },
+          "is": {
+            "tranches": 257,
+            "net": -7782.56,
+            "pf": 0.697
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 165,
+            "net": -7782.56,
+            "pf": 0.694,
+            "mean": -47.17,
+            "win_pct": 46.7,
+            "t": -2.1
+          },
+          "is_": {
+            "units": 165,
+            "net": -7782.56,
+            "pf": 0.694,
+            "mean": -47.17,
+            "win_pct": 46.7,
+            "t": -2.1
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 10.08,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -12.6531,
+        "tranche": {
+          "all": {
+            "tranches": 627,
+            "net": -12653.11,
+            "pf": 0.774
+          },
+          "is": {
+            "tranches": 431,
+            "net": -13748.42,
+            "pf": 0.673
+          },
+          "oos": {
+            "tranches": 196,
+            "net": 1095.31,
+            "pf": 1.078
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 395,
+            "net": -12653.11,
+            "pf": 0.772,
+            "mean": -32.03,
+            "win_pct": 47.8,
+            "t": -2.29
+          },
+          "is_": {
+            "units": 279,
+            "net": -13748.42,
+            "pf": 0.67,
+            "mean": -49.28,
+            "win_pct": 46.2,
+            "t": -2.99
+          },
+          "oos": {
+            "units": 116,
+            "net": 1095.31,
+            "pf": 1.079,
+            "mean": 9.44,
+            "win_pct": 51.7,
+            "t": 0.36
+          }
+        },
+        "max_dd_pct": 17.45,
+        "breach": true
+      }
+    },
+    "R1_plus_buffer": {
+      "guarded": {
+        "return_pct": -7.8289,
+        "tranche": {
+          "all": {
+            "tranches": 192,
+            "net": -7828.93,
+            "pf": 0.605
+          },
+          "is": {
+            "tranches": 192,
+            "net": -7828.93,
+            "pf": 0.605
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 127,
+            "net": -7828.93,
+            "pf": 0.602,
+            "mean": -61.65,
+            "win_pct": 44.9,
+            "t": -2.55
+          },
+          "is_": {
+            "units": 127,
+            "net": -7828.93,
+            "pf": 0.602,
+            "mean": -61.65,
+            "win_pct": 44.9,
+            "t": -2.55
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 10.12,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -6.5185,
+        "tranche": {
+          "all": {
+            "tranches": 445,
+            "net": -6518.51,
+            "pf": 0.827
+          },
+          "is": {
+            "tranches": 309,
+            "net": -9367.48,
+            "pf": 0.678
+          },
+          "oos": {
+            "tranches": 136,
+            "net": 2848.97,
+            "pf": 1.33
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 278,
+            "net": -6518.51,
+            "pf": 0.825,
+            "mean": -23.45,
+            "win_pct": 51.1,
+            "t": -1.41
+          },
+          "is_": {
+            "units": 200,
+            "net": -9367.48,
+            "pf": 0.674,
+            "mean": -46.84,
+            "win_pct": 48.0,
+            "t": -2.46
+          },
+          "oos": {
+            "units": 78,
+            "net": 2848.97,
+            "pf": 1.334,
+            "mean": 36.53,
+            "win_pct": 59.0,
+            "t": 1.1
+          }
+        },
+        "max_dd_pct": 12.68,
+        "breach": true
+      }
+    },
+    "R2_plus_candle": {
+      "guarded": {
+        "return_pct": -7.7855,
+        "tranche": {
+          "all": {
+            "tranches": 261,
+            "net": -7785.54,
+            "pf": 0.684
+          },
+          "is": {
+            "tranches": 261,
+            "net": -7785.54,
+            "pf": 0.684
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 169,
+            "net": -7785.54,
+            "pf": 0.681,
+            "mean": -46.07,
+            "win_pct": 47.3,
+            "t": -2.2
+          },
+          "is_": {
+            "units": 169,
+            "net": -7785.54,
+            "pf": 0.681,
+            "mean": -46.07,
+            "win_pct": 47.3,
+            "t": -2.2
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 10.08,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -4.2375,
+        "tranche": {
+          "all": {
+            "tranches": 418,
+            "net": -4237.47,
+            "pf": 0.876
+          },
+          "is": {
+            "tranches": 285,
+            "net": -7381.37,
+            "pf": 0.715
+          },
+          "oos": {
+            "tranches": 133,
+            "net": 3143.9,
+            "pf": 1.38
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 258,
+            "net": -4237.47,
+            "pf": 0.875,
+            "mean": -16.42,
+            "win_pct": 52.3,
+            "t": -0.94
+          },
+          "is_": {
+            "units": 182,
+            "net": -7381.37,
+            "pf": 0.712,
+            "mean": -40.56,
+            "win_pct": 48.9,
+            "t": -2.01
+          },
+          "oos": {
+            "units": 76,
+            "net": 3143.9,
+            "pf": 1.385,
+            "mean": 41.37,
+            "win_pct": 60.5,
+            "t": 1.22
+          }
+        },
+        "max_dd_pct": 10.48,
+        "breach": false
+      }
+    },
+    "R3_plus_htf": {
+      "guarded": {
+        "return_pct": 1.0625,
+        "tranche": {
+          "all": {
+            "tranches": 172,
+            "net": 1062.49,
+            "pf": 1.081
+          },
+          "is": {
+            "tranches": 119,
+            "net": -1215.19,
+            "pf": 0.883
+          },
+          "oos": {
+            "tranches": 53,
+            "net": 2277.68,
+            "pf": 1.838
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 100,
+            "net": 1062.49,
+            "pf": 1.082,
+            "mean": 10.62,
+            "win_pct": 55.0,
+            "t": 0.34
+          },
+          "is_": {
+            "units": 72,
+            "net": -1215.19,
+            "pf": 0.882,
+            "mean": -16.88,
+            "win_pct": 50.0,
+            "t": -0.47
+          },
+          "oos": {
+            "units": 28,
+            "net": 2277.68,
+            "pf": 1.867,
+            "mean": 81.35,
+            "win_pct": 67.9,
+            "t": 1.36
+          }
+        },
+        "max_dd_pct": 4.47,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 1.0625,
+        "tranche": {
+          "all": {
+            "tranches": 172,
+            "net": 1062.49,
+            "pf": 1.081
+          },
+          "is": {
+            "tranches": 119,
+            "net": -1215.19,
+            "pf": 0.883
+          },
+          "oos": {
+            "tranches": 53,
+            "net": 2277.68,
+            "pf": 1.838
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 100,
+            "net": 1062.49,
+            "pf": 1.082,
+            "mean": 10.62,
+            "win_pct": 55.0,
+            "t": 0.34
+          },
+          "is_": {
+            "units": 72,
+            "net": -1215.19,
+            "pf": 0.882,
+            "mean": -16.88,
+            "win_pct": 50.0,
+            "t": -0.47
+          },
+          "oos": {
+            "units": 28,
+            "net": 2277.68,
+            "pf": 1.867,
+            "mean": 81.35,
+            "win_pct": 67.9,
+            "t": 1.36
+          }
+        },
+        "max_dd_pct": 4.47,
+        "breach": false
+      }
+    },
+    "R4_plus_vol_FULL": {
+      "guarded": {
+        "return_pct": 1.0625,
+        "tranche": {
+          "all": {
+            "tranches": 172,
+            "net": 1062.49,
+            "pf": 1.081
+          },
+          "is": {
+            "tranches": 119,
+            "net": -1215.19,
+            "pf": 0.883
+          },
+          "oos": {
+            "tranches": 53,
+            "net": 2277.68,
+            "pf": 1.838
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 100,
+            "net": 1062.49,
+            "pf": 1.082,
+            "mean": 10.62,
+            "win_pct": 55.0,
+            "t": 0.34
+          },
+          "is_": {
+            "units": 72,
+            "net": -1215.19,
+            "pf": 0.882,
+            "mean": -16.88,
+            "win_pct": 50.0,
+            "t": -0.47
+          },
+          "oos": {
+            "units": 28,
+            "net": 2277.68,
+            "pf": 1.867,
+            "mean": 81.35,
+            "win_pct": 67.9,
+            "t": 1.36
+          }
+        },
+        "max_dd_pct": 4.47,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 1.0625,
+        "tranche": {
+          "all": {
+            "tranches": 172,
+            "net": 1062.49,
+            "pf": 1.081
+          },
+          "is": {
+            "tranches": 119,
+            "net": -1215.19,
+            "pf": 0.883
+          },
+          "oos": {
+            "tranches": 53,
+            "net": 2277.68,
+            "pf": 1.838
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 100,
+            "net": 1062.49,
+            "pf": 1.082,
+            "mean": 10.62,
+            "win_pct": 55.0,
+            "t": 0.34
+          },
+          "is_": {
+            "units": 72,
+            "net": -1215.19,
+            "pf": 0.882,
+            "mean": -16.88,
+            "win_pct": 50.0,
+            "t": -0.47
+          },
+          "oos": {
+            "units": 28,
+            "net": 2277.68,
+            "pf": 1.867,
+            "mean": 81.35,
+            "win_pct": 67.9,
+            "t": 1.36
+          }
+        },
+        "max_dd_pct": 4.47,
+        "breach": false
+      }
+    },
+    "R0_dirfree": {
+      "guarded": {
+        "return_pct": -7.7826,
+        "tranche": {
+          "all": {
+            "tranches": 257,
+            "net": -7782.56,
+            "pf": 0.697
+          },
+          "is": {
+            "tranches": 257,
+            "net": -7782.56,
+            "pf": 0.697
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 165,
+            "net": -7782.56,
+            "pf": 0.694,
+            "mean": -47.17,
+            "win_pct": 46.7,
+            "t": -2.1
+          },
+          "is_": {
+            "units": 165,
+            "net": -7782.56,
+            "pf": 0.694,
+            "mean": -47.17,
+            "win_pct": 46.7,
+            "t": -2.1
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 10.08,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -12.6531,
+        "tranche": {
+          "all": {
+            "tranches": 627,
+            "net": -12653.11,
+            "pf": 0.774
+          },
+          "is": {
+            "tranches": 431,
+            "net": -13748.42,
+            "pf": 0.673
+          },
+          "oos": {
+            "tranches": 196,
+            "net": 1095.31,
+            "pf": 1.078
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 395,
+            "net": -12653.11,
+            "pf": 0.772,
+            "mean": -32.03,
+            "win_pct": 47.8,
+            "t": -2.29
+          },
+          "is_": {
+            "units": 279,
+            "net": -13748.42,
+            "pf": 0.67,
+            "mean": -49.28,
+            "win_pct": 46.2,
+            "t": -2.99
+          },
+          "oos": {
+            "units": 116,
+            "net": 1095.31,
+            "pf": 1.079,
+            "mean": 9.44,
+            "win_pct": 51.7,
+            "t": 0.36
+          }
+        },
+        "max_dd_pct": 17.45,
+        "breach": true
+      }
+    },
+    "_canonical_reproduced": true
+  },
+  "GBPUSD": {
+    "R0_raw_breakout": {
+      "guarded": {
+        "return_pct": -9.5667,
+        "tranche": {
+          "all": {
+            "tranches": 139,
+            "net": -9566.67,
+            "pf": 0.476
+          },
+          "is": {
+            "tranches": 139,
+            "net": -9566.67,
+            "pf": 0.476
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 93,
+            "net": -9566.67,
+            "pf": 0.47,
+            "mean": -102.87,
+            "win_pct": 41.9,
+            "t": -2.87
+          },
+          "is_": {
+            "units": 93,
+            "net": -9566.67,
+            "pf": 0.47,
+            "mean": -102.87,
+            "win_pct": 41.9,
+            "t": -2.87
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 11.02,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -15.0378,
+        "tranche": {
+          "all": {
+            "tranches": 652,
+            "net": -15037.78,
+            "pf": 0.752
+          },
+          "is": {
+            "tranches": 456,
+            "net": -13434.68,
+            "pf": 0.696
+          },
+          "oos": {
+            "tranches": 196,
+            "net": -1603.1,
+            "pf": 0.903
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 421,
+            "net": -15037.78,
+            "pf": 0.751,
+            "mean": -35.72,
+            "win_pct": 46.8,
+            "t": -2.62
+          },
+          "is_": {
+            "units": 298,
+            "net": -13434.68,
+            "pf": 0.694,
+            "mean": -45.08,
+            "win_pct": 45.6,
+            "t": -2.79
+          },
+          "oos": {
+            "units": 123,
+            "net": -1603.1,
+            "pf": 0.902,
+            "mean": -13.03,
+            "win_pct": 49.6,
+            "t": -0.51
+          }
+        },
+        "max_dd_pct": 16.77,
+        "breach": true
+      }
+    },
+    "R1_plus_buffer": {
+      "guarded": {
+        "return_pct": -7.8294,
+        "tranche": {
+          "all": {
+            "tranches": 250,
+            "net": -7829.41,
+            "pf": 0.686
+          },
+          "is": {
+            "tranches": 250,
+            "net": -7829.41,
+            "pf": 0.686
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 164,
+            "net": -7829.41,
+            "pf": 0.683,
+            "mean": -47.74,
+            "win_pct": 47.0,
+            "t": -2.13
+          },
+          "is_": {
+            "units": 164,
+            "net": -7829.41,
+            "pf": 0.683,
+            "mean": -47.74,
+            "win_pct": 47.0,
+            "t": -2.13
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 9.57,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -9.9853,
+        "tranche": {
+          "all": {
+            "tranches": 457,
+            "net": -9985.34,
+            "pf": 0.77
+          },
+          "is": {
+            "tranches": 338,
+            "net": -9332.15,
+            "pf": 0.715
+          },
+          "oos": {
+            "tranches": 119,
+            "net": -653.19,
+            "pf": 0.939
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 292,
+            "net": -9985.34,
+            "pf": 0.769,
+            "mean": -34.2,
+            "win_pct": 47.3,
+            "t": -2.0
+          },
+          "is_": {
+            "units": 219,
+            "net": -9332.15,
+            "pf": 0.713,
+            "mean": -42.61,
+            "win_pct": 47.0,
+            "t": -2.2
+          },
+          "oos": {
+            "units": 73,
+            "net": -653.19,
+            "pf": 0.938,
+            "mean": -8.95,
+            "win_pct": 47.9,
+            "t": -0.25
+          }
+        },
+        "max_dd_pct": 11.69,
+        "breach": true
+      }
+    },
+    "R2_plus_candle": {
+      "guarded": {
+        "return_pct": -8.2157,
+        "tranche": {
+          "all": {
+            "tranches": 289,
+            "net": -8215.71,
+            "pf": 0.716
+          },
+          "is": {
+            "tranches": 289,
+            "net": -8215.71,
+            "pf": 0.716
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 186,
+            "net": -8215.71,
+            "pf": 0.712,
+            "mean": -44.17,
+            "win_pct": 47.8,
+            "t": -2.0
+          },
+          "is_": {
+            "units": 186,
+            "net": -8215.71,
+            "pf": 0.712,
+            "mean": -44.17,
+            "win_pct": 47.8,
+            "t": -2.0
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 9.95,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -9.12,
+        "tranche": {
+          "all": {
+            "tranches": 418,
+            "net": -9119.98,
+            "pf": 0.771
+          },
+          "is": {
+            "tranches": 306,
+            "net": -7860.46,
+            "pf": 0.733
+          },
+          "oos": {
+            "tranches": 112,
+            "net": -1259.52,
+            "pf": 0.879
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 267,
+            "net": -9119.98,
+            "pf": 0.769,
+            "mean": -34.16,
+            "win_pct": 47.9,
+            "t": -1.9
+          },
+          "is_": {
+            "units": 197,
+            "net": -7860.46,
+            "pf": 0.731,
+            "mean": -39.9,
+            "win_pct": 48.2,
+            "t": -1.93
+          },
+          "oos": {
+            "units": 70,
+            "net": -1259.52,
+            "pf": 0.878,
+            "mean": -17.99,
+            "win_pct": 47.1,
+            "t": -0.49
+          }
+        },
+        "max_dd_pct": 10.84,
+        "breach": false
+      }
+    },
+    "R3_plus_htf": {
+      "guarded": {
+        "return_pct": -1.2328,
+        "tranche": {
+          "all": {
+            "tranches": 171,
+            "net": -1232.75,
+            "pf": 0.922
+          },
+          "is": {
+            "tranches": 134,
+            "net": -1901.13,
+            "pf": 0.848
+          },
+          "oos": {
+            "tranches": 37,
+            "net": 668.37,
+            "pf": 1.199
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 105,
+            "net": -1232.75,
+            "pf": 0.922,
+            "mean": -11.74,
+            "win_pct": 49.5,
+            "t": -0.37
+          },
+          "is_": {
+            "units": 83,
+            "net": -1901.13,
+            "pf": 0.847,
+            "mean": -22.91,
+            "win_pct": 49.4,
+            "t": -0.66
+          },
+          "oos": {
+            "units": 22,
+            "net": 668.37,
+            "pf": 1.2,
+            "mean": 30.38,
+            "win_pct": 50.0,
+            "t": 0.39
+          }
+        },
+        "max_dd_pct": 4.23,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -1.2328,
+        "tranche": {
+          "all": {
+            "tranches": 171,
+            "net": -1232.75,
+            "pf": 0.922
+          },
+          "is": {
+            "tranches": 134,
+            "net": -1901.13,
+            "pf": 0.848
+          },
+          "oos": {
+            "tranches": 37,
+            "net": 668.37,
+            "pf": 1.199
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 105,
+            "net": -1232.75,
+            "pf": 0.922,
+            "mean": -11.74,
+            "win_pct": 49.5,
+            "t": -0.37
+          },
+          "is_": {
+            "units": 83,
+            "net": -1901.13,
+            "pf": 0.847,
+            "mean": -22.91,
+            "win_pct": 49.4,
+            "t": -0.66
+          },
+          "oos": {
+            "units": 22,
+            "net": 668.37,
+            "pf": 1.2,
+            "mean": 30.38,
+            "win_pct": 50.0,
+            "t": 0.39
+          }
+        },
+        "max_dd_pct": 4.23,
+        "breach": false
+      }
+    },
+    "R4_plus_vol_FULL": {
+      "guarded": {
+        "return_pct": -1.2328,
+        "tranche": {
+          "all": {
+            "tranches": 171,
+            "net": -1232.75,
+            "pf": 0.922
+          },
+          "is": {
+            "tranches": 134,
+            "net": -1901.13,
+            "pf": 0.848
+          },
+          "oos": {
+            "tranches": 37,
+            "net": 668.37,
+            "pf": 1.199
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 105,
+            "net": -1232.75,
+            "pf": 0.922,
+            "mean": -11.74,
+            "win_pct": 49.5,
+            "t": -0.37
+          },
+          "is_": {
+            "units": 83,
+            "net": -1901.13,
+            "pf": 0.847,
+            "mean": -22.91,
+            "win_pct": 49.4,
+            "t": -0.66
+          },
+          "oos": {
+            "units": 22,
+            "net": 668.37,
+            "pf": 1.2,
+            "mean": 30.38,
+            "win_pct": 50.0,
+            "t": 0.39
+          }
+        },
+        "max_dd_pct": 4.23,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -1.2328,
+        "tranche": {
+          "all": {
+            "tranches": 171,
+            "net": -1232.75,
+            "pf": 0.922
+          },
+          "is": {
+            "tranches": 134,
+            "net": -1901.13,
+            "pf": 0.848
+          },
+          "oos": {
+            "tranches": 37,
+            "net": 668.37,
+            "pf": 1.199
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 105,
+            "net": -1232.75,
+            "pf": 0.922,
+            "mean": -11.74,
+            "win_pct": 49.5,
+            "t": -0.37
+          },
+          "is_": {
+            "units": 83,
+            "net": -1901.13,
+            "pf": 0.847,
+            "mean": -22.91,
+            "win_pct": 49.4,
+            "t": -0.66
+          },
+          "oos": {
+            "units": 22,
+            "net": 668.37,
+            "pf": 1.2,
+            "mean": 30.38,
+            "win_pct": 50.0,
+            "t": 0.39
+          }
+        },
+        "max_dd_pct": 4.23,
+        "breach": false
+      }
+    },
+    "R0_dirfree": {
+      "guarded": {
+        "return_pct": -9.5667,
+        "tranche": {
+          "all": {
+            "tranches": 139,
+            "net": -9566.67,
+            "pf": 0.476
+          },
+          "is": {
+            "tranches": 139,
+            "net": -9566.67,
+            "pf": 0.476
+          },
+          "oos": {
+            "tranches": 0,
+            "net": 0,
+            "pf": null
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 93,
+            "net": -9566.67,
+            "pf": 0.47,
+            "mean": -102.87,
+            "win_pct": 41.9,
+            "t": -2.87
+          },
+          "is_": {
+            "units": 93,
+            "net": -9566.67,
+            "pf": 0.47,
+            "mean": -102.87,
+            "win_pct": 41.9,
+            "t": -2.87
+          },
+          "oos": {
+            "units": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "win_pct": null,
+            "t": null
+          }
+        },
+        "max_dd_pct": 11.02,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -15.0378,
+        "tranche": {
+          "all": {
+            "tranches": 652,
+            "net": -15037.78,
+            "pf": 0.752
+          },
+          "is": {
+            "tranches": 456,
+            "net": -13434.68,
+            "pf": 0.696
+          },
+          "oos": {
+            "tranches": 196,
+            "net": -1603.1,
+            "pf": 0.903
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 421,
+            "net": -15037.78,
+            "pf": 0.751,
+            "mean": -35.72,
+            "win_pct": 46.8,
+            "t": -2.62
+          },
+          "is_": {
+            "units": 298,
+            "net": -13434.68,
+            "pf": 0.694,
+            "mean": -45.08,
+            "win_pct": 45.6,
+            "t": -2.79
+          },
+          "oos": {
+            "units": 123,
+            "net": -1603.1,
+            "pf": 0.902,
+            "mean": -13.03,
+            "win_pct": 49.6,
+            "t": -0.51
+          }
+        },
+        "max_dd_pct": 16.77,
+        "breach": true
+      }
+    },
+    "_canonical_reproduced": true
+  },
+  "USDJPY": {
+    "R0_raw_breakout": {
+      "guarded": {
+        "return_pct": -5.95,
+        "tranche": {
+          "all": {
+            "tranches": 518,
+            "net": -5950.01,
+            "pf": 0.878
+          },
+          "is": {
+            "tranches": 385,
+            "net": -3195.0,
+            "pf": 0.911
+          },
+          "oos": {
+            "tranches": 133,
+            "net": -2755.01,
+            "pf": 0.785
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 332,
+            "net": -5950.01,
+            "pf": 0.877,
+            "mean": -17.92,
+            "win_pct": 48.2,
+            "t": -1.04
+          },
+          "is_": {
+            "units": 241,
+            "net": -3195.0,
+            "pf": 0.91,
+            "mean": -13.26,
+            "win_pct": 49.0,
+            "t": -0.64
+          },
+          "oos": {
+            "units": 91,
+            "net": -2755.01,
+            "pf": 0.784,
+            "mean": -30.27,
+            "win_pct": 46.2,
+            "t": -1.0
+          }
+        },
+        "max_dd_pct": 11.15,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -5.95,
+        "tranche": {
+          "all": {
+            "tranches": 518,
+            "net": -5950.01,
+            "pf": 0.878
+          },
+          "is": {
+            "tranches": 385,
+            "net": -3195.0,
+            "pf": 0.911
+          },
+          "oos": {
+            "tranches": 133,
+            "net": -2755.01,
+            "pf": 0.785
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 332,
+            "net": -5950.01,
+            "pf": 0.877,
+            "mean": -17.92,
+            "win_pct": 48.2,
+            "t": -1.04
+          },
+          "is_": {
+            "units": 241,
+            "net": -3195.0,
+            "pf": 0.91,
+            "mean": -13.26,
+            "win_pct": 49.0,
+            "t": -0.64
+          },
+          "oos": {
+            "units": 91,
+            "net": -2755.01,
+            "pf": 0.784,
+            "mean": -30.27,
+            "win_pct": 46.2,
+            "t": -1.0
+          }
+        },
+        "max_dd_pct": 11.15,
+        "breach": false
+      }
+    },
+    "R1_plus_buffer": {
+      "guarded": {
+        "return_pct": 0.218,
+        "tranche": {
+          "all": {
+            "tranches": 346,
+            "net": 217.96,
+            "pf": 1.007
+          },
+          "is": {
+            "tranches": 265,
+            "net": 1473.61,
+            "pf": 1.065
+          },
+          "oos": {
+            "tranches": 81,
+            "net": -1255.65,
+            "pf": 0.845
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 213,
+            "net": 217.96,
+            "pf": 1.007,
+            "mean": 1.02,
+            "win_pct": 51.6,
+            "t": 0.05
+          },
+          "is_": {
+            "units": 159,
+            "net": 1473.61,
+            "pf": 1.065,
+            "mean": 9.27,
+            "win_pct": 52.8,
+            "t": 0.35
+          },
+          "oos": {
+            "units": 54,
+            "net": -1255.65,
+            "pf": 0.845,
+            "mean": -23.25,
+            "win_pct": 48.1,
+            "t": -0.55
+          }
+        },
+        "max_dd_pct": 7.12,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 0.218,
+        "tranche": {
+          "all": {
+            "tranches": 346,
+            "net": 217.96,
+            "pf": 1.007
+          },
+          "is": {
+            "tranches": 265,
+            "net": 1473.61,
+            "pf": 1.065
+          },
+          "oos": {
+            "tranches": 81,
+            "net": -1255.65,
+            "pf": 0.845
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 213,
+            "net": 217.96,
+            "pf": 1.007,
+            "mean": 1.02,
+            "win_pct": 51.6,
+            "t": 0.05
+          },
+          "is_": {
+            "units": 159,
+            "net": 1473.61,
+            "pf": 1.065,
+            "mean": 9.27,
+            "win_pct": 52.8,
+            "t": 0.35
+          },
+          "oos": {
+            "units": 54,
+            "net": -1255.65,
+            "pf": 0.845,
+            "mean": -23.25,
+            "win_pct": 48.1,
+            "t": -0.55
+          }
+        },
+        "max_dd_pct": 7.12,
+        "breach": false
+      }
+    },
+    "R2_plus_candle": {
+      "guarded": {
+        "return_pct": 0.5083,
+        "tranche": {
+          "all": {
+            "tranches": 331,
+            "net": 508.27,
+            "pf": 1.017
+          },
+          "is": {
+            "tranches": 253,
+            "net": 1565.14,
+            "pf": 1.072
+          },
+          "oos": {
+            "tranches": 78,
+            "net": -1056.87,
+            "pf": 0.864
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 204,
+            "net": 508.27,
+            "pf": 1.017,
+            "mean": 2.49,
+            "win_pct": 51.5,
+            "t": 0.11
+          },
+          "is_": {
+            "units": 152,
+            "net": 1565.14,
+            "pf": 1.073,
+            "mean": 10.3,
+            "win_pct": 52.6,
+            "t": 0.38
+          },
+          "oos": {
+            "units": 52,
+            "net": -1056.87,
+            "pf": 0.864,
+            "mean": -20.32,
+            "win_pct": 48.1,
+            "t": -0.47
+          }
+        },
+        "max_dd_pct": 6.77,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 0.5083,
+        "tranche": {
+          "all": {
+            "tranches": 331,
+            "net": 508.27,
+            "pf": 1.017
+          },
+          "is": {
+            "tranches": 253,
+            "net": 1565.14,
+            "pf": 1.072
+          },
+          "oos": {
+            "tranches": 78,
+            "net": -1056.87,
+            "pf": 0.864
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 204,
+            "net": 508.27,
+            "pf": 1.017,
+            "mean": 2.49,
+            "win_pct": 51.5,
+            "t": 0.11
+          },
+          "is_": {
+            "units": 152,
+            "net": 1565.14,
+            "pf": 1.073,
+            "mean": 10.3,
+            "win_pct": 52.6,
+            "t": 0.38
+          },
+          "oos": {
+            "units": 52,
+            "net": -1056.87,
+            "pf": 0.864,
+            "mean": -20.32,
+            "win_pct": 48.1,
+            "t": -0.47
+          }
+        },
+        "max_dd_pct": 6.77,
+        "breach": false
+      }
+    },
+    "R3_plus_htf": {
+      "guarded": {
+        "return_pct": -4.1023,
+        "tranche": {
+          "all": {
+            "tranches": 143,
+            "net": -4102.29,
+            "pf": 0.72
+          },
+          "is": {
+            "tranches": 92,
+            "net": -3277.65,
+            "pf": 0.667
+          },
+          "oos": {
+            "tranches": 51,
+            "net": -824.64,
+            "pf": 0.828
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 97,
+            "net": -4102.29,
+            "pf": 0.719,
+            "mean": -42.29,
+            "win_pct": 47.4,
+            "t": -1.44
+          },
+          "is_": {
+            "units": 62,
+            "net": -3277.65,
+            "pf": 0.666,
+            "mean": -52.87,
+            "win_pct": 46.8,
+            "t": -1.43
+          },
+          "oos": {
+            "units": 35,
+            "net": -824.64,
+            "pf": 0.828,
+            "mean": -23.56,
+            "win_pct": 48.6,
+            "t": -0.49
+          }
+        },
+        "max_dd_pct": 5.17,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -4.1023,
+        "tranche": {
+          "all": {
+            "tranches": 143,
+            "net": -4102.29,
+            "pf": 0.72
+          },
+          "is": {
+            "tranches": 92,
+            "net": -3277.65,
+            "pf": 0.667
+          },
+          "oos": {
+            "tranches": 51,
+            "net": -824.64,
+            "pf": 0.828
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 97,
+            "net": -4102.29,
+            "pf": 0.719,
+            "mean": -42.29,
+            "win_pct": 47.4,
+            "t": -1.44
+          },
+          "is_": {
+            "units": 62,
+            "net": -3277.65,
+            "pf": 0.666,
+            "mean": -52.87,
+            "win_pct": 46.8,
+            "t": -1.43
+          },
+          "oos": {
+            "units": 35,
+            "net": -824.64,
+            "pf": 0.828,
+            "mean": -23.56,
+            "win_pct": 48.6,
+            "t": -0.49
+          }
+        },
+        "max_dd_pct": 5.17,
+        "breach": false
+      }
+    },
+    "R4_plus_vol_FULL": {
+      "guarded": {
+        "return_pct": -4.2131,
+        "tranche": {
+          "all": {
+            "tranches": 142,
+            "net": -4213.07,
+            "pf": 0.713
+          },
+          "is": {
+            "tranches": 91,
+            "net": -3372.44,
+            "pf": 0.658
+          },
+          "oos": {
+            "tranches": 51,
+            "net": -840.63,
+            "pf": 0.825
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 96,
+            "net": -4213.07,
+            "pf": 0.712,
+            "mean": -43.89,
+            "win_pct": 46.9,
+            "t": -1.49
+          },
+          "is_": {
+            "units": 61,
+            "net": -3372.44,
+            "pf": 0.656,
+            "mean": -55.29,
+            "win_pct": 45.9,
+            "t": -1.47
+          },
+          "oos": {
+            "units": 35,
+            "net": -840.63,
+            "pf": 0.825,
+            "mean": -24.02,
+            "win_pct": 48.6,
+            "t": -0.5
+          }
+        },
+        "max_dd_pct": 5.28,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -4.2131,
+        "tranche": {
+          "all": {
+            "tranches": 142,
+            "net": -4213.07,
+            "pf": 0.713
+          },
+          "is": {
+            "tranches": 91,
+            "net": -3372.44,
+            "pf": 0.658
+          },
+          "oos": {
+            "tranches": 51,
+            "net": -840.63,
+            "pf": 0.825
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 96,
+            "net": -4213.07,
+            "pf": 0.712,
+            "mean": -43.89,
+            "win_pct": 46.9,
+            "t": -1.49
+          },
+          "is_": {
+            "units": 61,
+            "net": -3372.44,
+            "pf": 0.656,
+            "mean": -55.29,
+            "win_pct": 45.9,
+            "t": -1.47
+          },
+          "oos": {
+            "units": 35,
+            "net": -840.63,
+            "pf": 0.825,
+            "mean": -24.02,
+            "win_pct": 48.6,
+            "t": -0.5
+          }
+        },
+        "max_dd_pct": 5.28,
+        "breach": false
+      }
+    },
+    "R0_dirfree": {
+      "guarded": {
+        "return_pct": -5.95,
+        "tranche": {
+          "all": {
+            "tranches": 518,
+            "net": -5950.01,
+            "pf": 0.878
+          },
+          "is": {
+            "tranches": 385,
+            "net": -3195.0,
+            "pf": 0.911
+          },
+          "oos": {
+            "tranches": 133,
+            "net": -2755.01,
+            "pf": 0.785
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 332,
+            "net": -5950.01,
+            "pf": 0.877,
+            "mean": -17.92,
+            "win_pct": 48.2,
+            "t": -1.04
+          },
+          "is_": {
+            "units": 241,
+            "net": -3195.0,
+            "pf": 0.91,
+            "mean": -13.26,
+            "win_pct": 49.0,
+            "t": -0.64
+          },
+          "oos": {
+            "units": 91,
+            "net": -2755.01,
+            "pf": 0.784,
+            "mean": -30.27,
+            "win_pct": 46.2,
+            "t": -1.0
+          }
+        },
+        "max_dd_pct": 11.15,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -5.95,
+        "tranche": {
+          "all": {
+            "tranches": 518,
+            "net": -5950.01,
+            "pf": 0.878
+          },
+          "is": {
+            "tranches": 385,
+            "net": -3195.0,
+            "pf": 0.911
+          },
+          "oos": {
+            "tranches": 133,
+            "net": -2755.01,
+            "pf": 0.785
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 332,
+            "net": -5950.01,
+            "pf": 0.877,
+            "mean": -17.92,
+            "win_pct": 48.2,
+            "t": -1.04
+          },
+          "is_": {
+            "units": 241,
+            "net": -3195.0,
+            "pf": 0.91,
+            "mean": -13.26,
+            "win_pct": 49.0,
+            "t": -0.64
+          },
+          "oos": {
+            "units": 91,
+            "net": -2755.01,
+            "pf": 0.784,
+            "mean": -30.27,
+            "win_pct": 46.2,
+            "t": -1.0
+          }
+        },
+        "max_dd_pct": 11.15,
+        "breach": false
+      }
+    },
+    "_canonical_reproduced": true
+  },
+  "XAUUSD": {
+    "R0_raw_breakout": {
+      "guarded": {
+        "return_pct": 2.7375,
+        "tranche": {
+          "all": {
+            "tranches": 668,
+            "net": 2737.55,
+            "pf": 1.051
+          },
+          "is": {
+            "tranches": 482,
+            "net": -1951.04,
+            "pf": 0.951
+          },
+          "oos": {
+            "tranches": 186,
+            "net": 4688.59,
+            "pf": 1.359
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 412,
+            "net": 2737.55,
+            "pf": 1.052,
+            "mean": 6.64,
+            "win_pct": 54.6,
+            "t": 0.45
+          },
+          "is_": {
+            "units": 301,
+            "net": -1951.04,
+            "pf": 0.951,
+            "mean": -6.48,
+            "win_pct": 53.5,
+            "t": -0.38
+          },
+          "oos": {
+            "units": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "win_pct": 57.7,
+            "t": 1.39
+          }
+        },
+        "max_dd_pct": 7.99,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 2.7375,
+        "tranche": {
+          "all": {
+            "tranches": 668,
+            "net": 2737.55,
+            "pf": 1.051
+          },
+          "is": {
+            "tranches": 482,
+            "net": -1951.04,
+            "pf": 0.951
+          },
+          "oos": {
+            "tranches": 186,
+            "net": 4688.59,
+            "pf": 1.359
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 412,
+            "net": 2737.55,
+            "pf": 1.052,
+            "mean": 6.64,
+            "win_pct": 54.6,
+            "t": 0.45
+          },
+          "is_": {
+            "units": 301,
+            "net": -1951.04,
+            "pf": 0.951,
+            "mean": -6.48,
+            "win_pct": 53.5,
+            "t": -0.38
+          },
+          "oos": {
+            "units": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "win_pct": 57.7,
+            "t": 1.39
+          }
+        },
+        "max_dd_pct": 7.99,
+        "breach": false
+      }
+    },
+    "R1_plus_buffer": {
+      "guarded": {
+        "return_pct": -4.9005,
+        "tranche": {
+          "all": {
+            "tranches": 460,
+            "net": -4900.51,
+            "pf": 0.877
+          },
+          "is": {
+            "tranches": 337,
+            "net": -2603.57,
+            "pf": 0.909
+          },
+          "oos": {
+            "tranches": 123,
+            "net": -2296.94,
+            "pf": 0.794
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 295,
+            "net": -4900.51,
+            "pf": 0.876,
+            "mean": -16.61,
+            "win_pct": 51.5,
+            "t": -0.99
+          },
+          "is_": {
+            "units": 213,
+            "net": -2603.57,
+            "pf": 0.909,
+            "mean": -12.22,
+            "win_pct": 53.1,
+            "t": -0.61
+          },
+          "oos": {
+            "units": 82,
+            "net": -2296.94,
+            "pf": 0.793,
+            "mean": -28.01,
+            "win_pct": 47.6,
+            "t": -0.91
+          }
+        },
+        "max_dd_pct": 8.04,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -4.9005,
+        "tranche": {
+          "all": {
+            "tranches": 460,
+            "net": -4900.51,
+            "pf": 0.877
+          },
+          "is": {
+            "tranches": 337,
+            "net": -2603.57,
+            "pf": 0.909
+          },
+          "oos": {
+            "tranches": 123,
+            "net": -2296.94,
+            "pf": 0.794
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 295,
+            "net": -4900.51,
+            "pf": 0.876,
+            "mean": -16.61,
+            "win_pct": 51.5,
+            "t": -0.99
+          },
+          "is_": {
+            "units": 213,
+            "net": -2603.57,
+            "pf": 0.909,
+            "mean": -12.22,
+            "win_pct": 53.1,
+            "t": -0.61
+          },
+          "oos": {
+            "units": 82,
+            "net": -2296.94,
+            "pf": 0.793,
+            "mean": -28.01,
+            "win_pct": 47.6,
+            "t": -0.91
+          }
+        },
+        "max_dd_pct": 8.04,
+        "breach": false
+      }
+    },
+    "R2_plus_candle": {
+      "guarded": {
+        "return_pct": -4.3576,
+        "tranche": {
+          "all": {
+            "tranches": 395,
+            "net": -4357.64,
+            "pf": 0.875
+          },
+          "is": {
+            "tranches": 295,
+            "net": -2250.42,
+            "pf": 0.912
+          },
+          "oos": {
+            "tranches": 100,
+            "net": -2107.22,
+            "pf": 0.773
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 255,
+            "net": -4357.64,
+            "pf": 0.874,
+            "mean": -17.09,
+            "win_pct": 51.0,
+            "t": -0.94
+          },
+          "is_": {
+            "units": 187,
+            "net": -2250.42,
+            "pf": 0.911,
+            "mean": -12.03,
+            "win_pct": 52.4,
+            "t": -0.55
+          },
+          "oos": {
+            "units": 68,
+            "net": -2107.22,
+            "pf": 0.771,
+            "mean": -30.99,
+            "win_pct": 47.1,
+            "t": -0.93
+          }
+        },
+        "max_dd_pct": 6.75,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": -4.3576,
+        "tranche": {
+          "all": {
+            "tranches": 395,
+            "net": -4357.64,
+            "pf": 0.875
+          },
+          "is": {
+            "tranches": 295,
+            "net": -2250.42,
+            "pf": 0.912
+          },
+          "oos": {
+            "tranches": 100,
+            "net": -2107.22,
+            "pf": 0.773
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 255,
+            "net": -4357.64,
+            "pf": 0.874,
+            "mean": -17.09,
+            "win_pct": 51.0,
+            "t": -0.94
+          },
+          "is_": {
+            "units": 187,
+            "net": -2250.42,
+            "pf": 0.911,
+            "mean": -12.03,
+            "win_pct": 52.4,
+            "t": -0.55
+          },
+          "oos": {
+            "units": 68,
+            "net": -2107.22,
+            "pf": 0.771,
+            "mean": -30.99,
+            "win_pct": 47.1,
+            "t": -0.93
+          }
+        },
+        "max_dd_pct": 6.75,
+        "breach": false
+      }
+    },
+    "R3_plus_htf": {
+      "guarded": {
+        "return_pct": 1.7289,
+        "tranche": {
+          "all": {
+            "tranches": 253,
+            "net": 1728.9,
+            "pf": 1.083
+          },
+          "is": {
+            "tranches": 183,
+            "net": 2627.67,
+            "pf": 1.184
+          },
+          "oos": {
+            "tranches": 70,
+            "net": -898.77,
+            "pf": 0.863
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 158,
+            "net": 1728.9,
+            "pf": 1.084,
+            "mean": 10.94,
+            "win_pct": 56.3,
+            "t": 0.44
+          },
+          "is_": {
+            "units": 112,
+            "net": 2627.67,
+            "pf": 1.187,
+            "mean": 23.46,
+            "win_pct": 58.9,
+            "t": 0.78
+          },
+          "oos": {
+            "units": 46,
+            "net": -898.77,
+            "pf": 0.862,
+            "mean": -19.54,
+            "win_pct": 50.0,
+            "t": -0.43
+          }
+        },
+        "max_dd_pct": 4.09,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 1.7289,
+        "tranche": {
+          "all": {
+            "tranches": 253,
+            "net": 1728.9,
+            "pf": 1.083
+          },
+          "is": {
+            "tranches": 183,
+            "net": 2627.67,
+            "pf": 1.184
+          },
+          "oos": {
+            "tranches": 70,
+            "net": -898.77,
+            "pf": 0.863
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 158,
+            "net": 1728.9,
+            "pf": 1.084,
+            "mean": 10.94,
+            "win_pct": 56.3,
+            "t": 0.44
+          },
+          "is_": {
+            "units": 112,
+            "net": 2627.67,
+            "pf": 1.187,
+            "mean": 23.46,
+            "win_pct": 58.9,
+            "t": 0.78
+          },
+          "oos": {
+            "units": 46,
+            "net": -898.77,
+            "pf": 0.862,
+            "mean": -19.54,
+            "win_pct": 50.0,
+            "t": -0.43
+          }
+        },
+        "max_dd_pct": 4.09,
+        "breach": false
+      }
+    },
+    "R4_plus_vol_FULL": {
+      "guarded": {
+        "return_pct": 1.7289,
+        "tranche": {
+          "all": {
+            "tranches": 253,
+            "net": 1728.9,
+            "pf": 1.083
+          },
+          "is": {
+            "tranches": 183,
+            "net": 2627.67,
+            "pf": 1.184
+          },
+          "oos": {
+            "tranches": 70,
+            "net": -898.77,
+            "pf": 0.863
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 158,
+            "net": 1728.9,
+            "pf": 1.084,
+            "mean": 10.94,
+            "win_pct": 56.3,
+            "t": 0.44
+          },
+          "is_": {
+            "units": 112,
+            "net": 2627.67,
+            "pf": 1.187,
+            "mean": 23.46,
+            "win_pct": 58.9,
+            "t": 0.78
+          },
+          "oos": {
+            "units": 46,
+            "net": -898.77,
+            "pf": 0.862,
+            "mean": -19.54,
+            "win_pct": 50.0,
+            "t": -0.43
+          }
+        },
+        "max_dd_pct": 4.09,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 1.7289,
+        "tranche": {
+          "all": {
+            "tranches": 253,
+            "net": 1728.9,
+            "pf": 1.083
+          },
+          "is": {
+            "tranches": 183,
+            "net": 2627.67,
+            "pf": 1.184
+          },
+          "oos": {
+            "tranches": 70,
+            "net": -898.77,
+            "pf": 0.863
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 158,
+            "net": 1728.9,
+            "pf": 1.084,
+            "mean": 10.94,
+            "win_pct": 56.3,
+            "t": 0.44
+          },
+          "is_": {
+            "units": 112,
+            "net": 2627.67,
+            "pf": 1.187,
+            "mean": 23.46,
+            "win_pct": 58.9,
+            "t": 0.78
+          },
+          "oos": {
+            "units": 46,
+            "net": -898.77,
+            "pf": 0.862,
+            "mean": -19.54,
+            "win_pct": 50.0,
+            "t": -0.43
+          }
+        },
+        "max_dd_pct": 4.09,
+        "breach": false
+      }
+    },
+    "R0_dirfree": {
+      "guarded": {
+        "return_pct": 2.7375,
+        "tranche": {
+          "all": {
+            "tranches": 668,
+            "net": 2737.55,
+            "pf": 1.051
+          },
+          "is": {
+            "tranches": 482,
+            "net": -1951.04,
+            "pf": 0.951
+          },
+          "oos": {
+            "tranches": 186,
+            "net": 4688.59,
+            "pf": 1.359
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 412,
+            "net": 2737.55,
+            "pf": 1.052,
+            "mean": 6.64,
+            "win_pct": 54.6,
+            "t": 0.45
+          },
+          "is_": {
+            "units": 301,
+            "net": -1951.04,
+            "pf": 0.951,
+            "mean": -6.48,
+            "win_pct": 53.5,
+            "t": -0.38
+          },
+          "oos": {
+            "units": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "win_pct": 57.7,
+            "t": 1.39
+          }
+        },
+        "max_dd_pct": 7.99,
+        "breach": false
+      },
+      "diag_unguarded": {
+        "return_pct": 2.7375,
+        "tranche": {
+          "all": {
+            "tranches": 668,
+            "net": 2737.55,
+            "pf": 1.051
+          },
+          "is": {
+            "tranches": 482,
+            "net": -1951.04,
+            "pf": 0.951
+          },
+          "oos": {
+            "tranches": 186,
+            "net": 4688.59,
+            "pf": 1.359
+          }
+        },
+        "unit": {
+          "all": {
+            "units": 412,
+            "net": 2737.55,
+            "pf": 1.052,
+            "mean": 6.64,
+            "win_pct": 54.6,
+            "t": 0.45
+          },
+          "is_": {
+            "units": 301,
+            "net": -1951.04,
+            "pf": 0.951,
+            "mean": -6.48,
+            "win_pct": 53.5,
+            "t": -0.38
+          },
+          "oos": {
+            "units": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "win_pct": 57.7,
+            "t": 1.39
+          }
+        },
+        "max_dd_pct": 7.99,
+        "breach": false
+      }
+    },
+    "_canonical_reproduced": true
+  }
+}

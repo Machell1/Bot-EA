@@ -9,8 +9,11 @@ conservative FTMO 2-Step account controls.
 > corrected engine (now including approximate overnight swap and the remaining
 > EA-parity nuances) EURUSD returns only **+1.06%** (was a flattered +4.03%)
 > with a losing in-sample half, and the strategy is negative on GBPUSD and
-> USDJPY and in-sample-only on XAUUSD. Do not use it for a funded/challenge decision; the
-> only credible next step is MetaTrader 5 real-tick validation. See
+> USDJPY and in-sample-only on XAUUSD. A 7-dimension mechanism audit
+> ([docs/WHY_NO_EDGE.md](docs/WHY_NO_EDGE.md)) explains *why*: no pre-cost
+> breakout drift on the FX majors, ~zero gross expectancy, filters that fit
+> the past, and positives that are regime luck a trivial baseline beats. Do
+> not use it for a funded/challenge decision. See
 > [the full result](docs/BACKTEST_RESULTS.md) and [the data brief](docs/DATA.md).
 
 The strategy buys or sells a 20-bar Donchian breakout only when a stack of

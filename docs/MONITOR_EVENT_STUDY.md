@@ -6,6 +6,15 @@
 > (`backtest/monitor_event_study.py`) are recoverable from git history at
 > commit `0d9495d`. This document and the results JSONs are kept as the
 > record of why.
+>
+> **Correction (2026-07-14, why-no-edge audit):** this study's secondary
+> claim that the H1 exits "leak ~16R vs random exits" did NOT survive null
+> calibration — the identical random-exit benchmark shows a comparable or
+> larger "leak" on permuted, zero-information data (fill-model asymmetry +
+> hindsight-bounded exit windows). See `docs/WHY_NO_EDGE.md` §7. The monitor
+> verdicts in this document (act-mode kill, alert = stop proximity) are
+> unaffected — they rest on the monitor's own controls, not the leak figure.
+> Disregard the "redirect effort to the H1 exit engine" recommendation.
 
 **Verdict: do not ship `act` mode; the alert itself is a stop-proximity
 detector, not incremental signal.** On 70 real H1 units replayed over real M5

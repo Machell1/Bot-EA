@@ -1,0 +1,619 @@
+{
+  "EURUSD": {
+    "base": {
+      "return_pct": 1.0624885714287435,
+      "net_profit": 1062.4885714287304,
+      "oos_net_profit": 2277.6767857143523,
+      "trades": 172,
+      "units": 100,
+      "unit_r_total": 5.970246000718369,
+      "oos_unit_r_total": 8.043578216146539,
+      "max_recon_err_usd": 1.9895196601282805e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 53,
+        "tp2": 19,
+        "trail": 26,
+        "stop": 63,
+        "weekend": 11
+      }
+    },
+    "pyramid_off": {
+      "return_pct": 0.477038928571627,
+      "net_profit": 477.0389285715283,
+      "oos_net_profit": 1422.8267857143087,
+      "trades": 125,
+      "units": 74,
+      "unit_r_total": 3.5231013562903666,
+      "oos_unit_r_total": 5.1514182001092905,
+      "max_recon_err_usd": 1.978150976356119e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 38,
+        "tp2": 13,
+        "trail": 22,
+        "stop": 42,
+        "weekend": 10
+      }
+    },
+    "no_trail": {
+      "return_pct": -2.1182385714283103,
+      "net_profit": -2118.238571428395,
+      "oos_net_profit": -38.320714285643206,
+      "trades": 174,
+      "units": 105,
+      "unit_r_total": -4.1149762559981085,
+      "oos_unit_r_total": 0.7401617658618613,
+      "max_recon_err_usd": 1.9895196601282805e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 51,
+        "tp2": 18,
+        "stop": 67,
+        "weekend": 24,
+        "trail": 14
+      }
+    },
+    "no_tp2": {
+      "return_pct": -4.244746428571222,
+      "net_profit": -4244.746428571329,
+      "oos_net_profit": -1205.8021428570992,
+      "trades": 156,
+      "units": 105,
+      "unit_r_total": -10.910196890352312,
+      "oos_unit_r_total": -2.994664147598547,
+      "max_recon_err_usd": 2.376054908381775e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 51,
+        "stop": 67,
+        "weekend": 24,
+        "trail": 14
+      }
+    },
+    "no_be_full": {
+      "return_pct": 0.5953607142858752,
+      "net_profit": 595.3607142858829,
+      "oos_net_profit": 562.2200000000661,
+      "trades": 209,
+      "units": 119,
+      "unit_r_total": 5.733979774956511,
+      "oos_unit_r_total": 2.821187394131335,
+      "max_recon_err_usd": 2.6943780540023e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 58,
+        "tp2": 32,
+        "trail": 20,
+        "stop": 74,
+        "weekend": 25
+      }
+    },
+    "no_tp1": {
+      "return_pct": -3.2191153571428544,
+      "net_profit": -3219.1153571428363,
+      "oos_net_profit": -941.2657142857115,
+      "trades": 66,
+      "units": 66,
+      "unit_r_total": -8.116241057134472,
+      "oos_unit_r_total": -2.255966534243143,
+      "max_recon_err_usd": 3.433342499192804e-11,
+      "official_breach": false,
+      "reasons": {
+        "weekend": 16,
+        "stop": 40,
+        "trail": 10
+      }
+    },
+    "stop_flip_only": {
+      "return_pct": -2.5240835714284926,
+      "net_profit": -2524.0835714285577,
+      "oos_net_profit": -2277.6432142857275,
+      "trades": 58,
+      "units": 58,
+      "unit_r_total": -5.471638448461679,
+      "oos_unit_r_total": -6.38777902060634,
+      "max_recon_err_usd": 3.865352482534945e-11,
+      "official_breach": false,
+      "reasons": {
+        "weekend": 23,
+        "stop": 35
+      }
+    },
+    "stop_flip_only_no_wk": {
+      "return_pct": -7.69065821428595,
+      "net_profit": -7690.658214285717,
+      "oos_net_profit": -2670.078571428589,
+      "trades": 40,
+      "units": 40,
+      "unit_r_total": -21.93675493777215,
+      "oos_unit_r_total": -7.999999999999982,
+      "max_recon_err_usd": 3.8198777474462986e-11,
+      "official_breach": false,
+      "reasons": {
+        "trend_change": 6,
+        "stop": 34
+      }
+    },
+    "no_weekend": {
+      "return_pct": 2.5142496428573136,
+      "net_profit": 2514.249642857312,
+      "oos_net_profit": 2082.1785714286016,
+      "trades": 182,
+      "units": 100,
+      "unit_r_total": 10.83750343712611,
+      "oos_unit_r_total": 7.426219598659753,
+      "max_recon_err_usd": 2.0463630789890885e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 59,
+        "tp2": 23,
+        "trail": 30,
+        "stop": 70
+      }
+    }
+  },
+  "GBPUSD": {
+    "base": {
+      "return_pct": -1.2327542857146767,
+      "net_profit": -1232.7542857146482,
+      "oos_net_profit": 668.3724999998694,
+      "trades": 171,
+      "units": 105,
+      "unit_r_total": -1.3854353447449552,
+      "oos_unit_r_total": 2.663286925991597,
+      "max_recon_err_usd": 3.581135388230905e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 48,
+        "tp2": 18,
+        "stop": 65,
+        "trail": 24,
+        "weekend": 16
+      }
+    },
+    "pyramid_off": {
+      "return_pct": -2.2148928571430915,
+      "net_profit": -2214.892857143108,
+      "oos_net_profit": -493.09857142868447,
+      "trades": 105,
+      "units": 67,
+      "unit_r_total": -5.586348055752023,
+      "oos_unit_r_total": -1.3276049015962268,
+      "max_recon_err_usd": 3.581135388230905e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 26,
+        "tp2": 12,
+        "stop": 44,
+        "trail": 13,
+        "weekend": 10
+      }
+    },
+    "no_trail": {
+      "return_pct": 0.07376535714258559,
+      "net_profit": 73.76535714249873,
+      "oos_net_profit": 217.16214285700337,
+      "trades": 160,
+      "units": 97,
+      "unit_r_total": 2.752832215939653,
+      "oos_unit_r_total": 1.2678434571759172,
+      "max_recon_err_usd": 5.468336894409731e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 45,
+        "tp2": 18,
+        "stop": 61,
+        "trail": 7,
+        "weekend": 29
+      }
+    },
+    "no_tp2": {
+      "return_pct": 0.12386928571381794,
+      "net_profit": 123.86928571380189,
+      "oos_net_profit": -429.41714285728517,
+      "trades": 142,
+      "units": 97,
+      "unit_r_total": 3.1500552033490945,
+      "oos_unit_r_total": -0.7096820486052662,
+      "max_recon_err_usd": 7.821654435247183e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 45,
+        "stop": 61,
+        "trail": 7,
+        "weekend": 29
+      }
+    },
+    "no_be_full": {
+      "return_pct": 1.7497203571425146,
+      "net_profit": 1749.720357142422,
+      "oos_net_profit": 378.8346428569814,
+      "trades": 206,
+      "units": 117,
+      "unit_r_total": 8.664494204006798,
+      "oos_unit_r_total": 1.7463527710168694,
+      "max_recon_err_usd": 5.729816621169448e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 56,
+        "tp2": 33,
+        "stop": 70,
+        "weekend": 21,
+        "trail": 26
+      }
+    },
+    "no_tp1": {
+      "return_pct": -2.3666503571432296,
+      "net_profit": -2366.650357143212,
+      "oos_net_profit": -837.3075000001103,
+      "trades": 59,
+      "units": 59,
+      "unit_r_total": -5.745676437952994,
+      "oos_unit_r_total": -2.241699853658732,
+      "max_recon_err_usd": 7.185008144006133e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 42,
+        "weekend": 15,
+        "trail": 2
+      }
+    },
+    "stop_flip_only": {
+      "return_pct": -0.5112064285718976,
+      "net_profit": -511.20642857190677,
+      "oos_net_profit": -1165.7378571429658,
+      "trades": 54,
+      "units": 54,
+      "unit_r_total": 0.5149708217550759,
+      "oos_unit_r_total": -3.2416998536587456,
+      "max_recon_err_usd": 7.185008144006133e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 35,
+        "weekend": 19
+      }
+    },
+    "stop_flip_only_no_wk": {
+      "return_pct": -4.408313214285842,
+      "net_profit": -4408.3132142860495,
+      "oos_net_profit": -1874.252142857225,
+      "trades": 44,
+      "units": 44,
+      "unit_r_total": -11.2562625443086,
+      "oos_unit_r_total": -5.51516271324015,
+      "max_recon_err_usd": 1.7189449863508344e-10,
+      "official_breach": false,
+      "reasons": {
+        "stop": 36,
+        "trend_change": 8
+      }
+    },
+    "no_weekend": {
+      "return_pct": -0.7820110714288897,
+      "net_profit": -782.0110714287381,
+      "oos_net_profit": 986.5267857141973,
+      "trades": 195,
+      "units": 113,
+      "unit_r_total": 0.5068920659327243,
+      "oos_unit_r_total": 3.611134450710179,
+      "max_recon_err_usd": 3.774403012357652e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 57,
+        "tp2": 25,
+        "stop": 88,
+        "trail": 25
+      }
+    }
+  },
+  "USDJPY": {
+    "base": {
+      "return_pct": -4.213073807413292,
+      "net_profit": -4213.073807413286,
+      "oos_net_profit": -840.6293180426658,
+      "trades": 142,
+      "units": 96,
+      "unit_r_total": -15.565215908168438,
+      "oos_unit_r_total": -3.8900673469521854,
+      "max_recon_err_usd": 2.802380549837835e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 70,
+        "tp1": 37,
+        "tp2": 9,
+        "trail": 6,
+        "weekend": 20
+      }
+    },
+    "pyramid_off": {
+      "return_pct": -3.010334729910935,
+      "net_profit": -3010.334729910965,
+      "oos_net_profit": -108.29242947532057,
+      "trades": 93,
+      "units": 63,
+      "unit_r_total": -10.73353837378929,
+      "oos_unit_r_total": -0.820714996017498,
+      "max_recon_err_usd": 2.8251179173821583e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 46,
+        "tp1": 23,
+        "tp2": 7,
+        "trail": 4,
+        "weekend": 13
+      }
+    },
+    "no_trail": {
+      "return_pct": -5.098747006415671,
+      "net_profit": -5098.747006415663,
+      "oos_net_profit": -1496.3824436319658,
+      "trades": 144,
+      "units": 98,
+      "unit_r_total": -18.574053711597813,
+      "oos_unit_r_total": -6.2009277214596885,
+      "max_recon_err_usd": 2.773958840407431e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 69,
+        "tp1": 37,
+        "tp2": 9,
+        "weekend": 25,
+        "trail": 4
+      }
+    },
+    "no_tp2": {
+      "return_pct": -5.657331765985985,
+      "net_profit": -5657.33176598604,
+      "oos_net_profit": -1791.0221477839739,
+      "trades": 135,
+      "units": 98,
+      "unit_r_total": -20.822636244282876,
+      "oos_unit_r_total": -7.360894175298039,
+      "max_recon_err_usd": 2.751221472863108e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 69,
+        "tp1": 37,
+        "weekend": 25,
+        "trail": 4
+      }
+    },
+    "no_be_full": {
+      "return_pct": -2.383752128332428,
+      "net_profit": -2383.752128332451,
+      "oos_net_profit": 656.9944160199816,
+      "trades": 164,
+      "units": 107,
+      "unit_r_total": -9.378272261439992,
+      "oos_unit_r_total": 1.006079362382044,
+      "max_recon_err_usd": 3.154809746774845e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 67,
+        "tp1": 40,
+        "tp2": 17,
+        "trail": 7,
+        "weekend": 33
+      }
+    },
+    "no_tp1": {
+      "return_pct": -3.590516557296297,
+      "net_profit": -3590.516557296302,
+      "oos_net_profit": -1084.1380922868307,
+      "trades": 60,
+      "units": 60,
+      "unit_r_total": -13.624793454895336,
+      "oos_unit_r_total": -4.506570831275588,
+      "max_recon_err_usd": 2.8194335754960775e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 41,
+        "weekend": 17,
+        "trail": 2
+      }
+    },
+    "stop_flip_only": {
+      "return_pct": -0.8657622041272295,
+      "net_profit": -865.7622041272211,
+      "oos_net_profit": 108.94164151555076,
+      "trades": 58,
+      "units": 58,
+      "unit_r_total": -4.933235651432746,
+      "oos_unit_r_total": -0.8395858232392718,
+      "max_recon_err_usd": 3.228706191293895e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 34,
+        "weekend": 24
+      }
+    },
+    "stop_flip_only_no_wk": {
+      "return_pct": -0.3260444699374365,
+      "net_profit": -326.0444699372717,
+      "oos_net_profit": 4409.198968746394,
+      "trades": 39,
+      "units": 39,
+      "unit_r_total": -8.990868920449973,
+      "oos_unit_r_total": 9.46880837619845,
+      "max_recon_err_usd": 5.657057045027614e-10,
+      "official_breach": false,
+      "reasons": {
+        "stop": 33,
+        "trend_change": 5,
+        "end_of_data": 1
+      }
+    },
+    "no_weekend": {
+      "return_pct": -6.727007527274809,
+      "net_profit": -6727.007527275,
+      "oos_net_profit": -2522.0478537828662,
+      "trades": 150,
+      "units": 97,
+      "unit_r_total": -24.67274904352778,
+      "oos_unit_r_total": -9.972445231506645,
+      "max_recon_err_usd": 2.7341684472048655e-11,
+      "official_breach": false,
+      "reasons": {
+        "stop": 89,
+        "tp1": 42,
+        "tp2": 11,
+        "trail": 8
+      }
+    }
+  },
+  "XAUUSD": {
+    "base": {
+      "return_pct": 1.7288980000000231,
+      "net_profit": 1728.8980000001632,
+      "oos_net_profit": -898.7722142856603,
+      "trades": 253,
+      "units": 158,
+      "unit_r_total": 8.859976298613292,
+      "oos_unit_r_total": -2.1363001252181246,
+      "max_recon_err_usd": 2.3419488570652902e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 71,
+        "trail": 25,
+        "stop": 96,
+        "tp2": 24,
+        "weekend": 37
+      }
+    },
+    "pyramid_off": {
+      "return_pct": 1.5796517857142423,
+      "net_profit": 1579.651785714374,
+      "oos_net_profit": 813.5592142857432,
+      "trades": 158,
+      "units": 97,
+      "unit_r_total": 6.865130706283114,
+      "oos_unit_r_total": 3.129506857333745,
+      "max_recon_err_usd": 1.2278178473934531e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 45,
+        "trail": 16,
+        "stop": 58,
+        "tp2": 16,
+        "weekend": 23
+      }
+    },
+    "no_trail": {
+      "return_pct": 4.640964142857085,
+      "net_profit": 4640.964142857311,
+      "oos_net_profit": -1545.8932857142254,
+      "trades": 248,
+      "units": 154,
+      "unit_r_total": 17.92600237194996,
+      "oos_unit_r_total": -4.2190357640761995,
+      "max_recon_err_usd": 2.97859514830634e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 71,
+        "trail": 10,
+        "stop": 94,
+        "tp2": 23,
+        "weekend": 50
+      }
+    },
+    "no_tp2": {
+      "return_pct": 7.414662500000158,
+      "net_profit": 7414.66250000017,
+      "oos_net_profit": -1512.6217857142285,
+      "trades": 225,
+      "units": 154,
+      "unit_r_total": 26.679261542729638,
+      "oos_unit_r_total": -4.05888766576234,
+      "max_recon_err_usd": 4.501998773775995e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 71,
+        "trail": 10,
+        "stop": 94,
+        "weekend": 50
+      }
+    },
+    "no_be_full": {
+      "return_pct": 4.303654285714331,
+      "net_profit": 4303.654285714512,
+      "oos_net_profit": 691.0512142857742,
+      "trades": 291,
+      "units": 176,
+      "unit_r_total": 17.837391623055115,
+      "oos_unit_r_total": 3.2420455096047616,
+      "max_recon_err_usd": 2.3817392502678558e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 77,
+        "stop": 100,
+        "weekend": 54,
+        "tp2": 38,
+        "trail": 22
+      }
+    },
+    "no_tp1": {
+      "return_pct": 5.035399642857219,
+      "net_profit": 5035.399642857267,
+      "oos_net_profit": 555.155000000021,
+      "trades": 88,
+      "units": 88,
+      "unit_r_total": 18.913260602113297,
+      "oos_unit_r_total": 2.3119594630618745,
+      "max_recon_err_usd": 4.1382008930668235e-11,
+      "official_breach": false,
+      "reasons": {
+        "trail": 6,
+        "stop": 55,
+        "weekend": 27
+      }
+    },
+    "stop_flip_only": {
+      "return_pct": 8.121856428571594,
+      "net_profit": 8121.856428571578,
+      "oos_net_profit": 1791.6078571428916,
+      "trades": 78,
+      "units": 78,
+      "unit_r_total": 28.4719589890474,
+      "oos_unit_r_total": 5.830967310044709,
+      "max_recon_err_usd": 4.1382008930668235e-11,
+      "official_breach": false,
+      "reasons": {
+        "weekend": 33,
+        "stop": 45
+      }
+    },
+    "stop_flip_only_no_wk": {
+      "return_pct": 20.47418357142878,
+      "net_profit": 20474.183571428657,
+      "oos_net_profit": 10986.248928571446,
+      "trades": 42,
+      "units": 42,
+      "unit_r_total": 73.33286905239957,
+      "oos_unit_r_total": 34.954770689652946,
+      "max_recon_err_usd": 2.3283064365386963e-10,
+      "official_breach": false,
+      "reasons": {
+        "trend_change": 12,
+        "stop": 30
+      }
+    },
+    "no_weekend": {
+      "return_pct": 12.1121757142856,
+      "net_profit": 12112.175714285813,
+      "oos_net_profit": 5841.700357142906,
+      "trades": 315,
+      "units": 165,
+      "unit_r_total": 41.899320250760255,
+      "oos_unit_r_total": 18.673259222079263,
+      "max_recon_err_usd": 2.3419488570652902e-11,
+      "official_breach": false,
+      "reasons": {
+        "tp1": 96,
+        "trail": 44,
+        "stop": 121,
+        "tp2": 54
+      }
+    }
+  }
+}

@@ -1,0 +1,556 @@
+{
+  "what": "14-agent why-no-edge audit: 7 analysis dimensions (signal-vs-random, filter-attribution, exit-leak, cost-drag, beta-regime, statistics-selection, breakout-premise), each adversarially re-derived by an independent verifier. Synthesis in docs/WHY_NO_EDGE.md; scripts in backtest/audit/.",
+  "date": "2026-07-14",
+  "dimensions": [
+    {
+      "dimension": "signal-vs-random",
+      "analysis": {
+        "headline": "The entry rule has a small, short-lived (+4h) timing effect but adds no system-level expectancy over regime-matched random timing on any symbol: vs 200 seeded random-entry engine runs the real net returns sit at the 91.0th (EURUSD), 84.5th (GBPUSD), 44.0th (USDJPY) and 29.5th (XAUUSD) percentiles \u2014 none clears 95, and XAUUSD's +1.73% is below the random median of +3.60%.",
+        "metrics": [
+          {
+            "name": "Engine-level return percentile vs random entries",
+            "symbol": "EURUSD",
+            "value": "91.0th percentile (real +1.06% vs random mean -2.29%, sd 2.68, q95 +2.94, 200 seeds)",
+            "definition": "Where the canonical measured net return falls in the distribution of 200 full-engine runs in which signal() is replaced by a seeded random signal matched to the real signal's per-regime per-bar fire rate (p_long|bull 2.24%, p_short|bear 2.22%), with identical costs, session, HTF/vol context gates, FTMO guards, sizing, exits and pyramiding."
+          },
+          {
+            "name": "Engine-level return percentile vs random entries",
+            "symbol": "GBPUSD",
+            "value": "84.5th percentile (real -1.23% vs random mean -4.06%, sd 2.42, q95 +0.30; only 12/200 random runs positive)",
+            "definition": "Same engine-level randomization test; per-tranche expectancy percentile 92.5 (real 0.476R vs random mean 0.228R). Entry timing is better than random here, yet the system still loses money."
+          },
+          {
+            "name": "Engine-level return percentile vs random entries",
+            "symbol": "USDJPY",
+            "value": "44.0th percentile (real -4.21% vs random mean -3.54%, sd 3.69)",
+            "definition": "Same test; real return is statistically indistinguishable from (slightly worse than) random regime-matched timing. Also 31/200 random runs breach official FTMO rules on this symbol - hostile regardless of entry rule."
+          },
+          {
+            "name": "Engine-level return percentile vs random entries",
+            "symbol": "XAUUSD",
+            "value": "29.5th percentile (real +1.73% vs random mean +3.94%, median +3.60%; 169/200 random runs positive)",
+            "definition": "Same test; per-tranche expectancy percentile 23.0 (real 0.493R vs random mean 0.564R). The gold profit is regime drift that random timing through the same exits harvests better than the breakout rule does."
+          },
+          {
+            "name": "Event-study +4h excess vs regime-matched controls",
+            "symbol": "EURUSD",
+            "value": "+0.354 ATR, 94.8th pctile (act +0.207 vs ctrl -0.148; n=100 units, 1000 control portfolios)",
+            "definition": "Cost-adjusted (spread+commission) mean forward return in ATR(14) units, 4 H1 bars after entry fill in trade direction, minus the mean of seeded control portfolios sampling in-session (08-17 excl 12) bars with side = prevailing H1 EMA50/200 direction, same costs. Percentile = actual mean's rank in the 1000 control-portfolio means."
+          },
+          {
+            "name": "Event-study +72h excess vs regime-matched controls",
+            "symbol": "EURUSD",
+            "value": "-0.565 ATR, 21.8th pctile; pyramid adds alone -1.960 ATR (7.5th pctile)",
+            "definition": "Same event study at 72 bars: the +4h/+24h selection effect fully inverts by 72h, driven by pyramid adds entered near trend exhaustion. Bootstrap 90% CI on the all-units mean does not separate from controls at any horizon."
+          },
+          {
+            "name": "Event-study excesses +4h/+24h/+72h",
+            "symbol": "GBPUSD",
+            "value": "+0.400 (98.4th, boot CI separates) / +0.486 (87.8th) / +0.464 ATR mean but median excess -0.573 (77.0th)",
+            "definition": "Only FX symbol whose +4h excess bootstrap CI excludes the control mean; long-horizon mean excess is carried by a few large winners (median negative). Signal timing genuinely better than random, but insufficient: system nets -1.23%."
+          },
+          {
+            "name": "Event-study excesses +4h/+24h/+72h",
+            "symbol": "USDJPY",
+            "value": "+0.224 (90.0th) / -0.925 ATR (1.7th pctile, boot CI separates) / -1.282 (5.0th)",
+            "definition": "Entry timing collapses below random after 4h. Mean/median divergence (median event +0.195 ATR, 5%-trimmed mean -0.557) shows a catastrophic left tail: 11/96 entries sit within 24h of a >5 ATR adverse move (two 2026-04-29 longs at -30 ATR each) - the breakout rule systematically buys into yen-reversal episodes."
+          },
+          {
+            "name": "Event-study excesses +4h/+24h/+72h",
+            "symbol": "XAUUSD",
+            "value": "+0.280 (96.1st) / +0.627 (97.2nd) / +2.069 ATR (99.9th); all bootstrap CIs separate; survives median, alt-fill and no-cost variants",
+            "definition": "The only symbol with genuine multi-day entry selection skill above regime drift (controls already +0.854 ATR at 72h from the gold bull). Yet the engine-level percentile is 29.5: the exit stack (2.5-ATR stop, 40% booked at 1R, 30% at 2.2R, BE move, trail) fails to convert the extra 72h drift into P&L, and OOS PF 0.86 confirms nothing realized."
+          },
+          {
+            "name": "Frequency/side matching of the random control",
+            "symbol": "ALL",
+            "value": "fire rates matched per regime; long-share real vs random: EUR 68/68, GBP 75/76, JPY 90/84, XAU 92/93 (%); units traded real vs random mean: 100/67, 105/68, 96/77, 158/138",
+            "definition": "Real signal raw fire rate ~2.2-2.9% of regime bars (e.g. EURUSD 194 long fires / 8645 bull bars). Random runs convert fewer fires into units because real fires cluster in session hours/trend runs; per-tranche expectancy percentiles (81.5/92.5/43.5/23.0) agree directionally with the return percentiles, so the conclusion is not a trade-count artifact."
+          }
+        ],
+        "conclusion": "Verdict for the WHY-no-edge synthesis: the entry signal is NOT meaningfully better than regime-matched random timing where it matters. (1) Event level: at every actual entry the rule buys a small, real burst of continuation - +4h cost-adjusted excess of +0.22 to +0.40 ATR on all four symbols (90th-98th percentile vs 1000 regime-matched in-session control portfolios; sign robust to median, alternative fill, and no-cost recomputation) - but the information decays within a day and, on FX, inverts: EURUSD -0.57 ATR excess by +72h (adds -1.96), USDJPY -0.93 ATR by +24h (1.7th percentile) because the breakout rule selects into catastrophic yen reversals (11/96 entries within 24h of >5 ATR adverse moves). (2) Engine level, with a seeded random signal matched to the real signal's per-regime fire rate and side mix and charged identical spread/commission/swap under identical gates and exits (200 seeds/symbol): EURUSD +1.06% = 91.0th percentile (above-average draw, not significant), GBPUSD -1.23% = 84.5th (better-than-random timing that still loses), USDJPY -4.21% = 44.0th (pure noise), XAUUSD +1.73% = 29.5th (WORSE than random - 84.5% of random-entry runs on gold are positive, mean +3.94%). XAUUSD is the decisive case: it is the only symbol with genuine multi-day selection skill at the signal level (+2.07 ATR excess at 72h, 99.9th percentile), yet the system converts that into less money than random timing, because the scale-out/trail exit stack books 70% of the position by 2.2R and cannot monetize the drift the entries select. Answer to the dimension question: the entry rule contributes at most a marginal, short-horizon timing effect worth roughly +2-3 return points over random on EURUSD/GBPUSD (inside the noise envelope), zero on USDJPY, and negative net contribution on XAUUSD; the EA's headline positives are an unremarkable draw (EURUSD) and gold regime drift (XAUUSD), not entry skill. Canonical measured runs were first reproduced trade-for-trade identical before any counterfactual.",
+        "caveats": "All results inherit the screening engine's fill model: H1 bars aggregated from M15, constant fallback spreads (10/15/28/16 points; no real spread series), $2.5/side/lot commission, approximate swap points - signal quality on real tick fills could differ. Horizons are measured in H1 trading bars (weekend gaps compressed), identically for events and controls. Event-study samples are small (96-158 units/symbol) and units within a trend episode are correlated (pyramid adds share regimes), so control-portfolio percentiles overstate independence; per-event bootstrap CIs are the honest check and they fail to separate from controls on EURUSD at all horizons and on most FX horizons. The engine-level random signal matches raw per-bar per-regime fire frequency, not the clustering of real fires, so random runs traded ~20-35% fewer units; the per-tranche expectancy percentiles (which normalize for this) agree directionally with the return percentiles. USDJPY's random distribution includes 31/200 runs that breach official FTMO rules; excluding them would shift the real strategy's percentile somewhat lower (survivor runs average better returns). Percentile ranks use mid-rank convention. Seeds fixed (event study BASE_SEED 20260714, 1000 seeds/horizon; engine BASE_SEED 11-14M by symbol, 200 seeds; robustness 987654321, 2000 bootstrap draws).",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/repro_check.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/entry_event_study.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/event_study_robustness.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/random_entry_engine.py"
+        ]
+      },
+      "verdict": {
+        "refuted": true,
+        "reasoning": "VERIFICATION METHOD (all independent re-implementations, fresh seed streams unrelated to the analyst's, identical costs charged to controls, no look-ahead; scripts saved for reproducibility): (1) verify_random_entry_engine.py first reproduced all four canonical measured runs trade-for-trade identical against the on-disk engine (returns exact to 1e-9; ledgers identical at 172/171/142/253 tranches), confirming the comparison baseline. It then re-ran the engine-level random-entry test with fresh sha256-derived seeds, 200/symbol, in two variants: (A) the analyst's design (unconditional per-regime fire rate) and (B) a fairness probe with the fire rate conditioned on in-session bars, because run_backtest only consults signal() in-session and verify_firerates.py showed the real signal fires ~2x its unconditional rate in-session (e.g. GBPUSD 0.0494 vs 0.0246 long) \u2014 the analyst's control therefore under-fired at the actual decision points, which is exactly why their random runs traded only 66-68 units vs the real 100-105 on EUR/GBP. (2) verify_event_study.py re-derived the event-study numbers from scratch. (3) verify_gbp_matched_count.py re-derived the one surprising result a second way with the trade-count confound removed entirely (fire probability calibrated so random converts ~the real unit count). RESULTS \u2014 CONFIRMED: Variant A percentiles all reproduce within Monte-Carlo error (EURUSD 88.0 vs claimed 91.0; GBPUSD 88.5 vs 84.5; USDJPY 46.0 vs 44.0; XAUUSD 33.0 vs 29.5; binomial se \u00b12.0-3.5 at 200 seeds); XAUUSD random median +3.64% vs claimed +3.60% with real +1.73% below it and 158/200 random runs positive (claimed 169/200) \u2014 the decisive gold claim (regime drift that random timing harvests better) is confirmed and STRENGTHENS under variant B (random mean +5.45%, real at 25th pctile); EURUSD stays below the 95th under every control variant (88.0/90.0, and count-matching would push it lower since variant B over-trades 118 vs 100 units); USDJPY is noise everywhere (46.0/62.0); event-study numbers reproduce almost exactly (EURUSD +4h excess +0.348 ATR at 94.5th vs claimed +0.354/94.8; EURUSD +72h inversion -0.550/22.1st vs -0.565/21.8; GBPUSD +4h +0.407/97.6th; USDJPY +4h +0.221/88.4th; XAUUSD +4h +0.285/96.5th; XAUUSD +72h +2.067/~100th vs claimed +2.069/99.9); real-signal fire-rate stats exact (194/8645 bull, 192/8644 bear on EURUSD, etc.). REFUTED \u2014 the headline's universal claim \"adds no system-level expectancy over regime-matched random timing on ANY symbol \u2014 none clears 95\" fails on GBPUSD once the control is fairly calibrated: with in-session-conditioned fire rates (113 units vs real 105) the real -1.23% sits at the 99.0th percentile (0/200 random runs positive, random mean -6.30%), and in the second, count-matched derivation (108 units vs real 105, removing all cost-drag confound) it sits at the 97.5th percentile of returns and 98.5th of expectancy (1/200 random runs positive, random mean -6.26%, sd 1.94). Per-unit, real GBP entries lose ~-0.012%/unit vs ~-0.058 to -0.062%/unit for random at any frequency \u2014 a ~5x timing advantage worth roughly +5 return points that the analyst's own per-tranche normalization (92.5th) and event study (+4h CI separating) already hinted at but the headline dismissed. The headline's \"84.5th\" is not a wrong number under their method; the method's control under-fires by ~35%, and the correct conclusion for GBPUSD flips from \"no expectancy added\" to \"significant timing skill destroyed by venue costs/exits.\" Secondary overreach: \"short-lived (+4h)\" contradicts the analyst's own (and my verified) XAUUSD result \u2014 selection skill there persists and grows to +72h (+2.07 ATR, ~100th pctile); it is short-lived on FX only. The program-level bottom line (no deployable edge; EURUSD positive an unremarkable draw; XAUUSD positive regime drift the exit stack converts worse than random; challenge-funding unjustified) SURVIVES \u2014 but the WHY-dimension answer must be corrected per symbol. Scripts written: C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_firerates.py, verify_random_entry_engine.py, verify_event_study.py, verify_gbp_matched_count.py (+ their *_results.json). Caveats: percentile MC error \u00b12-3.5 points at 200 seeds; all results inherit the screening engine's H1/constant-spread fill model; variant B slightly over-trades on EURUSD (118 vs 100 units) so its EURUSD percentile (90.0) is an upper bound \u2014 EURUSD remains not significant either way.",
+        "corrected_headline": "Entry-vs-random is symbol-split, not uniformly null: EURUSD +1.06% sits at only the ~88-91st percentile of 200 regime-matched random-entry engine runs (not significant), USDJPY -4.21% at the ~44-62nd (pure noise), and XAUUSD +1.73% at the ~25-33rd \u2014 significantly WORSE than random (random mean +3.9 to +5.5%, median +3.6%), confirming the gold profit is regime drift the exit stack converts worse than random timing does; but on GBPUSD the prior control under-fired ~35% at the engine's actual in-session decision points, and with the fire rate session-conditioned and unit count matched (108 vs 105) the real -1.23% sits at the 97.5-99th percentile (random mean ~-6.3%, \u22641/200 runs positive) \u2014 GBPUSD entry timing IS significantly better than random and the symbol loses on venue costs/exits instead. The +4h timing burst (+0.22 to +0.41 ATR, 88-98th pctile) is real on all four symbols and short-lived on FX, but on XAUUSD selection skill persists to +72h (+2.07 ATR, ~100th pctile) and is still not monetized. Bottom line unchanged \u2014 no deployable entry edge anywhere \u2014 but the WHY differs per symbol: no timing skill (EURUSD/USDJPY), timing skill destroyed by costs/exits (GBPUSD), and multi-day selection skill un-monetized while underperforming its own regime drift (XAUUSD)."
+      }
+    },
+    {
+      "dimension": "filter-attribution",
+      "analysis": {
+        "headline": "The confluence filters do not earn their keep: no rung of the attribution ladder has a statistically credible OOS edge on any symbol (best t=1.39, never >=2), the vol-regime filter binds on only 2 of 2,141 raw candidates (rung4==rung3 to the cent on 3 of 4 symbols), and on the development symbol EURUSD the filters add +$12,533 in-sample vs only +$1,182 out-of-sample (10.6:1) \u2014 the signature of in-sample tuning dressed over a raw breakout whose expectancy is negative everywhere in-sample (unit PF 0.67-0.95).",
+        "metrics": [
+          {
+            "name": "Canonical reproduction check",
+            "symbol": "ALL",
+            "value": "4/4 exact (EURUSD +1.0625%/172 tranches, GBPUSD -1.2328%/171, USDJPY -4.2131%/142, XAUUSD +1.7289%/253)",
+            "definition": "Rung 4 (full config, FTMO-guarded, 1x spread) rerun vs the published measured ledgers; return_pct matched to <1e-3 and tranche counts exactly, validating the ladder harness."
+          },
+          {
+            "name": "Attribution ladder, EURUSD (unguarded diag, distinct units, IS net/PF | OOS net/PF)",
+            "symbol": "EURUSD",
+            "value": "R0 raw: 395u, -13748/0.67 | +1095/1.08 (t 0.36); R1 +buffer: 278u, -9367/0.67 | +2849/1.33; R2 +candle: 258u, -7381/0.71 | +3144/1.39; R3 +HTF: 100u, -1215/0.88 | +2278/1.87 (t 1.36); R4 +vol: identical to R3",
+            "definition": "Cumulative filter sets in documented order; session, exits, scale-out/pyramid, sizing, and full costs (spread+commission+swap) held constant; 70/30 chronological split; unit = distinct try_open (tranches grouped by entry_time)."
+          },
+          {
+            "name": "Attribution ladder, GBPUSD",
+            "symbol": "GBPUSD",
+            "value": "R0: 421u, IS -13435/0.69 | OOS -1603/0.90; R1: 292u, -9332/0.71 | -653/0.94; R2: 267u, -7860/0.73 | -1260/0.88; R3: 105u, -1901/0.85 | +668/1.20 (t 0.39); R4 == R3",
+            "definition": "Same protocol as EURUSD; fallback spread 15pts, max-spread gate 60pts per canonical DATA.md run."
+          },
+          {
+            "name": "Attribution ladder, USDJPY",
+            "symbol": "USDJPY",
+            "value": "R0: 332u, IS -3195/0.91 | OOS -2755/0.78; R1: 213u, +1474/1.07 | -1256/0.85; R2: 204u, +1565/1.07 | -1057/0.86; R3: 97u, -3278/0.67 | -825/0.83; R4: 96u, -3372/0.66 | -841/0.83 (t -0.5)",
+            "definition": "Same protocol; note HTF filter CRATERS USDJPY in-sample (-$4,843) \u2014 the only symbol where it binds hard against IS \u2014 and OOS is negative at every single rung."
+          },
+          {
+            "name": "Attribution ladder, XAUUSD",
+            "symbol": "XAUUSD",
+            "value": "R0: 412u, IS -1951/0.95 | OOS +4689/1.36 (t 1.39); R1: 295u, -2604/0.91 | -2297/0.79; R2: 255u, -2250/0.91 | -2107/0.77; R3: 158u, +2628/1.19 | -899/0.86 (t -0.43); R4 == R3",
+            "definition": "Same protocol; the grid's single best OOS cell is the RAW unfiltered breakout on gold, and the very first documented filter (buffer) flips it from +$4,689 to -$2,297 OOS."
+          },
+          {
+            "name": "(a) Any rung with positive OOS edge?",
+            "symbol": "ALL",
+            "value": "NO. Best cells: EURUSD R3/R4 mean +$81/unit (~+0.25R, t 1.36, n=28) and XAUUSD R0 +$42/unit (~+0.13R, t 1.39, n=111); pooled across 4 symbols per rung OOS expectancy is -$4.8 to +$9.2/unit on ~$320 risk (|R| <= 0.03) at every rung",
+            "definition": "Unit-level t = mean/(sd/sqrt(n)) on OOS unit PnL; the two 'positive' cells require OPPOSITE filter sets (gold: none; EURUSD: all), which is noise relocation, not an edge."
+          },
+          {
+            "name": "(b) Filter veto census (position-independent, sequential order buffer->candle->H4->D1->vol)",
+            "symbol": "ALL",
+            "value": "EURUSD 546 raw -> 249 buf / 36 candle / 164 HTF / 0 vol -> 97 pass; GBPUSD 557->98; USDJPY 494->95; XAUUSD 544->136. Vol regime fails unconditionally on 3/2141 candidates (0.14%); candle direction-residue at rung 0 binds 0 times",
+            "definition": "Independent re-derivation of the ladder outside the portfolio path: every in-session raw breakout candidate scored against each filter. Confirms vol filter is dead weight (R4==R3 exactly on EURUSD/GBPUSD/XAUUSD; -$95 net effect via 1 removed unit on USDJPY) and rung 0 as spec'd is a true raw breakout."
+          },
+          {
+            "name": "(c) IS-vs-OOS delta per filter addition, EURUSD (development symbol)",
+            "symbol": "EURUSD",
+            "value": "buffer +4381 IS / +1754 OOS; candle +1986 / +295; HTF +6166 / -866 (helps IS, HURTS OOS net); vol 0 / 0; total +12533 IS vs +1182 OOS (10.6:1)",
+            "definition": "Change in unit-level IS and OOS net when each filter is added in documented order. Every filter helps IS more than OOS on the symbol the config was developed on, and IS STILL ends negative (PF 0.88) \u2014 filters shaved losses on a never-profitable in-sample signal."
+          },
+          {
+            "name": "Cross-symbol filter-effect consistency",
+            "symbol": "ALL",
+            "value": "None consistent: buffer helps IS on EURUSD/GBPUSD/USDJPY (+$4.1-4.7k each) but hurts XAUUSD both halves (-653 IS/-6986 OOS); HTF helps 3 symbols IS but -$4,843 on USDJPY; candle sign-flips OOS by symbol; vol never fires",
+            "definition": "Sign of each filter's IS/OOS net delta compared across the 4 symbols; a genuine conditioning variable should transport, these do not \u2014 the only universal effect is trade-count reduction (~4x, e.g. 395->100 units EURUSD)."
+          },
+          {
+            "name": "FTMO-guarded account death at loose rungs",
+            "symbol": "EURUSD/GBPUSD",
+            "value": "Guarded raw breakout: EURUSD last trade 2024-09-25, ends $92,217 (frozen ~$217 above the $92,000 soft-total floor, projected-risk gate blocks all entries), GBPUSD last trade 2024-04-10, ends $90,433 \u2014 ZERO OOS trades; split starts 2025-08-26",
+            "definition": "In the guarded (measured-path) ladder the unfiltered strategy kills the account ~11-16 months before the OOS window: the filters' real function under FTMO rules is throttling a negative-expectancy signal below the loss floor, not creating an edge."
+          }
+        ],
+        "conclusion": "The confluence stack is selection dressing over a structurally losing signal, with one partial exception. Verdict by filter: (1) the vol-regime guard (ATR ratio<=2.5) is a filter in name only \u2014 it vetoes 0.14% of all raw candidates and produces bit-identical results on 3 of 4 symbols; (2) the candle body/wick confirmation is noise-level \u2014 it removes 6-8% of candidates with sub-$10/unit, sign-inconsistent expectancy effects; (3) the entry buffer and HTF H4+D1 stacks do all the sample reduction (~4x fewer units, ~80% of raw candidates vetoed) and do genuinely raise per-unit expectancy on EURUSD (OOS mean $9 -> $81/unit), but the evidence never strengthens (t plateaus at 1.36 while n collapses 116->28), the same filters flip signs on other symbols (buffer destroys gold's only OOS-positive cell; HTF craters USDJPY in-sample), and on the development symbol every filter helps IS ~10x more than OOS with in-sample expectancy still negative after all of them. Answering the dimension question 'why no edge': the raw 20-bar Donchian+EMA breakout has negative per-trade expectancy on all four symbols in-sample (unit PF 0.67-0.95 before filters), so the filters had nothing to purify \u2014 they were tuned to minimize EURUSD's historical losses, which mechanically loads their benefit in-sample, shrinks the OOS sample to sizes (22-46 units) where PF 1.2-1.87 is indistinguishable from luck, and under FTMO guards their main measurable function is keeping a losing strategy from freezing the account at the 8% soft floor. No rung, on any symbol, guarded or unguarded, produces an OOS edge that survives a basic t-test; pooled across symbols the OOS expectancy is within +/-0.03R of zero at every rung.",
+        "caveats": "1) Rung 0 as specified retains the H1 EMA50/200 stack + rising-EMA condition (inseparable from signal() by config) \u2014 this ladder attributes the five confluence filters, not the EMA trend gate; the direction-residue check confirmed the candle degenerate case never binds, so rung 0 is otherwise a true raw breakout. 2) Trade sets across rungs are not strictly nested (position occupancy, daily caps, and the latched profit lock make entries path-dependent), so per-rung deltas are net portfolio effects, not per-signal marginals; the position-independent census was run precisely to cross-check this and agrees. 3) Unit-level t-stats treat units as independent, but pyramid adds within one trend are correlated, so the reported t-values are, if anything, OVERSTATED \u2014 which only strengthens the no-edge conclusion. 4) Everything inherits the screening engine's H1 OHLC pessimistic-fill model, fallback (constant) spreads, and approximate swap; none of these caveats can rescue a filter whose veto count is zero. 5) IS/OOS unit assignment follows the ledger's oos flag (entry-bar side of the 70/30 split). 6) All runs deterministic \u2014 no randomness, so no seeds were required.",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/filter_attribution.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/filter_census.py"
+        ]
+      },
+      "verdict": {
+        "refuted": false,
+        "reasoning": "Independently re-derived every load-bearing number with fresh code (C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_filter_attribution.py, results in verify_filter_attribution_results.json) \u2014 own unit grouping, own t-stat, own position-independent census, own ledger comparison; did not re-run the analyst's scripts. (1) Canonical reproduction: 4/4 verified STRONGER than claimed \u2014 my default-config guarded runs are trade-by-trade identical to the published measured ledgers (EURUSD +1.0625%/172 tranches, GBPUSD \u22121.2328%/171, USDJPY \u22124.2131%/142, XAUUSD +1.7289%/253; return deltas <1e-9). (2) EURUSD ladder (unguarded diag) matches to the dollar: R0 395u IS \u221213,748.42/PF 0.670, OOS +1,095.31/PF 1.079 t 0.359; R3 100u IS \u22121,215.19/PF 0.882, OOS +2,277.68/PF 1.867 t 1.362; R4 trade-for-trade identical to R3. All intermediate rungs (R1 278u, R2 258u) and the GBPUSD/USDJPY/XAUUSD ladders also match. (3) The 10.6:1 claim verified exactly: per-filter EURUSD deltas buffer +4,380.94 IS/+1,753.66 OOS, candle +1,986.11/+294.93, HTF +6,166.18/\u2212866.22, vol 0/0; total +12,533.23 IS vs +1,182.37 OOS = 10.60:1, with IS still negative after all filters (PF 0.88). (4) 'Best t=1.39, never >=2' verified across all 40 grid cells (5 rungs x 4 symbols x guarded/unguarded): max OOS unit t = 1.388 (XAUUSD R0), second 1.362 (EURUSD R3/R4). (5) XAUUSD verified: raw breakout is the single best OOS cell (+4,688.59, PF 1.361) and the buffer flips it to \u22122,296.94. (6) Vol-filter census verified: 546+557+494+544 = 2,141 raw candidates exactly; vol fails unconditionally on 3 (EURUSD 1, USDJPY 2) and is the BINDING veto on exactly 2 (both USDJPY) \u2014 the headline's '2 of 2,141' and the census's '3/2141' are both correct, describing binding vetoes vs unconditional fails; R4==R3 bit-identical on EURUSD/GBPUSD/XAUUSD, USDJPY differs by 1 unit (\u221294.79 IS / \u221215.99 OOS). (7) Guarded account-death verified: EURUSD R0 guarded ends $92,217.44 (=$217.44 above the $92,000 soft-total floor), last trade 2024-09-25, zero OOS tranches; GBPUSD ends $90,433.33, last trade 2024-04-10, zero OOS tranches; OOS split starts 2025-08-26. (8) Raw-breakout IS unit PF range 0.670\u20130.951 confirms 'negative expectancy everywhere in-sample, PF 0.67\u20130.95'. Pooled OOS expectancy per rung: mine \u2212$4.81 to +$9.33/unit vs their '\u2212$4.8 to +$9.2' (they quoted R4's 9.21; R3 is 9.33) \u2014 immaterial, still ~0.03R on ~$320 unit risk. Only nit: the census metric's '-$95 net effect' for the USDJPY vol veto is the IS half only (total both halves \u2212$110.78). No material error found; the headline and conclusion are fully supported. Scripts written: C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_filter_attribution.py and C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_filter_attribution_results.json."
+      }
+    },
+    {
+      "dimension": "exit-leak",
+      "analysis": {
+        "headline": "The exit engine is a confirmed negative-alpha component at scale: on identical entries, identical spread and commission, its realized exits sit at or below the 1st percentile of 400 signal-free random-exit portfolios on all four symbols, giving back +74.8R total across 459 units (EURUSD +11.3R, GBPUSD +13.9R, USDJPY +27.4R, XAUUSD +22.3R), with the leak living almost entirely in the hold-to-stop path (-118.2R on the 294 stop-terminated units) and the break-even-at-TP1 stop move being the only mechanism whose removal helps consistently (+25.0R full-sample, +4.1R OOS, +6.9pp return across the four symbols).",
+        "metrics": [
+          {
+            "name": "Total exit leak vs random in-trade exits",
+            "symbol": "ALL (459 units)",
+            "value": "+74.8R (actual -2.1R vs random-mean +72.7R; +0.163 R/unit)",
+            "definition": "Per-unit price-based R with identical spread and commission: actual weighted exit vs the exact expectation of flattening the whole unit at a uniformly random H1 bar close inside the unit's actual holding window. Positive = give-back by the actual exit engine."
+          },
+          {
+            "name": "Actual percentile vs 400 seeded random-exit portfolios",
+            "symbol": "EUR/GBP/JPY/XAU",
+            "value": "0.5 / 0.5 / 0.0 / 0.0",
+            "definition": "Percentile of the actual total R within the distribution of 400 seeded portfolios that exit every unit at one random in-window bar close. 0.0 = actual is worse than every one of the 400 random portfolios."
+          },
+          {
+            "name": "Per-symbol leak vs random (IS / OOS split)",
+            "symbol": "leak_rand",
+            "value": "EUR +11.3 (IS +10.2/OOS +1.1), GBP +13.9 (+13.1/+0.8), JPY +27.4 (+17.4/+10.0), XAU +22.3 (+12.4/+9.9)",
+            "definition": "Random-exit expectation minus actual R, per symbol, split by the canonical 70/30 chronological split. Positive in all 8 cells = the leak is robust across the split, not an in-sample artifact."
+          },
+          {
+            "name": "Leak localization: stop-terminated units",
+            "symbol": "stop-path",
+            "value": "294/459 units: actual -115.7R vs random +2.6R = -118.2R give-back; the other 165 units beat random by +43.4R",
+            "definition": "Units grouped by the exit reason of their final tranche. The entire portfolio leak (and more) is generated by units that end at a stop (original or break-even); winner-terminated units (tp2/trail/weekend) actually out-time random."
+          },
+          {
+            "name": "Break-even-at-TP1 removal (patched engine A/B)",
+            "symbol": "no_be_full",
+            "value": "+25.0R full / +4.1R OOS / +6.92pp return (GBP +10.0R, XAU +9.0R, JPY +6.2R, EUR -0.2R); GBPUSD flips -1.23% to +1.75%",
+            "definition": "Full engine re-run with the hardcoded stop-to-entry move after TP1 patched out AND break_even_r disabled, everything else (TP1/TP2/trail/pyramid/guards) intact. The only single-mechanism removal that helps 3 of 4 symbols with the 4th flat - the most consistently destructive exit mechanism."
+          },
+          {
+            "name": "Weekend (Friday-17h) flatten removal",
+            "symbol": "no_weekend",
+            "value": "+30.7R full / +15.1R OOS / +9.77pp net, but sign-flips: XAU +33.0R (+10.4pp, largest single destroyer anywhere), JPY -9.1R (flatten SAVES yen), EUR +4.9R, GBP +1.9R",
+            "definition": "Engine re-run with friday_close=100 (positions held over weekends). The XAU number is truncated long-gold beta, not alpha; on USDJPY weekend holds are toxic."
+          },
+          {
+            "name": "Early scale-out (TP1 40% / TP2 30%) removal",
+            "symbol": "no_tp1 / no_tp2",
+            "value": "net ~0 across symbols and NEGATIVE OOS (no_tp1: -6.5R full/-11.4R OOS; no_tp2: +0.2R full/-19.8R OOS); EUR loses 14-17R without scale-outs, XAU gains 10-18R",
+            "definition": "Engine re-runs with tp1_r=1e9 (kills TP1+BE-at-TP1+TP2+trail+pyramid) or reward_risk=1e9 (kills TP2+trail). Scale-out is NOT the main leak: it salvages FX chop and truncates gold trend - roughly a wash."
+          },
+          {
+            "name": "Pyramiding contribution (task-required A/B)",
+            "symbol": "pyramid_on - pyramid_off",
+            "value": "+3.8R full-sample / -1.5R OOS / +0.51pp return net (EUR +2.4R, GBP +4.2R, JPY -4.8R, XAU +2.0R full; XAU -5.3R OOS)",
+            "definition": "base minus pyramid_enabled=False engine re-run. Pyramiding adds nothing reliable: small, sign-unstable across symbols, and its XAU contribution is in-sample only."
+          },
+          {
+            "name": "Let-it-run counterfactual (orig 2.5-ATR stop or pure 50/200 flip only)",
+            "symbol": "letrun",
+            "value": "EUR -68.4R, GBP -39.7R, JPY -55.7R, XAU +256.3R (vs actual +8.9R); engine analog stop_flip_only_no_wk: XAU +20.5% return, +73.3R over 42 units, no FTMO breach",
+            "definition": "Whole unit held from entry until the original stop or an EMA-flip, no TP1/TP2/BE/trail/weekend, identical costs. Cross-validated per-unit: counterfactual +1.62 R/unit vs independent engine implementation +1.75 R/unit on XAU. The XAU recovery is long-gold-bull beta, not exit alpha."
+          },
+          {
+            "name": "Fixed-horizon exits (24/72/120 H1 bars, stop-less)",
+            "symbol": "h24/h72/h120",
+            "value": "EUR +16.9/-40.8/-57.7R, GBP +9.0/+8.1/+34.1R, JPY -49.0/-45.0/-41.3R, XAU +67.3/+179.3/+254.8R",
+            "definition": "Flatten every unit at the close N bars after entry (no stop). FX entry edge decays to negative by 3-5 days (JPY negative at every horizon = entry quality is the deeper problem there); XAU grows monotonically = beta."
+          },
+          {
+            "name": "Swap sensitivity of counterfactuals (approximate meta points)",
+            "symbol": "swap_R",
+            "value": "actual: EUR -0.8/GBP -0.8/JPY +4.6/XAU -2.8R; letrun: -5.2/-5.9/+19.3/-41.6R",
+            "definition": "Overnight financing in R per policy from broker-meta swap points (commission cancels exactly between actual and counterfactuals; spread charged identically). Swap trims but never overturns any leak conclusion (XAU letrun still +215R after swap)."
+          },
+          {
+            "name": "Prior M5 finding replication",
+            "symbol": "XAU leak/unit",
+            "value": "0.141 R/unit on H1 (158 units, 0th percentile) vs prior ~0.229 R/unit on M5 (70 units)",
+            "definition": "The 07-14 M5 event-study finding (random exits beat actual by ~16R on 70 XAUUSD units) reproduces at scale on H1 with the same direction and comparable magnitude, and generalizes to all four symbols."
+          },
+          {
+            "name": "Ledger reconciliation quality",
+            "symbol": "recon",
+            "value": "$0.0000 max unit-level error, all 459 units + every variant run",
+            "definition": "Every canonical ledger unit reconciled to float precision: entry price (exact), initial risk vs TP1 prices (~1e-16), and unit pnl = priceR*risk_budget - commission + swap-on-remaining-lots. Canonical runs reproduced exactly first (EURUSD/GBPUSD/XAUUSD max_spread_points=25, USDJPY=30)."
+          }
+        ],
+        "conclusion": "ANSWER TO THE DIMENSION - the exit engine leaks, a lot, on every symbol, and the prior 16R M5 finding was not a gold quirk. Holding entries, path, spread and commission fixed, the EA's exit machinery realizes 0th-1st-percentile outcomes versus signal-free random exits in the same holding windows: +74.8R total give-back across 459 units (~0.16R per unit), positive in-sample AND out-of-sample on all four symbols. Decomposition: (1) THE LEAK IS THE HOLD-TO-STOP PATH, not the scale-outs - the 294 units that terminate at a stop give back -118.2R vs random while winner-terminated units actually beat random by +43R; stops by construction execute at each window's adverse extreme, and the engine routes 64% of units there. (2) THE MOST CONSISTENTLY DESTRUCTIVE SINGLE MECHANISM IS BE-AT-TP1: patching out the stop-to-entry move (with break_even_r off, all else intact) is the only ablation that helps nearly everywhere (+25.0R full, +4.1R OOS, GBPUSD flips from -1.23% to +1.75%). It converts trades that just proved +1R of momentum into scratch-outs on normal retracement. (3) WEEKEND FLATTEN is the largest destroyer on XAUUSD only (+33R/+10.4pp if removed) - that is truncated long-gold beta, and it SAVES money on USDJPY, so it is not a generic defect. (4) EARLY SCALE-OUT is a wash (saves FX chop, cuts gold trend; negative OOS when removed) and (5) PYRAMIDING contributes nothing (+3.8R full, -1.5R OOS, sign-unstable). Strategic implication for 'why no edge': fixing the exits cannot rescue the EA - the ~+73R recoverable by matching random-exit timing would only lift the system from slightly negative to roughly what an unconditional exit gets, the FX entries decay to negative expectancy by 72-120 bars (USDJPY is negative at every horizon - an entry problem, not an exit problem), and the spectacular let-run numbers on gold (+256R, +20.5% engine return) are reproducible long-beta, not strategy alpha. The exit engine destroys expectancy the entries never had.",
+        "caveats": "1) Counterfactual exits use H1 bar closes while actual stop tranches fill intra-bar at the stop price under the engine's deliberately pessimistic model (stop-before-target, gap fills at worse-of); real stops do fill at stop prices so this is realistic-to-conservative, but a small part of the measured leak is fill-model asymmetry rather than pure timing. 2) Random-exit windows are bounded by the ACTUAL exit time, so the benchmark inherits the engine's loss-bounding; it answers 'was the timing inside the window any good', not 'what should the policy be'. 3) Per-unit counterfactuals hold entries fixed and ignore portfolio feedback (a unit held longer would block subsequent entries via max_units and daily caps); the full-engine ablation ladder captures those interactions and agrees directionally everywhere. 4) Fixed-horizon and let-run policies hold over weekends and carry no stop (horizons) - FTMO standard (non-Swing) accounts prohibit weekend holds, so the XAU weekend give-back is only recoverable on a Swing-type account. 5) Swap points in the broker meta are approximate mid-2025 snapshots; swap adjustments (reported separately, commission cancels exactly) trim but never overturn any conclusion. 6) 24h/72h/120h horizons are counts of H1 bars (trading hours), not calendar hours. 7) The BE-at-TP1 ablation required patching one hardcoded engine line (unit.stop = unit.entry after TP1); the patch is a single-line replacement asserted unique in source. 8) All numbers are from the corrected screening engine on ~2.8y of real Deriv M15 aggregated to H1 - this quantifies WHERE the canonical results lose expectancy; it validates no live edge for any variant (the +20.5% XAU stop-flip-only-no-weekend run is unvalidated beta riding, DSR-ungated, and breaches no FTMO guard only in this one sample).",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/exit_leak_00_reproduce.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/exit_leak_01_units.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/exit_leak_02_variants.py"
+        ]
+      },
+      "verdict": {
+        "refuted": true,
+        "reasoning": "ARITHMETIC VERIFIED, INFERENCE REFUTED. Part 1 \u2014 independent reproduction (my own unit-grouping/leak pipeline, own seeds; script verify_exit_leak_A_units.py): every load-bearing number reproduces exactly. 459 units; actual -2.12R vs random-in-window +72.70R = leak +74.82R (+0.163 R/unit); per-symbol EUR +11.27 / GBP +13.87 / JPY +27.39 / XAU +22.29; all 8 IS/OOS cells positive; actual percentile vs 400 random-exit portfolios with MY seed scheme = 0.50/0.25/0.00/0.00 (0.30/0.30/0.00/0.00 at 1000 portfolios); stop-terminated units = 294, actual -115.65R vs random +2.56R (give-back +118.21R), non-stop units beat random +43.38R. The no_be_full ablation (verify_exit_leak_B_no_be.py, fresh base runs matched canonical returns to 1e-9 first): dR +24.98 full / +4.14 OOS / +6.92pp, GBPUSD -1.233% -> +1.750% \u2014 all as claimed. Part 2 \u2014 the headline's INFERENCE ('confirmed negative-alpha component', '0th-1st percentile vs signal-free random exits', 'giving back +74.8R') fails null calibration. I ran the FULL engine + the IDENTICAL leak statistic on permuted, de-meaned H1 data (exchangeable increments = zero exit information by construction; iid and 24-bar-block schemes; 120 seeded runs/symbol, 479 usable; verify_exit_leak_C_nullcal.py + _analyze.py). Under this null the exit engine 'leaks' +0.189 R/unit pooled (EUR +0.175\u00b10.077, GBP +0.195\u00b10.079, JPY +0.192\u00b10.091, XAU +0.195\u00b10.108) \u2014 MORE than the measured +0.163 \u2014 and lands at <=1st percentile of the 400 random-exit portfolios in 79% of null runs (mean null percentile 3.1). So the '0.0-0.5 percentile on all four symbols' is the modal outcome for a zero-information exit engine, not evidence of negative alpha. Measured leaks sit at the 20th (EUR), 22nd (GBP), 29th (XAU) percentile of the null \u2014 at or BETTER than signal-free \u2014 and only USDJPY is above it (88th; timing component 94th), which with 4 symbols tested occurs by chance with p\u22480.40. Mechanism (quantified two independent ways): +32.69R of the +74.82R (44%) is pure fill-model asymmetry \u2014 stop/trail/BE tranches fill intra-bar at the touched level while the benchmark fills at bar closes (by-reason decomposition: concentrated in 'trail'/'stop' tranches, e.g. EUR trail +9.19R); EURUSD's close-vs-close timing component is actually NEGATIVE (-2.58R, 7th pctile of null) \u2014 its exits time better than random. The remainder is the hindsight-bounded window (random exits drawn from [entry, actual-exit] use the actual exit time, an infeasible policy), which alone generates +0.10-0.15 R/unit under the null. The stop-path localization (-118.2R) reproduces but is a property of the statistic (stops sit at each window's adverse extreme by construction \u2014 the analyst says so themselves), present under the null too. Consistent cross-check from the analyst's own feasible-policy table: on USDJPY every implementable alternative (h24/h72/h120, let-run) does WORSE than the actual exits (-41 to -56R vs -15.6R), yet the infeasible random benchmark 'wins' \u2014 the +73R was never recoverable. What survives: the engine-level ablations are genuine A/Bs \u2014 BE-at-TP1 removal +24.98R full-sample with the GBPUSD sign-flip is real, though 'consistently helps' is generous (OOS total +4.14R rests on JPY/XAU; EUR OOS -5.22R, GBP OOS -0.92R) \u2014 and the analyst's strategic bottom line (exit fixes cannot rescue the EA; entries/costs are the problem) is actually STRENGTHENED: even the claimed +73R exit give-back was benchmark construction, so there is no exit fix to make. The metric claiming the prior ~16R M5 XAUUSD finding 'reproduces and generalizes' should be read in reverse: that finding is the same uncalibrated-statistic family and needs the same null test before being cited. Scripts written (all reproducible, seeded): C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_exit_leak_A_units.py, verify_exit_leak_B_no_be.py, verify_exit_leak_C_nullcal.py, verify_exit_leak_C_analyze.py (results in verify_exit_leak_A_results.json, verify_exit_leak_B_results.json, verify_exit_leak_C_runs.jsonl, verify_exit_leak_C_summary.json in the same directory).",
+        "corrected_headline": "The exit engine is NOT a confirmed negative-alpha component: every reported number reproduces exactly (459 units; actual -2.1R vs random-in-window +72.7R; 294 stop-terminated units -118.2R; BE-at-TP1 ablation +25.0R full-sample with GBPUSD flipping -1.23% to +1.75%), but the 'leak vs signal-free random exits' statistic is uncalibrated \u2014 the identical full engine on 479 permuted zero-information datasets 'gives back' +0.189 R/unit (more than the measured +0.163) and lands at or below the 1st percentile of the 400 random-exit portfolios in 79% of null runs, because 44% of the gap is intra-bar stop-family fills versus the benchmark's bar-close fills and the rest is generated by the hindsight-bounded exit window; against this null the EA's actual exits are at or better than signal-free on EURUSD/GBPUSD/XAUUSD (20th/22nd/29th null percentile; EURUSD's within-window timing is better than random) with USDJPY suggestive-only (88th percentile, p\u22480.40 family-wise), so the honest exit findings reduce to: the BE-at-TP1 removal is a real but in-sample-driven engine improvement (+25.0R full, only +4.1R OOS and negative on EURUSD/GBPUSD OOS), there is no ~73R of recoverable exit money, the prior ~16R M5 random-exit finding is the same artifact family and should not be cited without this calibration, and the EA's lack of edge is an entry/cost problem that no exit fix can rescue."
+      }
+    },
+    {
+      "dimension": "cost-drag",
+      "analysis": {
+        "headline": "Cost decomposition verdict: the FTMO Quant EA is a near-zero-gross strategy, not a real edge eaten by costs \u2014 frictionless (zero spread/commission/swap) re-runs give per-unit gross expectancy of just +0.057R (EURUSD), -0.030R (GBPUSD), -0.199R (USDJPY) and +0.002R (XAUUSD), while all costs combined take only 0.03-0.07R per round-turn unit, so no plausible spread on FTMO's feed can fix GBPUSD/USDJPY/XAUUSD, and EURUSD's apparent gross (+$1,792 gross, 64% consumed by costs, break-even spread ~19.5-20 pts vs 10 modeled) lives entirely in the OOS window (IS gross \u2248 $0).",
+        "metrics": [
+          {
+            "name": "Cost ladder net $ (rung1 gross / +spread / +commission / +swap=canonical)",
+            "symbol": "EURUSD",
+            "value": "+$1,791.99 / +$1,539.86 / +$1,277.47 / +$1,062.49 (units 102/101/100/100)",
+            "definition": "Full engine re-run at each cost rung, FTMO guards on, $100k, 70/30 split, fallback spread 10 pts; rung 4 reproduces the canonical results/EURUSD.json measured run to the cent"
+          },
+          {
+            "name": "Per-unit expectancy R by rung (all trades)",
+            "symbol": "EURUSD",
+            "value": "+0.0567 / +0.0493 / +0.0421 / +0.0350 R",
+            "definition": "Mean net-PnL/risk-budget per round-turn unit (scale-out tranches regrouped into units via a pure recording patch inside book(); risk budget \u2248 $317/unit)"
+          },
+          {
+            "name": "Same-path cost attribution (canonical fills, reconciles to the cent)",
+            "symbol": "EURUSD",
+            "value": "gross_ex_spread +$2,963.68 (+0.0935R/unit) \u2212 spread $1,119.50 (0.0353R) \u2212 commission $559.75 (0.0177R) \u2212 swap $221.94 (0.0070R) = net +$1,062.49; costs = 64% of gross, spread 59% of costs",
+            "definition": "Attribution holding the canonical trade set fixed: engine-booked commission and swap per tranche + first-order spread crossing bill (spread \u00d7 lots \u00d7 $/price/lot)"
+          },
+          {
+            "name": "Gross IS vs OOS",
+            "symbol": "EURUSD",
+            "value": "IS (72 units): \u2212$651 rerun / +$102 same-path (R \u22120.026 / +0.004 \u2248 zero); OOS (28 units): +$2,443 / +$2,862 (R +0.286 / +0.325)",
+            "definition": "Frictionless-rerun and same-path gross before all costs, split at the 70% chronological boundary \u2014 ALL of EURUSD's gross edge sits in the 28-unit OOS window"
+          },
+          {
+            "name": "Break-even spread",
+            "symbol": "EURUSD",
+            "value": "~19.5 pts analytic / ~20.1 pts bisection (two methods agree); modeled 10 pts; FTMO effective EURUSD \u2248 1-6 pts raw + commission \u2014 plausibly available",
+            "definition": "Spread (points, 1 pt = 0.1 pip) at which full-cost net crosses zero; response curve is non-monotone with \u00b1$1,200 path noise (net at 8 pts = \u2212$109 but at 16 pts = +$1,164)"
+          },
+          {
+            "name": "Cost ladder net $ (gross / +spread / +comm / +swap=canonical)",
+            "symbol": "GBPUSD",
+            "value": "\u2212$1,093.29 / \u2212$510.68 / \u2212$1,009.94 / \u2212$1,232.75 (105 units each); per-unit R \u22120.0302 / \u22120.0130 / \u22120.0278 / \u22120.0346",
+            "definition": "Same protocol, fallback spread 15 pts; rung 4 reproduces GBPUSD_relaxedgate.json to the cent; note gross is NEGATIVE before any costs"
+          },
+          {
+            "name": "Same-path attribution + break-even",
+            "symbol": "GBPUSD",
+            "value": "gross_ex_spread +$938.88 (+0.0283R/unit) \u2212 spread $1,463.55 (0.0441R) \u2212 comm $487.85 (0.0147R) \u2212 swap $220.23 (0.0066R) = \u2212$1,232.75; costs = 231% of gross; break-even spread 2.4 pts (0.24 pips) \u2014 NOT plausibly available on any retail/prop feed",
+            "definition": "Gross is \u22480 (sign flips between derivations: \u2212$1,093 rerun vs +$939 same-path, both within path noise); IS gross \u2248 \u2212$139, OOS +$1,078 (22 units)"
+          },
+          {
+            "name": "Cost ladder net $ (gross / +spread / +comm / +swap=canonical)",
+            "symbol": "USDJPY",
+            "value": "\u2212$6,097.33 / \u2212$4,856.97 / \u2212$5,462.15 / \u2212$4,213.07 (99/96/96/96 units); per-unit R \u22120.1993 / \u22120.1621 / \u22120.1821 / \u22120.1396",
+            "definition": "Fallback spread 28 pts; rung 4 reproduces USDJPY.json to the cent; gross is DEEPLY negative before any costs \u2014 both derivations agree (rerun \u2212$6,097; same-path gross \u2212$2,816 = \u22120.094R/unit)"
+          },
+          {
+            "name": "Same-path attribution",
+            "symbol": "USDJPY",
+            "value": "gross \u2212$2,816.22 \u2212 spread $2,074.01 (0.0694R, largest spread drag of the 4) \u2212 comm $597.60 (0.0200R) + swap CREDIT $1,274.75 (+0.0427R, long +15pts/night carry) = \u2212$4,213.07; break-even spread = \u221228.9 pts (impossible); IS gross \u2212$2,383, OOS gross \u2212$433 \u2014 negative everywhere",
+            "definition": "The 28-pt spread costs real money but is NOT the root cause: at ZERO spread with full commission+swap the strategy still loses $5,771"
+          },
+          {
+            "name": "Cost ladder net $ (gross / +spread / +comm / +swap=canonical)",
+            "symbol": "XAUUSD",
+            "value": "\u2212$50.78 / +$2,610.22 / +$2,465.44 / +$1,728.90 (154/158/158/158 units); per-unit R +0.0023 / +0.0563 / +0.0530 / +0.0373",
+            "definition": "Fallback spread 16 pts; rung 4 reproduces XAUUSD.json to the cent; frictionless gross \u2248 ZERO (\u2212$51, +0.002R/unit) \u2014 adding spread RAISED net $2,661 through path divergence (5-9 changed trades worth +$2.5k), i.e. the canonical +1.73% is path luck, not signal"
+          },
+          {
+            "name": "Same-path attribution \u2014 swap dominates",
+            "symbol": "XAUUSD",
+            "value": "gross_ex_spread +$3,200.28 \u2212 spread $531.68 (0.0106R, 36% of costs) \u2212 comm $166.15 (0.0033R, 11%) \u2212 swap $773.55 (0.0155R, 53% \u2014 the \u221245pts/night long-gold financing) = +$1,728.90; but canonical-path gross is all IS (+$3,871); OOS gross NEGATIVE (\u2212$670, \u22120.047R/unit, 46 units)",
+            "definition": "XAUUSD is the only symbol where swap is the largest cost; break-even spread is ill-posed (curve non-monotone: net \u2212$830 at 0-8 pts, +$1,700-2,800 at 12-32 pts)"
+          },
+          {
+            "name": "Path-noise band (chaos diagnostic)",
+            "symbol": "ALL",
+            "value": "\u00b1$1,000-3,000 net swings from spread perturbations smaller than the cost itself; rung1-vs-rung2 trade overlap 84-97%; aggregate gross across 4 symbols: \u2212$5,449 (rerun) vs +$4,287 (same-path) \u2014 sign not even stable",
+            "definition": "Any single-run net on this strategy sits inside its own path-noise band (~\u00b10.03R/unit), which is itself proof the gross expectancy is \u22480"
+          }
+        ],
+        "conclusion": "ANSWER (a) \u2014 is GROSS positive, IS and OOS? Only EURUSD has positive gross in both derivations (+0.057R/unit rerun, +0.094R same-path), but it is 100% concentrated in the 28-unit OOS window: IS gross is \u2212$651/+$102 (\u22480) depending on derivation. GBPUSD gross \u2248 0 with unstable sign (\u2212$1,093 rerun vs +$939 same-path; IS \u2248 \u2212$139, OOS +$1,078). USDJPY gross is decisively NEGATIVE both ways, IS and OOS (\u22120.199R rerun, \u22120.094R same-path; IS \u2212$2,383, OOS \u2212$433). XAUUSD frictionless gross \u2248 0 (\u2212$51); its canonical-path gross is IS-only (+$3,871 IS, \u2212$670 OOS) and its positive net at 16-pt spread is demonstrably path luck (net is NEGATIVE at 0-8 pt spreads). ANSWER (b) \u2014 what do costs consume and which dominates? EURUSD: costs $1,901 = 64% of same-path gross; spread dominates (59% of costs; 0.035R/unit), then commission (29%), swap (12%). GBPUSD: costs $2,172 = 231% of a $939 gross; spread dominates (67%). USDJPY: gross already negative before costs; spread is the biggest cost (0.069R/unit \u2014 yes, the 28-pt spread bites hardest here) but swap is actually a +$1,275 CREDIT (long-JPY carry), and zeroing ALL costs still loses 6.1%. XAUUSD: costs $1,471 = 46% of (IS-only) gross; SWAP dominates (53% \u2014 the \u221245/night long-gold financing, 0.0155R/unit), spread only 36%, commission 11%. Commission is a minor cost everywhere (0.003-0.020R/unit). ANSWER (c) \u2014 break-even spread and plausibility: EURUSD ~19.5-20 pts (two methods agree) vs 10 modeled \u2014 plausibly available on FTMO (effective ~2-10 pts), so EURUSD is the only symbol where the venue is NOT the binding constraint; GBPUSD needs 2.4 pts (0.24 pips) \u2014 not available anywhere; USDJPY needs \u221229 pts (you'd have to be PAID the spread) \u2014 impossible; XAUUSD's nominal 68 pts is meaningless because the response surface is non-monotone noise around a \u22480 gross. VERDICT: this is the unfixable kind. Three of four symbols (GBPUSD, USDJPY, XAUUSD) have gross expectancy that is zero or negative BEFORE any costs \u2014 no cost engineering (tighter spread, lower commission, swap-free account) can create an edge that isn't there, and USDJPY's signal is outright wrong on this data. EURUSD alone shows real-looking gross that survives realistic FTMO costs, but its in-sample gross is zero and the entire edge is one 28-unit OOS window \u2014 consistent with the program's standing conclusion that this is not a validated edge. The EA's problem is the signal, not the venue.",
+        "caveats": "1) The engine is a conservative H1 OHLC screening model (intrabar ambiguity resolved against the strategy), not MT5 tick parity \u2014 absolute nets are pessimistic but the gross-vs-cost structure should hold. 2) Re-run ladder deltas mix true cost with path divergence (trade sets change 3-16% between rungs and cascade through daily caps/profit locks/pyramids); the same-path decomposition on canonical fills is the authoritative attribution and reconciles to the cent, but its spread term is the first-order crossing bill (spread \u00d7 lots) \u2014 spread's second-order effect (shifted hit probabilities of TPs/stops) is only visible in the re-runs, where it is inside the noise band. 3) Net-vs-spread is non-monotone (\u00b1$1,000-3,000 path noise), so break-even spreads are trend crossings, not sharp thresholds; the two independent derivations agree for EURUSD (19.5 vs 20.1 pts) which is the only symbol where the number matters. 4) Swap points are the meta file's APPROXIMATE mid-2025 FTMO-style values and USDJPY's tick value is a point-in-time USD conversion; real financing varies daily \u2014 the XAUUSD swap-dominance and USDJPY swap-credit findings are directionally robust but not exact. 5) FTMO live-feed spread figures cited for plausibility are typical published/observed values, not measured on FTMO's feed this session (the repo's ftmo/spread-check exists for that). 6) Single 70/30 chronological split; OOS buckets are small (22-46 units) and no significance testing was done here \u2014 the OOS-positive FX gross readings are well within small-sample luck, per the parity-audit precedent. 7) All runs FTMO-guarded (canonical protocol); guard interactions are part of the measured path by design. 8) No randomness anywhere (deterministic engine and script), so no seeding was required despite the harness rule.",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/cost_ladder.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/cost_ladder_results.json"
+        ]
+      },
+      "verdict": {
+        "refuted": false,
+        "reasoning": "HEADLINE SURVIVES. I re-derived every load-bearing number with an independent mechanism (script: C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/verify_cost_decomp.py, results JSON alongside): instead of the analyst's source-patched book() recorder, I imported the real module, monkeypatched the module-level Position dataclass to record risk budgets/lots at construction, grouped the engine's own returned tranche ledger into round-turn units, and \u2014 for the same-path attribution \u2014 reconstructed per-tranche lots from the PUBLISHED canonical ledgers' pnl/r fields (lots_i = orig_lots*(pnl_i/r_i)/risk_budget) with per-unit reconciliation asserts (lots sum to original, swap only on final tranche, unit net = price_pnl \u2212 commission + swap to the cent). Findings: (1) Rung-4 reproduces all four canonical results JSONs exactly, tranche-by-tranche identical ledgers (EURUSD +$1,062.49/172, GBPUSD_relaxedgate \u2212$1,232.75/171, USDJPY \u2212$4,213.07/142, XAUUSD +$1,728.90/253). (2) Frictionless gross per-unit R matches to 4 decimals: EURUSD +0.0567R (+$1,791.99, 102 units), GBPUSD \u22120.0302R (\u2212$1,093.29, 105), USDJPY \u22120.1993R (\u2212$6,097.33, 99), XAUUSD +0.0023R (\u2212$50.78, 154) \u2014 confirming three of four symbols have zero-or-negative gross before any costs. (3) EURUSD same-path attribution reproduces to the cent: gross_ex_spread $2,963.68 \u2212 spread $1,119.50 \u2212 commission $559.75 \u2212 swap $221.94 = $1,062.49; costs = 64.1% of gross, spread = 58.9% of costs. (4) Total same-path costs per unit: 0.0600R (EU) / 0.0655R (GBP) / 0.0467R (JPY, incl. +0.0427R swap CREDIT verified) / 0.0295R (XAU) \u2014 the \"0.03\u20130.07R\" claim holds. (5) EURUSD OOS concentration confirmed: frictionless IS \u2212$651.07 (\u22120.026R) vs OOS +$2,443.05 (+0.286R); same-path IS gross +$101.76 vs OOS +$2,861.92 (+0.325R). (6) EURUSD break-even spread: my analytic 19.5 pts; my full-cost grid crosses zero between 20 and 21 pts (net +$175.08 at 20, \u2212$156.74 at 21), and the cited noise points reproduce exactly (\u2212$109.06 at 8 pts, +$1,163.73 at 16 pts). (7) XAUUSD path-luck claim confirmed: +spread-only run = +$2,610.22 exactly (spread RAISED net vs \u2212$50.78 frictionless), and full-cost response is non-monotone exactly as claimed (\u2212$830/\u2212$835/\u2212$863 at 0/4/8 pts vs +$1,747/+$1,729/+$2,261 at 12/16/20); XAU swap = 52.6% of costs, the largest. (8) Secondary cited figures also exact: USDJPY at zero spread with full commission+swap loses $5,771.18; EURUSD ladder +$1,539.86/+$1,277.47 at rungs 2/3; GBPUSD analytic break-even 2.37 pts; mean risk budget $316.81/unit (EURUSD). No material error found; the caveats already disclose the only soft spots (approximate swap points, single split, unmeasured FTMO feed, re-run path divergence). The conclusion \u2014 near-zero-gross signal, not an edge eaten by costs; only EURUSD's gross is real-looking and it is entirely one small OOS window \u2014 is fully supported."
+      }
+    },
+    {
+      "dimension": "beta-regime",
+      "analysis": {
+        "headline": "Yes \u2014 the positive residue is regime-window luck, not edge, and it is not even competent trend beta: across all 4 symbols the EA nets \u2212$2,654 while the plainest long/flat EMA50/200-cross baseline under identical costs and sizing nets +$35,060, and the two \"winning\" symbols' profits are statistically indistinguishable from zero (bootstrap p(net\u22640)=0.37 EURUSD, 0.33 XAUUSD) with top-3-unit concentration of 170% and 118% of net.",
+        "metrics": [
+          {
+            "name": "EA 4-symbol total net (canonical measured ledgers, $100k)",
+            "symbol": "ALL",
+            "value": "-$2,654.44",
+            "definition": "Sum of canonical 'measured' nets: EURUSD +1,062.49, GBPUSD \u22121,232.75 (relaxedgate), USDJPY \u22124,213.07, XAUUSD +1,728.90"
+          },
+          {
+            "name": "Long/flat EMA-cross baseline total (same costs, same 0.35%/1.10 sizing, H1)",
+            "symbol": "ALL",
+            "value": "+$35,059.98",
+            "definition": "Two-line baseline: long while EMA50>EMA200 else flat, no stop, same fallback spread/commission/swap, fills at next bar open; per symbol: EURUSD \u22124,087, GBPUSD \u22123,516, USDJPY +12,057, XAUUSD +30,606"
+          },
+          {
+            "name": "EURUSD long/short decomposition",
+            "symbol": "EURUSD",
+            "value": "long \u2212$2,742 (PF 0.72, 68 units) / short +$3,804 (PF 2.19, 32 units)",
+            "definition": "All profit is short-sided while the pair's full-window buy-and-hold drift is +6.56% \u2014 profit does NOT match the sample drift; it matches two downtrend sub-windows (2023 shorts +$1,949, 2026 shorts +$1,899) and 2024 lost \u2212$2,114"
+          },
+          {
+            "name": "EURUSD OOS shine decomposed",
+            "symbol": "EURUSD",
+            "value": "83% of OOS profit = 5 short units",
+            "definition": "The OOS PF 1.84 that made EURUSD look alive: +$1,899 of the +$2,278 OOS net comes from 5 short units riding the H1-2026 EUR slide (OOS drift \u22121.81%); pure regime beta on one window"
+          },
+          {
+            "name": "EURUSD unit-level bootstrap",
+            "symbol": "EURUSD",
+            "value": "p(net\u22640)=0.369, CI95 [\u2212$5,061, +$7,103], mean unit R +0.035",
+            "definition": "10,000 seeded resamples of the 100 reconstructed unit PnLs (unit risk recovered exactly as sum(pnl_i/r_i)); the +$1,062 net is indistinguishable from zero; top-3 units = +$1,805 = 170% of full-period net"
+          },
+          {
+            "name": "XAUUSD beta capture ratio",
+            "symbol": "XAUUSD",
+            "value": "5.6% of a two-line cross; 2.6% of risk-scaled B&H",
+            "definition": "EA +$1,729 vs long/flat EMA cross +$30,606 (PF 3.70, maxDD 8.3%) and risk-scaled buy-and-hold +$67,476 (after \u2212$24,685 swap, maxDD 31%) over a +106.9% gold window; EA long side = 145 of 158 units at PF 1.04 (zero); short +$985 is 13 units, mostly the Sep\u2013Oct 2023 correction"
+          },
+          {
+            "name": "XAUUSD anti-beta years",
+            "symbol": "XAUUSD",
+            "value": "2025: EA \u2212$1,246 vs gold +65.4%; OOS: EA \u2212$899 (PF 0.86) vs gold +18.2%",
+            "definition": "The EA loses money precisely in the strongest beta windows \u2014 its +1.73% is residue the bull market dropped, not trend capture; bootstrap p(net\u22640)=0.325, top-3 units = 118% of net (two of the three are adjacent 2023-09-25/26 short adds in one move)"
+          },
+          {
+            "name": "USDJPY underperformance vs trivial beta",
+            "symbol": "USDJPY",
+            "value": "EA \u2212$4,213 vs long/flat cross +$12,057 and B&H +$31,706 (incl. +$17,131 carry)",
+            "definition": "Both EA sides lose (long PF 0.79, short PF 0.21) against a +11.0% drift and +$9.30/lot/night positive long carry; in 2024 the pair rose 11.5% and the EA's longs lost \u2212$1,546; bootstrap p(net\u22640)=0.93"
+          },
+          {
+            "name": "GBPUSD underperformance vs trivial beta",
+            "symbol": "GBPUSD",
+            "value": "EA \u2212$1,233 vs long/flat cross+stop +$4,467 and B&H +$3,991",
+            "definition": "Drift +5.12%; EA long side +$172 (PF 1.01, dead), short side \u2212$1,405 (PF 0.66); the EA gives up ~$5,700 to a two-line baseline; bootstrap p(net\u22640)=0.65"
+          },
+          {
+            "name": "Risk-adjusted comparison (fairness check)",
+            "symbol": "XAUUSD",
+            "value": "EA \u2248 $423/DD-pt vs cross \u2248 $3,670/DD-pt (~9x worse)",
+            "definition": "EA maxDD is smaller (4.1\u20135.3% vs baselines 6\u201331%), but even per point of max drawdown the XAUUSD long/flat cross earns ~9x the EA; low DD comes from suppressing trend capture, not from alpha"
+          }
+        ],
+        "conclusion": "The EA's positive residue (EURUSD +1.06%, XAUUSD +1.73%) is regime luck riding directional sub-windows, and the EA is strictly worse than trivial trend beta. (1) Side decomposition: EURUSD profit is 100%+ short-sided against a rising full-sample drift, concentrated in exactly two EUR-down windows (autumn 2023 +$1,949; H1 2026 +$1,899 \u2014 the latter is 83% of the celebrated OOS PF 1.84, from just 5 units), with 2024 bleeding \u2212$2,114 in between; XAUUSD longs (145 units) net PF 1.04 \u2248 zero through a +107% gold bull, and the EA LOST money in 2025 (gold +65%) and OOS (gold +18%). (2) Baselines under identical costs/sizing: the EA beats the two-line baseline only on EURUSD (where all baselines lose and the EA's own profit is noise); on GBPUSD/USDJPY/XAUUSD it underperforms a no-thought EMA50/200 long/flat follower by $5.7k/$16.3k/$28.9k respectively, and USDJPY B&H with carry beats it by ~$36k. (3) Concentration/bootstrap: top-3 units carry 170% (EURUSD) and 118% (XAUUSD) of full-period net; 10,000-resample bootstraps put every symbol's net inside the zero band (p(net\u22640) = 0.33\u20130.93). (4) Time stability: no symbol makes money across regimes \u2014 each profitable cell of the yearly table coincides with one directional window whose sign the EA happened to be positioned for, and adjacent regimes take it back. Verdict for the parent question: the EA adds nothing beyond (badly harvested) beta \u2014 its filter/guard stack suppresses trend capture and losses alike, leaving cost-laden noise whose occasional positive residue is a handful of lucky units in trending sub-windows. The apparent EURUSD \"edge\" (+1.06%, OOS PF 1.84) is the single strongest piece of regime-luck evidence, not the exception to it.",
+        "caveats": "(a) Bootstrap treats units as iid; pyramid adds are correlated within a move (e.g. XAUUSD's #2/#3 top units are 2023-09-25 15:00 and 2023-09-26 13:00 shorts in the same swing), so true concentration is worse and p-values optimistic \u2014 this biases AGAINST my conclusion's strength, not for it. (b) Baselines hold overnight and over weekends (the EA flattens Fridays and is session-gated), so they carry gap risk the EA avoids and slightly undercharged weekend swap (engine convention: one charge per calendar-date change); their max drawdowns are 6\u201331% vs the EA's 4\u20135%, so raw-net comparisons flatter the baselines \u2014 the DD-normalized comparison (still ~9x in the baseline's favor on XAUUSD) is the fair one. (c) Swap points are the meta file's approximate mid-2025 FTMO-style values applied to the whole sample; USDJPY's +$17k B&H carry in particular is an approximation (real swaps varied), though the sign was robustly positive over 2023\u20132026. (d) All numbers come from the conservative H1-OHLC screening engine (stop-before-target), not tick parity. (e) Baselines size one 0.35% position vs the EA's up to 3 concurrent 0.35% units, so the baselines use LESS peak risk. (f) GBPUSD uses the relaxedgate ledger per the task; the plain GBPUSD.json (\u22121.01%) does not change any conclusion. (g) Buy-and-hold windows start at bar 210 (engine warmup) for symmetry with the EA's first possible entry.",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/beta_regime_01_decomposition.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/beta_regime_01_decomposition_results.json",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/beta_regime_02_baselines.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/beta_regime_02_baselines_results.json",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/beta_regime_03_bh_crosscheck.py"
+        ]
+      },
+      "verdict": {
+        "refuted": false,
+        "reasoning": "Headline VERIFIED \u2014 every load-bearing number reproduces under independent re-derivation. (1) EA total: summing the four canonical measured ledgers gives exactly \u2212$2,654.44 (EURUSD +1,062.49, GBPUSD_relaxedgate \u22121,232.75, USDJPY \u22124,213.07, XAUUSD +1,728.90). (2) Baseline: I re-implemented the long/flat EMA50/200-cross baseline from the spec in fresh code (verify_beta_B_baseline_indep.py; single-position event loop written independently of the analyst's script) with identical costs (fallback spreads 10/15/28/16 pts on the ask, $2.5/side/lot commission, engine-convention calendar-date swap with Thursday triple) and identical sizing (0.35%/1.10 against 2.5\u00d7ATR14, floor_volume, warmup 210): total +$35,059.98, per-symbol EURUSD \u22124,087.40 / GBPUSD \u22123,515.60 / USDJPY +12,057.26 / XAUUSD +30,605.72 \u2014 matching the analyst to the cent. Sensitivity: with non-compounding fixed-$100k sizing the total is still \u2248+$32.5k (XAUUSD +27,883.57, USDJPY +11,791.47), so the gap is not a compounding artifact. Cross-checks also reproduce: XAUUSD cross PF 3.698 / maxDD 8.34%; risk-scaled B&H XAUUSD +$67,475.70 (swap \u2212$24,684.75, maxDD 31.3%); USDJPY B&H +$31,705.93 including +$17,131.05 carry; DD-normalized XAUUSD ratio $422.9 vs $3,669.8 per DD-point = 8.68x (claimed ~9x). (3) Bootstrap/concentration: reconstructing units by (entry_time, side, entry) and bootstrapping with fresh seeds (10k\u00d7seed 12345 + 100 seeds\u00d72k + 20k\u00d7seed 777) gives EURUSD p(net\u22640)=0.364\u20130.373 (claimed 0.369), CI95 [\u22125,067,+7,106] vs claimed [\u22125,061,+7,103], mean unit R +0.035; XAUUSD p=0.303\u20130.359, mean 0.332 (claimed 0.325); top-3 concentration 169.9% (EURUSD) and 117.7% (XAUUSD) vs claimed 170%/118%; USDJPY p=0.930, GBPUSD p=0.651. (4) Decompositions: EURUSD long \u2212$2,741.60 (68 units, PF 0.723) / short +$3,804.09 (32 units, PF 2.186) against positive full-window drift; 5 OOS short units = +$1,898.61 = 83.4% of the +$2,277.68 OOS net behind the PF-1.84 headline; 2023 shorts +$1,949.23. XAUUSD: 145/158 long units at tranche PF 1.039 (+$744.21) through a >100% gold window, short +$984.68 over 13 units, 2025 \u2212$1,245.77, OOS \u2212$898.77 at PF 0.863. USDJPY long PF 0.785 / short PF 0.207, 2024 longs \u2212$1,545.75. GBPUSD long +$172.42 PF 1.015 / short \u2212$1,405.17 PF 0.659; plain GBPUSD ledger \u22121.01% as caveated. Only two immaterial convention differences found: the analyst's EURUSD \"2024 \u2212$2,114\" attributes units by entry year (tranche-exit-year attribution gives \u2212$1,992; one short unit spans the 2024/2025 boundary), and their drift figures anchor at the ledger window start rather than the warmup bar (EURUSD +6.56% vs +7.16%, XAUUSD +106.9% vs +104.4%) \u2014 same sign and magnitude, no conclusion changes. The headline's framing is supported and appropriately caveated (iid-bootstrap optimism, baseline gap risk/DD asymmetry, approximate swaps all disclosed, and the DD-normalized comparison addresses the fairness concern). Verification scripts: backtest/audit/verify_beta_A_ledger_stats.py, verify_beta_B_baseline_indep.py, verify_beta_C_ci_misc.py, with results in verify_beta_A_results.json, verify_beta_B_results.json, verify_beta_C_results.json."
+      }
+    },
+    {
+      "dimension": "statistics-selection",
+      "analysis": {
+        "headline": "The EA's edge is statistically indistinguishable from zero and its best-looking number is pure selection: pooled expectancy across all 4 symbols is NEGATIVE (-0.017R/unit, cluster t=-0.27, n=459), the single best cell in the whole results grid (EURUSD OOS, +0.259R, day-clustered t=1.26, p=0.22) is below the expected maximum of just 8 pure-noise t-stats (1.46) and less than half the Bonferroni hurdle implied by the >=9 documented design decisions (z>=2.77), the celebrated IS-negative/OOS-positive \"paradox\" is reproduced by 7.4-10.7% of random re-splits of the same trades (and the mirror-image flip occurs on XAUUSD), and the sample is 30-50x too small to detect a +0.05R edge (need ~3,022-5,003 units vs 100-459 available, i.e. 19-137 years of trading).",
+        "metrics": [
+          {
+            "name": "Pooled unit expectancy (4 symbols, measured path, FTMO-guarded 1x spread)",
+            "symbol": "mean R (pooled)",
+            "value": "-0.0166 R/unit, sd 0.990, n=459 units; t_naive=-0.36, entry-day cluster-robust t=-0.27 (G=257 days), weekly-block bootstrap 95% CI [-0.160, +0.108], bootstrap p=0.78",
+            "definition": "Per-unit R = sum of a unit's tranche PnL (incl. swap/commission) divided by its dollar risk budget recovered exactly from the ledger (sum of pnl_i/r_i over tranches; reconciles to ledger net_profit to the cent on all 4 symbols; cross-checked against 0.4/0.3/residual reason-weights, 0 mismatches). Cluster t = Liang-Zeger with G/(G-1) correction, clusters = entry calendar day pooled across symbols."
+          },
+          {
+            "name": "Per-symbol expectancy (n, mean R, naive t, day-clustered t, weekly-boot 95% CI)",
+            "symbol": "R by symbol",
+            "value": "EURUSD: 100, +0.0350, +0.36, +0.31, [-0.179,+0.228] | GBPUSD(relaxedgate): 105, -0.0346, -0.34, -0.31, [-0.292,+0.187] | USDJPY: 96, -0.1396, -1.47, -1.23, [-0.363,+0.064] | XAUUSD: 158, +0.0373, +0.47, +0.40, [-0.180,+0.231]",
+            "definition": "Same estimator per symbol. No symbol reaches |t|=1.5; the largest statistic in the table is USDJPY's NEGATIVE t. Note: the ledgers' headline 'expectancy_r 0.514' is a tranche-accounting artifact (per-tranche R normalized by tranche risk basis); honest per-unit expectancy is ~15x smaller."
+          },
+          {
+            "name": "Best split anywhere: EURUSD OOS",
+            "symbol": "t_OOS(EURUSD)",
+            "value": "n=28 units, mean +0.2587R; naive t=1.363 (p=0.184), entry-day clustered t=1.26 (G=22, p=0.222), weekly-block bootstrap 95% CI [-0.251, +0.661], bootstrap p=0.328",
+            "definition": "The single most favorable cell in the 4-symbol x (IS/OOS/full) grid, i.e. the number the +1.06% verdict leans on. It is not significant at nominal 5% with ZERO multiplicity adjustment. Re-derived independently from dollar PnL (OOS net $2,277.68 matches ledger exactly)."
+          },
+          {
+            "name": "Multiple-testing hurdle vs observed",
+            "symbol": "z_required vs t_obs",
+            "value": "Bonferroni z (5% family, two-sided): N=4 -> 2.50, N=8 -> 2.73, N=9 -> 2.77, N=13 -> 2.89, N=36 -> 3.20, N=100 -> 3.48. Expected max of N null t's (Bailey/Lopez-de-Prado): N=4 -> 1.05, N=8 -> 1.46, N=9 -> 1.52, N=36 -> 2.15, N=100 -> 2.53. Observed best: 1.26 clustered (1.36 naive)",
+            "definition": "Documented selection history (docs/BACKTEST_RESULTS.md lines 67-90 + README + results dir): 9 sequential design decisions (buffer, session, wider stop 2.5 ATR, candle+wick, HTF confluence, skip-hour, vol regime, market-structure tried-and-shipped-off, scale-out/pyramid), x4 symbols, x2 cost levels, 3 engine re-screens (+4.03% -> +1.28% -> +1.06%), plus a GBPUSD gate variant; unlogged rejected parameter values make 9 a hard floor and ~36 (9x4) a conservative mid. The observed best t (1.26) is BELOW the expected maximum of even 8 pure-noise trials (1.46) and ~45% of the N=9 Bonferroni hurdle: the grid underperforms what noise-plus-selection alone would be expected to produce."
+          },
+          {
+            "name": "OOS paradox re-split test (EURUSD)",
+            "symbol": "p_resplit",
+            "value": "p(random 70/30 re-split OOS mean >= +0.2587) = 0.074 unit-permutation (10,000 perms, seed 7; range 0.061-0.094 over 100 seeds) and 0.107 week-block permutation (52 blocks; range 0.078-0.133); joint pattern (IS <= -0.052 AND OOS >= +0.259) = same 0.074/0.107; ANY IS<0<OOS sign flip occurs in 28.0%/31.0% of random splits",
+            "definition": "Null: unit R's exchangeable over time (no time-localized edge). ~1 in 10-13 random re-orderings of the SAME trades produce an OOS this good, and the qualitative flip is a ~3-in-10 base-rate event. XAUUSD shows the mirror flip in the same ledger (IS +0.076/OOS -0.057; its OOS is beaten by 72-78% of random splits). Verdict: the IS-negative/OOS-positive pattern is variance, not a late-emerging edge - and since IS drove the 9-step design selection, OOS was the only untouched split and it is insignificant."
+          },
+          {
+            "name": "Sample adequacy for a +0.05R true edge",
+            "symbol": "n_required",
+            "value": "sd(R)=0.981 (EURUSD) / 0.990 (pooled) -> n = 3,022 (5% two-sided, 80% power) / 5,003 (95% power) per EURUSD sd; pooled sd gives 3,075/5,092. Available: 100 EURUSD units (35.9/yr -> 84 yrs at 80%, 139 yrs at 95%) or 459 pooled (159.5/yr -> 19.3/31.9 yrs). Minimum detectable effect at n=100, 80% power: ~0.275R",
+            "definition": "One-sample z-approximation n = ((z_0.975 + z_power) * sd / 0.05)^2. The screen can only resolve per-unit edges ~5x larger than the +0.05R that would plausibly matter; it is structurally incapable of validating (or refuting) an edge of realistic size at this sample."
+          }
+        ],
+        "conclusion": "STATISTICAL VERDICT: there is no statistically detectable edge, and the reported positives are selection artifacts on an inadequate sample. (1) Honest per-unit expectancy is +0.035R on EURUSD (t=0.31 after day-clustering) and NEGATIVE pooled across the 4 screened symbols (-0.017R, t=-0.27, weekly-block bootstrap CI [-0.160,+0.108]); every per-symbol CI comfortably straddles zero and the strongest statistic in the entire grid is USDJPY's negative t=-1.23. (2) The one number that looks alive - EURUSD OOS +0.259R - carries a clustered t of 1.26 (p=0.22), which fails even a nominal unadjusted 5% test, sits BELOW the expected maximum of 8 pure-noise t-stats (1.46) generated by simply picking the best of 4 symbols x 2 splits, and is less than half the z>=2.77-3.48 that surviving the >=9 documented sequential design decisions (times 4 symbols, times 3 re-screens) would require. (3) The IS-negative/OOS-positive 'paradox' is not evidence of a real edge that emerged late: 7.4-10.7% of seeded random re-splits of the same trade sequence produce an equally good OOS, the qualitative sign flip is a 28-31% base-rate event, and XAUUSD exhibits the mirror-image flip in the same results set - exactly the two-sided scatter variance produces. (4) Even if a true +0.05R edge existed, this harness could not see it: at sd(R)=0.98 per unit you need ~3,000-5,000 units and there are 100 (EURUSD) to 459 (pooled) - i.e. 19-137 years of trading at the observed signal frequency. The +1.06% EURUSD headline is therefore an unrejected null dressed as a marginal positive: the honest statement is that after ~dozens of implicit trials the best remaining split is weaker than noise-plus-selection alone would predict. Reproducible scripts and JSON outputs are in backtest/audit/ (stats_honesty_01/02).",
+        "caveats": "Unit R uses risk budgets recovered exactly from the ledger (pnl/r per tranche) - verified to reconcile with net_profit to the cent and against reason-weight reconstruction (0/100 mismatches), but inherits the canonical run's assumptions (fallback spreads, approximate swap snapshot, H1 stop-first fills). Entry-day clustering may still understate multi-day regime dependence; the weekly-block bootstrap addresses one level up but true regime blocks could be longer, which would make the t-stats even weaker, not stronger. The permutation null assumes exchangeability of unit R over time, which ignores genuine regime drift - but a clustered t of 1.26 cannot be rescued by any regime story, and the drift argument cuts against the OOS reading too (nothing guarantees the OOS regime persists). The 9-trial multiplicity floor counts only DOCUMENTED accepted decisions; rejected parameter values during development were not logged, so every hurdle quoted is a lower bound. Power numbers use the z-approximation (exact t-based n is ~1-2 units higher). GBPUSD uses the relaxedgate ledger per the canonical results table; the stricter GBPUSD.json variant is itself one more unlogged trial. Bootstrap/permutation p-values are seeded (seeds 7/42) with 100-seed stability ranges reported; all randomness is reproducible from the saved scripts.",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/stats_honesty_01_unit_inference.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/stats_honesty_02_multiplicity_resplit.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/stats_honesty_01_results.json",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/stats_honesty_02_results.json"
+        ]
+      },
+      "verdict": {
+        "refuted": false,
+        "reasoning": "I re-derived the analyst's load-bearing numbers from scratch (script: C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/stats_honesty_03_adversarial_verify.py, results JSON alongside), deliberately using a different unit-grouping key (entry_time only, with a collision check), an independent risk-magnitude cross-check, my own permutation design (random.sample of the OOS set instead of shuffle-split), fresh seeds (101-120, 20k draws each), and statistics.NormalDist instead of their Acklam inverse-normal. Every claim reproduced. (1) UNIT/RISK RECOVERY IS SOUND: engine source (ftmo_quant_backtest.py line 530) writes tranche r = reported/(risk_budget * lot_fraction), so sum(pnl_i/r_i) recovers the full unit risk; 0 zero-r tranches, 0 entry-time collisions, reconstructed net reconciles to the ledger net_profit to better than a cent on all 4 symbols, and recovered risk budgets are 0.977-1.021x the config-implied 0.35%/1.10 = 0.318% of equity (independent magnitude confirmation that the R denominator is right, not off by a tranche factor). (2) POOLED EXPECTANCY: n=459, mean -0.01661R, sd 0.9897, naive t -0.360, entry-day Liang-Zeger t -0.267 (G=257) - matches -0.0166/-0.27/n=459 exactly. Per-symbol table matches to 4 decimals (EURUSD +0.0350/t_cl +0.312; GBPUSD -0.0346/-0.305; USDJPY -0.1396/naive -1.470/cluster -1.226; XAUUSD +0.0373/+0.400); largest |t| in the grid is indeed USDJPY's negative. (3) BEST CELL EURUSD OOS: n=28, mean +0.25869R, naive t=1.3626, day-clustered t=1.264 (G=22), and OOS net $2,277.68 equals the ledger's oos.net_profit exactly - matches +0.2587/1.363/1.26 as claimed; p~0.21-0.22, insignificant unadjusted. (4) MULTIPLICITY ANALYTICS: Bonferroni z = 2.498 (N=4), 2.734 (8), 2.773 (9), 3.481 (100); Bailey/LdP expected max of 8 null t's = 1.459 - so the observed best (1.26 clustered, 1.36 naive) is below even the 8-trial noise maximum and ~45% of the N=9 hurdle, as claimed. The 9 sequential design decisions are documented verbatim in docs/BACKTEST_RESULTS.md ('Changes over the original defaults, in the order they were added', items 1-9 incl. market-structure tried-and-defaulted-off), and the 3 engine re-screens (+4.03% -> +1.28% -> +1.06%) are documented at BACKTEST_RESULTS.md lines 11-12; GBPUSD.json vs GBPUSD_relaxedgate.json both exist. (5) RE-SPLIT PARADOX: my independent 20-seed test gives p(random OOS mean >= +0.2587) in [0.0756, 0.0812] (mean 0.079), consistent with their 0.074 (seed band 0.061-0.094); any IS<0<OOS sign flip occurs in 28.3% of re-splits (claimed 28.0%); XAUUSD mirror flip confirmed (IS +0.0761/OOS -0.0571, OOS beaten by 77.5% of random splits, inside their 72-78%). (6) POWER: sd 0.9811 (EURUSD)/0.9897 (pooled) gives n = 3,022/5,003 and 3,075/5,092 - exact match; at my measured 36.45 EURUSD units/yr that is 83/137 years (their 35.9/yr and '84/139' is a trivial span-convention difference), pooled 159.5 units/yr gives 19.3/31.9 years, matching the headline's '19-137 years'. (7) The ledger's 'expectancy_r 0.514' (EURUSD all.expectancy_r = 0.5140) is confirmed to be a mean over per-tranche r's (engine line 366), i.e., a tranche-accounting artifact, not per-unit expectancy. Two immaterial compressions, noted but not refuting: the '30-50x too small' ratio strictly applies to the single-symbol EURUSD case (pooled is ~6.7-11x too small - still structurally inadequate, and the headline parenthetical states the exact numbers); and comparing a clustered t to the expected max of standard normals mixes t and z scales slightly (the naive t 1.36 is also below 1.46, so the conclusion is unaffected). Canonical returns also re-confirmed from the ledgers: EURUSD +1.0625%, GBPUSD_relaxedgate -1.2328%, USDJPY -4.2131%, XAUUSD +1.7289%. The headline survives adversarial re-derivation in full."
+      }
+    },
+    {
+      "dimension": "breakout-premise",
+      "analysis": {
+        "headline": "The H1 breakout-continuation premise is effectively dead on 3 of 4 instruments: EURUSD/GBPUSD post-breakout drift is statistically zero and roughly the size of one round-trip cost (+0.09/+0.17 ATR at 24 bars vs 0.11/0.12 ATR cost), USDJPY's once-real drift decayed monotonically and INVERTED in 2026 (h12 continuation -0.37 ATR, CI excludes zero), and only XAUUSD shows genuine cost-clearing drift (+0.53 ATR at h24, perm p=0.001) - but it is long-only (shorts +0.12, at h48 -0.05) and ~2/3 of it is raw gold-bull drift; the EA's confirmation stack is selection-neutral-to-mildly-positive (except GBPUSD) and cannot manufacture an edge where the raw premise carries nothing.",
+        "metrics": [
+          {
+            "name": "EURUSD continuation at 24 bars",
+            "symbol": "EURUSD",
+            "value": "+0.090 ATR, 95% CI [-0.225, +0.432], n=1839 events",
+            "definition": "Mean spread-free signed forward return dir*(close[t+24]-close[t])/ATR14[t] after a 20-bar Donchian H1 breakout close (any hour), calendar-month block bootstrap (1000 resamples, seed 12345); drift-adjusted version +0.089 [-0.225, +0.420]. No horizon (1/4/12/24/48) is significant; h48 point estimate is -0.123. Round-trip cost (10pt spread + $5/lot commission) = 0.114 ATR, i.e. the entire point-estimate drift is ~1x cost."
+          },
+          {
+            "name": "GBPUSD continuation at 24 bars",
+            "symbol": "GBPUSD",
+            "value": "+0.169 ATR, CI [-0.143, +0.468], perm p=0.085, n=1925",
+            "definition": "Same statistic. Best horizon still straddles zero; h48 -0.014. Round-trip cost 0.124 ATR. Crucially the EA's own 0.5-ATR buffer DESTROYS what little there is: h24 continuation drops from +0.169 (plain) to +0.036 (buffered), and the full signal() selects WORSE continuation than rejected breakouts at h12-h48 (D-minus-rest -0.07 at h24, -0.47 at h48)."
+          },
+          {
+            "name": "USDJPY continuation (peak and now)",
+            "symbol": "USDJPY",
+            "value": "h12 +0.183 [+0.007, +0.357] full-sample (perm p=0.011) but by-year: 2023 +0.74 / 2024 +0.29 / 2025 +0.17 / 2026 -0.365 [-0.755, -0.024]",
+            "definition": "The only FX symbol with statistically real full-sample continuation (h4 +0.113, p=0.003; h12 p=0.011) - but drift-adjusted h12 falls to +0.164 [-0.019, +0.335], and the year-by-year series decays monotonically and turns significantly NEGATIVE in 2026 (n=324, independently re-derived: -0.365). The premise existed in 2023-24 and is now inverted - matching the ledger's -4.21%. Round-trip cost 0.155 ATR exceeds even the 2025 vintage (+0.17)."
+          },
+          {
+            "name": "XAUUSD continuation at 24/48 bars",
+            "symbol": "XAUUSD",
+            "value": "h24 +0.530 [+0.216, +0.856], h48 +0.760 [+0.258, +1.250], perm p=0.001, n=1918",
+            "definition": "The one instrument with real, cost-clearing post-breakout drift (round-trip cost only 0.019 ATR). BUT: unconditional same-horizon drift is +0.52 ATR (h24) / +0.95 (h48) - the gold bull. Drift-adjusted continuation is +0.386 [+0.076, +0.705] at h24. Per-direction: LONG breakouts +0.765 (h24) / +1.218 (h48); SHORT breakouts +0.115 (h24) and -0.050 (h48). It is a long-only phenomenon, stable across years (h24: +0.69/+0.26/+0.47/+1.06), roughly 2/3 explained by just being long gold."
+          },
+          {
+            "name": "First-bar continuation (all symbols)",
+            "symbol": "h=1",
+            "value": "EURUSD -0.009, GBPUSD -0.022, USDJPY +0.030, XAUUSD +0.017 ATR (all CIs straddle 0)",
+            "definition": "Mean signed drift over the single bar after the breakout close - there is NO immediate breakout pop anywhere; every entry pays the spread into a statistically flat first hour, which is why fast partial-profit logic (TP1 at 1R) has nothing to harvest early."
+          },
+          {
+            "name": "Confirmation-stack selection differential (full signal vs rejected breakouts)",
+            "symbol": "D-rest",
+            "value": "EURUSD +0.13 ATR at h24 (ns, toward); GBPUSD -0.07 h24 / -0.47 h48 (ns, away); USDJPY +0.45 [+0.05, +0.86] at h12 (significant, toward); XAUUSD ~0 (neutral)",
+            "definition": "Month-block-bootstrapped difference in signed continuation between breakouts the EA's exact signal() accepts (buffer + decisive candle + EMA50>200 stack; verified nested subset, n=385-437 per symbol) and those it rejects. The stack points TOWARD the drift on USDJPY (where the premise died anyway) and EURUSD (where there is no drift to amplify), AWAY on GBPUSD, and is neutral on XAUUSD - where its only real work is the EMA stack tilting selection long (314/437 up), i.e. re-deriving the gold bull."
+          },
+          {
+            "name": "Buffer + candle sub-effects",
+            "symbol": "B,C",
+            "value": "0.5-ATR buffer: EURUSD h24 +0.090->+0.268, USDJPY +0.106->+0.202 (helps); GBPUSD +0.169->+0.036, XAUUSD +0.530->+0.385 (hurts). Candle filter: small mixed effects on top",
+            "definition": "Signed h24 continuation of plain breakouts (A) vs buffered breakouts (B) vs buffered+decisive-candle (C). The buffer's effect has no consistent sign across symbols - consistent with a fitted parameter, not a structural filter; on the only instrument with real drift (gold) it removes ~27% of the continuation."
+          },
+          {
+            "name": "Round-trip cost in ATR units",
+            "symbol": "cost",
+            "value": "EURUSD 0.114, GBPUSD 0.124, USDJPY 0.155, XAUUSD 0.019 ATR",
+            "definition": "(Fallback spread + $5/lot round-trip commission converted at broker tick value) / mean ATR14(H1). The exploitability bar every drift number above must clear at least once per trade - before swap, slippage, or the 2x-spread stress the canonical runs applied."
+          }
+        ],
+        "conclusion": "VERDICT ON THE DIMENSION: the underlying premise is dead where the EA needs it and redundant where it isn't. (1) On EURUSD and GBPUSD, raw H1 Donchian-breakout continuation is statistically indistinguishable from zero at every horizon from 1 to 48 bars (all bootstrap CIs straddle zero, best permutation p=0.085), and the point estimates (~0.09-0.17 ATR at the best horizon) are about the size of ONE round-trip cost - there is no pre-cost drift for any machinery to harvest. (2) On USDJPY the premise was genuinely alive in 2023-24 (h12 +0.74 then +0.29 ATR, full-sample perm p=0.011) but decayed monotonically and inverted to significantly NEGATIVE (-0.37 ATR, CI excludes zero) in 2026 - the EA is trading a dead regime, which is exactly why its ledger shows -4.21%. (3) Only XAUUSD has exploitable pre-cost drift (h24 +0.53 ATR vs 0.02 ATR cost, permutation p=0.001, stable across years, still positive after drift adjustment at +0.39), but it is entirely long-sided (short-breakout continuation +0.12 at h24, negative at h48) and roughly two-thirds of it is the unconditional gold-bull drift - a long-only position or the simplest long filter captures most of it without any breakout logic; this matches XAUUSD being the EA's only robustly positive ledger (+1.73%/+2.76%). (4) The confirmation stack does NOT point away from what drift exists - it selects significantly better continuation on USDJPY (+0.45 ATR differential at h12) and mildly better on EURUSD - but it points the wrong way on GBPUSD (buffer alone cuts h24 continuation from +0.169 to +0.036) and is neutral on gold, and no confirmation can rescue symbols where the raw effect is ~0. The EA's core problem is not its filters; it is that 20-bar H1 breakout continuation, as a tradeable anomaly net of one spread, no longer exists on the FX pairs it trades and survives on gold only as beta.",
+        "caveats": "Sample is ~2.8-3 years (Sep 2023 - Jul 2026) on a single venue (Deriv M15 aggregated to complete-H1 bars); 2023 and 2026 are partial years, so by-year cells have unequal n (202-742 events). Breakout events overlap heavily inside trends - the calendar-month block bootstrap (1000 resamples, seeded) absorbs within-month serial correlation but effective sample size is far below the nominal 1839-2006 events, so moderate effects (GBPUSD h24 +0.17) can hide in the wide CIs; absence of significance is not proof of exactly zero, but any drift below ~one round-trip cost is untradeable regardless. Permutation p-values are per-symbol/per-horizon (20 tests) without multiplicity correction; USDJPY's full-sample p=0.003-0.011 would weaken under correction (its 2026 inversion is the more decision-relevant fact). Continuation is close-to-close and spread-free by design; the EA's realized PnL passes this drift through a 2.5-ATR stop, scale-outs, and session filters, so positive mean drift is necessary but not sufficient for EA profit - the converse (no drift implies no edge) is the load-bearing direction here. Cost yardstick uses the canonical fallback spreads and a point-in-time USDJPY tick value, not historical spread series. The drift adjustment subtracts full-sample unconditional drift scaled by the events' long/short mix (recomputed inside each bootstrap resample); it removes static drift, not time-varying regime effects - on XAUUSD some 'adjusted' continuation may still be bull-regime clustering rather than breakout information. signal() was tested with H1 EMA50/200 and ATR exactly as the engine computes them, but without the session window, HTF confluence, or vol-regime gates (the A_session_only variant shows session filtering alone changes little); the D subset was assert-verified to nest inside the buffer+candle subset.",
+        "scripts_written": [
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/premise_breakout_drift.py",
+          "C:/Users/Sanique Richards/Documents/Homework Heroes/Pokemon/Bot-EA/backtest/audit/premise_secondcheck.py"
+        ]
+      },
+      "verdict": {
+        "refuted": false,
+        "reasoning": "HEADLINE SURVIVES. I re-derived every load-bearing number from scratch (own CSV parser, own H1 aggregation, own SMA-of-TR ATR, own Donchian event scan, own month-block bootstrap with 2000 resamples and seeds 20260714/424242/99173 - none shared with the analyst's 12345/777 - plus an analytic month-cluster-robust SE as a second inferential method and an ISO-week-block bootstrap as a third). Scripts: backtest/audit/verify_premise_breakout.py and verify_premise_dsubset.py; results JSON saved alongside. Matches, point-by-point: (1) EURUSD h24 continuation +0.0897 (claimed +0.090), boot CI [-0.221,+0.407] and cluster +-2SE [-0.236,+0.416] both straddle zero, n=1839 exact; no horizon 1-48 significant (perm p h24=0.36); h48 point -0.123 matches. (2) GBPUSD h24 +0.1685 (claimed +0.169), perm p=0.084 (claimed 0.085), n=1925 exact; buffer effect confirmed exactly (+0.1685 plain -> +0.0358 buffered, n_buf=792). (3) USDJPY full-sample h12 +0.1830 [+0.006,+0.353] perm p=0.014 (claimed +0.183, p=0.011); by-year h12 decay is monotone and matches to 3-4 decimals: 2023 +0.7412 / 2024 +0.2872 / 2025 +0.1659 / 2026 -0.3650 with n=324; the 2026 CI excludes zero under BOTH my month-block ([-0.758,-0.019]) and week-block ([-0.722,-0.028]) bootstraps with fresh seeds. (4) XAUUSD h24 +0.5301 / h48 +0.7601, perm p=0.0005 with 2000 perms (more extreme than every permutation - consistent with their p=0.001 at 1000), n=1918 exact; unconditional drift +0.5196 (h24) / +0.9500 (h48); drift-adjusted +0.3860 [+0.079,+0.706]; per-direction long +0.7649/+1.2183 vs short +0.1151/-0.0498 - the long-only character is exact. (5) Cost yardstick reproduces to the third decimal (0.1144/0.1236/0.1548/0.0191 ATR), and my adversarial variant using ATR AT EVENT TIMES instead of full-sample ATR gives 0.1154/0.1228/0.1539/0.0188 - no vol-clustering distortion, the yardstick is fair. (6) First-bar h1 numbers match exactly and all CIs straddle zero. (7) Confirmation-stack claims verified against the engine's literal signal(): D-minus-rest USDJPY h12 +0.4488 [+0.035,+0.867] (claimed +0.45, significant, toward), GBPUSD -0.0672 h24 / -0.4676 h48 (away, ns), EURUSD +0.1318 (ns), XAUUSD +0.0791 (~0); nD 385-437 as claimed. TWO HONEST NUANCES, neither refuting: (a) the USDJPY-2026 \"CI excludes zero\" is method-marginal - both block-bootstrap schemes exclude zero but the analytic 6-cluster +-2SE interval is [-0.784,+0.054] (iid t=-2.03), so significance rests on the bootstrap; the decision-relevant facts (monotone 4-year decay, negative 2026 point, and 2025's +0.17 already below the 0.155-ATR round-trip cost) stand regardless. (b) the \"~2/3 of it is raw gold-bull drift\" figure follows the analyst's stated long-side decomposition (unconditional +0.5196 / long-breakout +0.7649 = 68%); the static-drift adjustment attributes only 27% (0.144/0.530), BUT the strongest comparison actually UNDERSTATES their beta case: signed breakout continuation (+0.53 at h24, +0.76 at h48) barely matches or falls BELOW the same-horizon unconditional drift (+0.52/+0.95) - always-long gold beats breakout-following at h48 - so \"survives on gold only as beta\" is conservative. Conclusion and headline stand as written."
+      }
+    }
+  ]
+}

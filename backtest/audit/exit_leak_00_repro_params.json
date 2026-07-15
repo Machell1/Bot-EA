@@ -1,0 +1,30 @@
+{
+  "EURUSD": {
+    "file": "EURUSD.json",
+    "fallback_spread_points": 10.0,
+    "max_spread_points": 25.0,
+    "return_pct_repro": 1.0624885714287435,
+    "return_pct_canon": 1.0624885714287435
+  },
+  "GBPUSD": {
+    "file": "GBPUSD_relaxedgate.json",
+    "fallback_spread_points": 15.0,
+    "max_spread_points": 25.0,
+    "return_pct_repro": -1.2327542857146767,
+    "return_pct_canon": -1.2327542857146767
+  },
+  "USDJPY": {
+    "file": "USDJPY.json",
+    "fallback_spread_points": 28.0,
+    "max_spread_points": 30.0,
+    "return_pct_repro": -4.213073807413292,
+    "return_pct_canon": -4.213073807413292
+  },
+  "XAUUSD": {
+    "file": "XAUUSD.json",
+    "fallback_spread_points": 16.0,
+    "max_spread_points": 25.0,
+    "return_pct_repro": 1.7288980000000231,
+    "return_pct_canon": 1.7288980000000231
+  }
+}

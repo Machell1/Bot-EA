@@ -1,0 +1,1042 @@
+{
+  "initial_balance": 100000.0,
+  "split": 0.7,
+  "symbols": {
+    "EURUSD": {
+      "fallback_spread_pts": 10.0,
+      "point": 1e-05,
+      "dollars_per_price_per_lot": 99999.99999999999,
+      "ladder": {
+        "1_gross": {
+          "spread_pts": 0.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": 1791.9853571429994,
+          "return_pct": 1.791985357143,
+          "tranches": 175,
+          "tranche_expectancy_r": 0.5475325926480464,
+          "pf_all": 1.136627924153796,
+          "pf_oos": 1.95292817186988,
+          "all": {
+            "units": 102,
+            "net_usd": 1791.9853571430415,
+            "mean_unit_r": 0.05672260295486739,
+            "mean_risk_budget_usd": 316.8124299719912
+          },
+          "is": {
+            "units": 75,
+            "net_usd": -651.0689285713119,
+            "mean_unit_r": -0.02572703623430796,
+            "mean_risk_budget_usd": 316.9145238095264
+          },
+          "oos": {
+            "units": 27,
+            "net_usd": 2443.0542857143532,
+            "mean_unit_r": 0.2857493784803544,
+            "mean_risk_budget_usd": 316.52883597883783
+          },
+          "sum_lots": 118.91,
+          "direct_spread_bill_usd": 0.0,
+          "direct_commission_bill_usd": 0.0
+        },
+        "2_plus_spread": {
+          "spread_pts": 10.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": 1539.8617857145146,
+          "return_pct": 1.5398617857145247,
+          "tranches": 173,
+          "tranche_expectancy_r": 0.528794173255584,
+          "pf_all": 1.1195413834547372,
+          "pf_oos": 1.9874370721025252,
+          "all": {
+            "units": 101,
+            "net_usd": 1539.8617857144427,
+            "mean_unit_r": 0.04929135798580964,
+            "mean_risk_budget_usd": 317.5463755304115
+          },
+          "is": {
+            "units": 73,
+            "net_usd": -990.0524999999095,
+            "mean_unit_r": -0.04185110001635405,
+            "mean_risk_budget_usd": 318.33177592955144
+          },
+          "oos": {
+            "units": 28,
+            "net_usd": 2529.914285714352,
+            "mean_unit_r": 0.2869127663485936,
+            "mean_risk_budget_usd": 315.4987244897967
+          },
+          "sum_lots": 113.11,
+          "direct_spread_bill_usd": 1131.1,
+          "direct_commission_bill_usd": 0.0
+        },
+        "3_plus_commission": {
+          "spread_pts": 10.0,
+          "commission": true,
+          "swap": false,
+          "net_usd": 1277.4692857144692,
+          "return_pct": 1.277469285714461,
+          "tranches": 172,
+          "tranche_expectancy_r": 0.5198842583039226,
+          "pf_all": 1.0988816976856024,
+          "pf_oos": 1.891283211722147,
+          "all": {
+            "units": 100,
+            "net_usd": 1277.4692857144446,
+            "mean_unit_r": 0.042065425078304235,
+            "mean_risk_budget_usd": 317.23508928571556
+          },
+          "is": {
+            "units": 72,
+            "net_usd": -1084.3739285713361,
+            "mean_unit_r": -0.04588874347740565,
+            "mean_risk_budget_usd": 318.07946428571574
+          },
+          "oos": {
+            "units": 28,
+            "net_usd": 2361.843214285781,
+            "mean_unit_r": 0.2682332870787011,
+            "mean_risk_budget_usd": 315.06383928571506
+          },
+          "sum_lots": 112.04,
+          "direct_spread_bill_usd": 1120.3999999999999,
+          "direct_commission_bill_usd": 560.2
+        },
+        "4_plus_swap_canonical": {
+          "spread_pts": 10.0,
+          "commission": true,
+          "swap": true,
+          "net_usd": 1062.4885714287375,
+          "return_pct": 1.0624885714287435,
+          "tranches": 172,
+          "tranche_expectancy_r": 0.5140112953756575,
+          "pf_all": 1.0809971683630002,
+          "pf_oos": 1.8384709853314092,
+          "all": {
+            "units": 100,
+            "net_usd": 1062.4885714287304,
+            "mean_unit_r": 0.03503001986722677,
+            "mean_risk_budget_usd": 317.03180357142986
+          },
+          "is": {
+            "units": 72,
+            "net_usd": -1215.1882142856218,
+            "mean_unit_r": -0.051950522633845,
+            "mean_risk_budget_usd": 318.0501736111126
+          },
+          "oos": {
+            "units": 28,
+            "net_usd": 2277.6767857143523,
+            "mean_unit_r": 0.2586942720128399,
+            "mean_risk_budget_usd": 314.4131377551028
+          },
+          "sum_lots": 111.95,
+          "direct_spread_bill_usd": 1119.4999999999998,
+          "direct_commission_bill_usd": 559.75
+        }
+      },
+      "rerun_deltas": {
+        "rerun_spread_cost_usd": 252.12357142848487,
+        "rerun_commission_cost_usd": 262.3925000000454,
+        "rerun_swap_cost_usd": 214.98071428573166,
+        "rerun_total_cost_usd": 729.4967857142619,
+        "note": "re-run deltas mix cost with path divergence; same_path block is the authoritative attribution"
+      },
+      "same_path": {
+        "all": {
+          "units": 100,
+          "gross_ex_spread_usd": 2963.68357142873,
+          "spread_bill_usd": 1119.4999999999998,
+          "commission_usd": 559.75,
+          "swap_usd_signed": 221.94499999999994,
+          "net_usd": 1062.4885714287304,
+          "per_unit_r": {
+            "gross_ex_spread": 0.0934822165486936,
+            "spread": 0.035311914684539446,
+            "commission": 0.017655957342269726,
+            "swap": 0.007000717199339085,
+            "net": 0.033513627322545356
+          },
+          "mean_risk_budget_usd": 317.03180357142986
+        },
+        "is": {
+          "units": 72,
+          "gross_ex_spread_usd": 101.7617857143781,
+          "spread_bill_usd": 786.8,
+          "commission_usd": 393.40000000000003,
+          "swap_usd_signed": 136.75,
+          "net_usd": -1215.1882142856218,
+          "per_unit_r": {
+            "gross_ex_spread": 0.004443821296730572,
+            "spread": 0.034358659999159206,
+            "commission": 0.017179329999579607,
+            "swap": 0.0059717167703165,
+            "net": -0.05306588547232474
+          },
+          "mean_risk_budget_usd": 318.0501736111126
+        },
+        "oos": {
+          "units": 28,
+          "gross_ex_spread_usd": 2861.9217857143517,
+          "spread_bill_usd": 332.7,
+          "commission_usd": 166.35,
+          "swap_usd_signed": 85.19499999999996,
+          "net_usd": 2277.6767857143523,
+          "per_unit_r": {
+            "gross_ex_spread": 0.3250865821852328,
+            "spread": 0.037791496061458756,
+            "commission": 0.018895748030729378,
+            "swap": 0.009677326441106034,
+            "net": 0.25872201165193864
+          },
+          "mean_risk_budget_usd": 314.4131377551028
+        }
+      },
+      "rung1_vs_rung2_trade_set_overlap": {
+        "units_a": 102,
+        "units_b": 101,
+        "common": 97,
+        "pnl_a_common": 1717.8821428573126,
+        "pnl_b_common": 751.2835714287374,
+        "pnl_a_only": 74.10321428572897,
+        "pnl_b_only": 788.5782142857053
+      },
+      "spread_response_curve_full_costs": [
+        {
+          "spread_pts": 0,
+          "net_usd": 1220.1560714287043,
+          "units": 101
+        },
+        {
+          "spread_pts": 4,
+          "net_usd": 302.9483571429155,
+          "units": 100
+        },
+        {
+          "spread_pts": 8,
+          "net_usd": -109.0566428572929,
+          "units": 100
+        },
+        {
+          "spread_pts": 12,
+          "net_usd": 1020.4602142860822,
+          "units": 100
+        },
+        {
+          "spread_pts": 16,
+          "net_usd": 1163.7349285715463,
+          "units": 101
+        },
+        {
+          "spread_pts": 20,
+          "net_usd": 175.08357142876775,
+          "units": 101
+        },
+        {
+          "spread_pts": 24,
+          "net_usd": -412.0054999999993,
+          "units": 98
+        },
+        {
+          "spread_pts": 28,
+          "net_usd": -381.64707142864063,
+          "units": 96
+        },
+        {
+          "spread_pts": 32,
+          "net_usd": -448.23671428595844,
+          "units": 96
+        },
+        {
+          "spread_pts": 36,
+          "net_usd": -1873.4128571426118,
+          "units": 100
+        },
+        {
+          "spread_pts": 40,
+          "net_usd": -1323.411071428447,
+          "units": 99
+        }
+      ],
+      "analytic_breakeven_spread_pts_same_path": 19.490742040453153
+    },
+    "GBPUSD": {
+      "fallback_spread_pts": 15.0,
+      "point": 1e-05,
+      "dollars_per_price_per_lot": 99999.99999999999,
+      "ladder": {
+        "1_gross": {
+          "spread_pts": 0.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": -1093.2857142856228,
+          "return_pct": -1.093285714285619,
+          "tranches": 171,
+          "tranche_expectancy_r": 0.45672067136119565,
+          "pf_all": 0.9280346268826262,
+          "pf_oos": 1.3965867011729394,
+          "all": {
+            "units": 105,
+            "net_usd": -1093.2857142857074,
+            "mean_unit_r": -0.030162369832087827,
+            "mean_risk_budget_usd": 315.24224489795733
+          },
+          "is": {
+            "units": 82,
+            "net_usd": -2387.0882142856412,
+            "mean_unit_r": -0.09065874779623055,
+            "mean_risk_budget_usd": 315.87898519163576
+          },
+          "oos": {
+            "units": 23,
+            "net_usd": 1293.8024999999336,
+            "mean_unit_r": 0.18552036899659494,
+            "mean_risk_budget_usd": 312.97212732919087
+          },
+          "sum_lots": 103.12,
+          "direct_spread_bill_usd": 0.0,
+          "direct_commission_bill_usd": 0.0
+        },
+        "2_plus_spread": {
+          "spread_pts": 15.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": -510.68464285753726,
+          "return_pct": -0.5106846428575396,
+          "tranches": 171,
+          "tranche_expectancy_r": 0.5000819793131707,
+          "pf_all": 0.9670215134844062,
+          "pf_oos": 1.2512376754441379,
+          "all": {
+            "units": 105,
+            "net_usd": -510.68464285750736,
+            "mean_unit_r": -0.012960730140770755,
+            "mean_risk_budget_usd": 316.644693877558
+          },
+          "is": {
+            "units": 83,
+            "net_usd": -1340.0864285716614,
+            "mean_unit_r": -0.048847965327905384,
+            "mean_risk_budget_usd": 316.7554862306441
+          },
+          "oos": {
+            "units": 22,
+            "net_usd": 829.401785714154,
+            "mean_unit_r": 0.1224320207925099,
+            "mean_risk_budget_usd": 316.22670454546005
+          },
+          "sum_lots": 97.84,
+          "direct_spread_bill_usd": 1467.6,
+          "direct_commission_bill_usd": 0.0
+        },
+        "3_plus_commission": {
+          "spread_pts": 15.0,
+          "commission": true,
+          "swap": false,
+          "net_usd": -1009.9417857146764,
+          "return_pct": -1.0099417857146742,
+          "tranches": 171,
+          "tranche_expectancy_r": 0.4852489430403836,
+          "pf_all": 0.9359788844922561,
+          "pf_oos": 1.216166821646282,
+          "all": {
+            "units": 105,
+            "net_usd": -1009.9417857146497,
+            "mean_unit_r": -0.027765908532330758,
+            "mean_risk_budget_usd": 316.0042857142926
+          },
+          "is": {
+            "units": 83,
+            "net_usd": -1732.5850000002326,
+            "mean_unit_r": -0.06389846877644681,
+            "mean_risk_budget_usd": 316.25335628227924
+          },
+          "oos": {
+            "units": 22,
+            "net_usd": 722.643214285583,
+            "mean_unit_r": 0.10855238693410708,
+            "mean_risk_budget_usd": 315.0646103896159
+          },
+          "sum_lots": 97.66,
+          "direct_spread_bill_usd": 1464.8999999999999,
+          "direct_commission_bill_usd": 488.29999999999995
+        },
+        "4_plus_swap_canonical": {
+          "spread_pts": 15.0,
+          "commission": true,
+          "swap": true,
+          "net_usd": -1232.7542857146764,
+          "return_pct": -1.2327542857146767,
+          "tranches": 171,
+          "tranche_expectancy_r": 0.47592023694745245,
+          "pf_all": 0.9222693899331245,
+          "pf_oos": 1.199095971436499,
+          "all": {
+            "units": 105,
+            "net_usd": -1232.7542857146484,
+            "mean_unit_r": -0.034570074624351826,
+            "mean_risk_budget_usd": 315.7107312925239
+          },
+          "is": {
+            "units": 83,
+            "net_usd": -1901.1267857145178,
+            "mean_unit_r": -0.07052732698921951,
+            "mean_risk_budget_usd": 316.1460843373567
+          },
+          "oos": {
+            "units": 22,
+            "net_usd": 668.3724999998694,
+            "mean_unit_r": 0.10108683202492172,
+            "mean_risk_budget_usd": 314.0682629870185
+          },
+          "sum_lots": 97.57000000000001,
+          "direct_spread_bill_usd": 1463.55,
+          "direct_commission_bill_usd": 487.85
+        }
+      },
+      "rerun_deltas": {
+        "rerun_spread_cost_usd": -582.6010714280856,
+        "rerun_commission_cost_usd": 499.2571428571391,
+        "rerun_swap_cost_usd": 222.8125,
+        "rerun_total_cost_usd": 139.46857142905355,
+        "note": "re-run deltas mix cost with path divergence; same_path block is the authoritative attribution"
+      },
+      "same_path": {
+        "all": {
+          "units": 105,
+          "gross_ex_spread_usd": 938.8757142853516,
+          "spread_bill_usd": 1463.5500000000002,
+          "commission_usd": 487.85,
+          "swap_usd_signed": 220.2299999999999,
+          "net_usd": -1232.7542857146484,
+          "per_unit_r": {
+            "gross_ex_spread": 0.028322361526252122,
+            "spread": 0.04414981832105211,
+            "commission": 0.014716606107017367,
+            "swap": 0.006643513709026203,
+            "net": -0.037187576610843556
+          },
+          "mean_risk_budget_usd": 315.7107312925239
+        },
+        "is": {
+          "units": 83,
+          "gross_ex_spread_usd": -139.4517857145181,
+          "spread_bill_usd": 1191.45,
+          "commission_usd": 397.15000000000003,
+          "swap_usd_signed": 173.07499999999985,
+          "net_usd": -1901.1267857145178,
+          "per_unit_r": {
+            "gross_ex_spread": -0.005314448224408797,
+            "spread": 0.04540565260264472,
+            "commission": 0.015135217534214906,
+            "swap": 0.006595814615974424,
+            "net": -0.07245113297724283
+          },
+          "mean_risk_budget_usd": 316.1460843373567
+        },
+        "oos": {
+          "units": 22,
+          "gross_ex_spread_usd": 1078.3274999998696,
+          "spread_bill_usd": 272.1,
+          "commission_usd": 90.7,
+          "swap_usd_signed": 47.15500000000006,
+          "net_usd": 668.3724999998694,
+          "per_unit_r": {
+            "gross_ex_spread": 0.15606443611163726,
+            "spread": 0.039380552815338234,
+            "commission": 0.013126850938446077,
+            "swap": 0.006824659933874592,
+            "net": 0.09673237242397835
+          },
+          "mean_risk_budget_usd": 314.0682629870185
+        }
+      },
+      "rung1_vs_rung2_trade_set_overlap": {
+        "units_a": 105,
+        "units_b": 105,
+        "common": 96,
+        "pnl_a_common": -1060.6075000000292,
+        "pnl_b_common": -804.5992857145691,
+        "pnl_a_only": -32.67821428567825,
+        "pnl_b_only": 293.9146428570618
+      },
+      "spread_response_curve_full_costs": [
+        {
+          "spread_pts": 0,
+          "net_usd": -1459.9807142856444,
+          "units": 104
+        },
+        {
+          "spread_pts": 4,
+          "net_usd": -2435.038714285809,
+          "units": 105
+        },
+        {
+          "spread_pts": 8,
+          "net_usd": -2245.273428571789,
+          "units": 105
+        },
+        {
+          "spread_pts": 12,
+          "net_usd": -1956.7151428568613,
+          "units": 104
+        },
+        {
+          "spread_pts": 16,
+          "net_usd": -1242.69092857145,
+          "units": 105
+        },
+        {
+          "spread_pts": 20,
+          "net_usd": -1488.3946428572235,
+          "units": 100
+        },
+        {
+          "spread_pts": 24,
+          "net_usd": -1813.9125000000495,
+          "units": 97
+        },
+        {
+          "spread_pts": 28,
+          "net_usd": -2303.707500000208,
+          "units": 96
+        },
+        {
+          "spread_pts": 32,
+          "net_usd": -2828.186285714575,
+          "units": 96
+        },
+        {
+          "spread_pts": 36,
+          "net_usd": -3253.1019285712828,
+          "units": 98
+        },
+        {
+          "spread_pts": 40,
+          "net_usd": -1977.328214285677,
+          "units": 101
+        }
+      ],
+      "analytic_breakeven_spread_pts_same_path": 2.3654372684775207
+    },
+    "USDJPY": {
+      "fallback_spread_pts": 28.0,
+      "point": 0.001,
+      "dollars_per_price_per_lot": 619.7437979139424,
+      "ladder": {
+        "1_gross": {
+          "spread_pts": 0.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": -6097.32832875436,
+          "return_pct": -6.097328328754359,
+          "tranches": 143,
+          "tranche_expectancy_r": 0.19257529534889967,
+          "pf_all": 0.6035016670149853,
+          "pf_oos": 0.8223635385262873,
+          "all": {
+            "units": 99,
+            "net_usd": -6097.328328754479,
+            "mean_unit_r": -0.19930386077772874,
+            "mean_risk_budget_usd": 307.79247071381633
+          },
+          "is": {
+            "units": 64,
+            "net_usd": -5229.808525726733,
+            "mean_unit_r": -0.2637104800924604,
+            "mean_risk_budget_usd": 311.21214679583187
+          },
+          "oos": {
+            "units": 35,
+            "net_usd": -867.5198030277459,
+            "mean_unit_r": -0.08153175688793364,
+            "mean_risk_budget_usd": 301.5393487352737
+          },
+          "sum_lots": 133.9,
+          "direct_spread_bill_usd": 0.0,
+          "direct_commission_bill_usd": 0.0
+        },
+        "2_plus_spread": {
+          "spread_pts": 28.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": -4856.970037157545,
+          "return_pct": -4.856970037157549,
+          "tranches": 142,
+          "tranche_expectancy_r": 0.2511023962977323,
+          "pf_all": 0.6720268231767669,
+          "pf_oos": 0.7603383142791827,
+          "all": {
+            "units": 96,
+            "net_usd": -4856.9700371576255,
+            "mean_unit_r": -0.16212398468860398,
+            "mean_risk_budget_usd": 310.3846124476342
+          },
+          "is": {
+            "units": 61,
+            "net_usd": -3663.0507419657984,
+            "mean_unit_r": -0.19138866785761577,
+            "mean_risk_budget_usd": 313.2642741837037
+          },
+          "oos": {
+            "units": 35,
+            "net_usd": -1193.9192951918274,
+            "mean_unit_r": -0.11111982259404059,
+            "mean_risk_budget_usd": 305.36577342191305
+          },
+          "sum_lots": 119.12,
+          "direct_spread_bill_usd": 2067.068673810247,
+          "direct_commission_bill_usd": 0.0
+        },
+        "3_plus_commission": {
+          "spread_pts": 28.0,
+          "commission": true,
+          "swap": false,
+          "net_usd": -5462.147160997454,
+          "return_pct": -5.462147160997455,
+          "tranches": 142,
+          "tranche_expectancy_r": 0.230695279092606,
+          "pf_all": 0.6399941435127025,
+          "pf_oos": 0.721661334999326,
+          "all": {
+            "units": 96,
+            "net_usd": -5462.147160997488,
+            "mean_unit_r": -0.1821384126603889,
+            "mean_risk_budget_usd": 309.4226861496325
+          },
+          "is": {
+            "units": 61,
+            "net_usd": -4036.366326928689,
+            "mean_unit_r": -0.21085642764755863,
+            "mean_risk_budget_usd": 312.4472755140919
+          },
+          "oos": {
+            "units": 35,
+            "net_usd": -1425.7808340687986,
+            "mean_unit_r": -0.1320870151113217,
+            "mean_risk_budget_usd": 304.1512589715746
+          },
+          "sum_lots": 118.76,
+          "direct_spread_bill_usd": 2060.8216563272745,
+          "direct_commission_bill_usd": 593.8000000000001
+        },
+        "4_plus_swap_canonical": {
+          "spread_pts": 28.0,
+          "commission": true,
+          "swap": true,
+          "net_usd": -4213.073807413297,
+          "return_pct": -4.213073807413292,
+          "tranches": 142,
+          "tranche_expectancy_r": 0.27457811070870525,
+          "pf_all": 0.7126089613944295,
+          "pf_oos": 0.825152546070396,
+          "all": {
+            "units": 96,
+            "net_usd": -4213.073807413286,
+            "mean_unit_r": -0.1395502742382984,
+            "mean_risk_budget_usd": 311.32372719378856
+          },
+          "is": {
+            "units": 61,
+            "net_usd": -3372.44448937062,
+            "mean_unit_r": -0.17586556984089874,
+            "mean_risk_budget_usd": 313.8841268359147
+          },
+          "oos": {
+            "units": 35,
+            "net_usd": -840.6293180426657,
+            "mean_unit_r": -0.07625790190233785,
+            "mean_risk_budget_usd": 306.8613163889402
+          },
+          "sum_lots": 119.52,
+          "direct_spread_bill_usd": 2074.009804346883,
+          "direct_commission_bill_usd": 597.6
+        }
+      },
+      "rerun_deltas": {
+        "rerun_spread_cost_usd": -1240.3582915968145,
+        "rerun_commission_cost_usd": 605.1771238399087,
+        "rerun_swap_cost_usd": -1249.0733535841573,
+        "rerun_total_cost_usd": -1884.254521341063,
+        "note": "re-run deltas mix cost with path divergence; same_path block is the authoritative attribution"
+      },
+      "same_path": {
+        "all": {
+          "units": 96,
+          "gross_ex_spread_usd": -2816.2150209955907,
+          "spread_bill_usd": 2074.0098043468834,
+          "commission_usd": 597.6,
+          "swap_usd_signed": -1274.7510179291883,
+          "net_usd": -4213.073807413286,
+          "per_unit_r": {
+            "gross_ex_spread": -0.0942285170481411,
+            "spread": 0.06939486749055944,
+            "commission": 0.019995263631561067,
+            "swap": -0.042652246767227155,
+            "net": -0.14096640140303446
+          },
+          "mean_risk_budget_usd": 311.32372719378856
+        },
+        "is": {
+          "units": 61,
+          "gross_ex_spread_usd": -2382.816540784565,
+          "spread_bill_usd": 1290.0091102338297,
+          "commission_usd": 371.7,
+          "swap_usd_signed": -672.0811616477749,
+          "net_usd": -3372.44448937062,
+          "per_unit_r": {
+            "gross_ex_spread": -0.1244490017260101,
+            "spread": 0.0673741948816585,
+            "commission": 0.019413032077713867,
+            "swap": -0.035101246031464764,
+            "net": -0.1761349826539177
+          },
+          "mean_risk_budget_usd": 313.8841268359147
+        },
+        "oos": {
+          "units": 35,
+          "gross_ex_spread_usd": -433.39848021102523,
+          "spread_bill_usd": 784.0006941130538,
+          "commission_usd": 225.9,
+          "swap_usd_signed": -602.6698562814133,
+          "net_usd": -840.6293180426657,
+          "per_unit_r": {
+            "gross_ex_spread": -0.040353127158654474,
+            "spread": 0.07299720960399578,
+            "commission": 0.021033233482271332,
+            "swap": -0.056113748560840525,
+            "net": -0.07826982168408106
+          },
+          "mean_risk_budget_usd": 306.8613163889402
+        }
+      },
+      "rung1_vs_rung2_trade_set_overlap": {
+        "units_a": 99,
+        "units_b": 96,
+        "common": 84,
+        "pnl_a_common": -5832.23734593819,
+        "pnl_b_common": -5016.486557313944,
+        "pnl_a_only": -265.0909828162892,
+        "pnl_b_only": 159.5165201563187
+      },
+      "spread_response_curve_full_costs": [
+        {
+          "spread_pts": 0,
+          "net_usd": -5771.183555230964,
+          "units": 99
+        },
+        {
+          "spread_pts": 4,
+          "net_usd": -3530.24031508615,
+          "units": 93
+        },
+        {
+          "spread_pts": 8,
+          "net_usd": -1762.639812253081,
+          "units": 96
+        },
+        {
+          "spread_pts": 12,
+          "net_usd": -1538.8075765448302,
+          "units": 95
+        },
+        {
+          "spread_pts": 16,
+          "net_usd": -2127.774409627338,
+          "units": 97
+        },
+        {
+          "spread_pts": 20,
+          "net_usd": -2906.011945473292,
+          "units": 96
+        },
+        {
+          "spread_pts": 24,
+          "net_usd": -1857.479351862945,
+          "units": 95
+        },
+        {
+          "spread_pts": 28,
+          "net_usd": -4213.073807413297,
+          "units": 96
+        },
+        {
+          "spread_pts": 32,
+          "net_usd": -4289.685501580912,
+          "units": 96
+        },
+        {
+          "spread_pts": 36,
+          "net_usd": -1849.9344053423847,
+          "units": 95
+        },
+        {
+          "spread_pts": 40,
+          "net_usd": -1748.3983199185604,
+          "units": 94
+        }
+      ],
+      "analytic_breakeven_spread_pts_same_path": -28.87825889748875
+    },
+    "XAUUSD": {
+      "fallback_spread_pts": 16.0,
+      "point": 0.01,
+      "dollars_per_price_per_lot": 100.0,
+      "ladder": {
+        "1_gross": {
+          "spread_pts": 0.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": -50.77821428558673,
+          "return_pct": -0.050778214285585044,
+          "tranches": 241,
+          "tranche_expectancy_r": 0.4432800363822585,
+          "pf_all": 0.9974733248904142,
+          "pf_oos": 0.9435485346831848,
+          "all": {
+            "units": 154,
+            "net_usd": -50.778214285614254,
+            "mean_unit_r": 0.002262545078233669,
+            "mean_risk_budget_usd": 309.0245593692027
+          },
+          "is": {
+            "units": 108,
+            "net_usd": 288.5342857143634,
+            "mean_unit_r": 0.009335457718894888,
+            "mean_risk_budget_usd": 311.81218584656136
+          },
+          "oos": {
+            "units": 46,
+            "net_usd": -339.31249999997766,
+            "mean_unit_r": -0.014343423730275277,
+            "mean_risk_budget_usd": 302.4796972049691
+          },
+          "sum_lots": 31.810000000000002,
+          "direct_spread_bill_usd": 0.0,
+          "direct_commission_bill_usd": 0.0
+        },
+        "2_plus_spread": {
+          "spread_pts": 16.0,
+          "commission": false,
+          "swap": false,
+          "net_usd": 2610.2176428573002,
+          "return_pct": 2.610217642857293,
+          "tranches": 253,
+          "tranche_expectancy_r": 0.5115929729265355,
+          "pf_all": 1.1287258227691235,
+          "pf_oos": 0.884083591283681,
+          "all": {
+            "units": 158,
+            "net_usd": 2610.2176428573066,
+            "mean_unit_r": 0.056309821606822824,
+            "mean_risk_budget_usd": 316.95728526220483
+          },
+          "is": {
+            "units": 112,
+            "net_usd": 3356.139857142967,
+            "mean_unit_r": 0.09851117802764466,
+            "mean_risk_budget_usd": 319.15476403061086
+          },
+          "oos": {
+            "units": 46,
+            "net_usd": -745.9222142856602,
+            "mean_unit_r": -0.04644130706996077,
+            "mean_risk_budget_usd": 311.60690217391175
+          },
+          "sum_lots": 33.31,
+          "direct_spread_bill_usd": 532.96,
+          "direct_commission_bill_usd": 0.0
+        },
+        "3_plus_commission": {
+          "spread_pts": 16.0,
+          "commission": true,
+          "swap": false,
+          "net_usd": 2465.4408571428503,
+          "return_pct": 2.465440857142842,
+          "tranches": 253,
+          "tranche_expectancy_r": 0.5081410003366061,
+          "pf_all": 1.121200962966287,
+          "pf_oos": 0.8806800234985102,
+          "all": {
+            "units": 158,
+            "net_usd": 2465.4408571430213,
+            "mean_unit_r": 0.05299717865760404,
+            "mean_risk_budget_usd": 316.6809832730547
+          },
+          "is": {
+            "units": 112,
+            "net_usd": 3235.0130714286815,
+            "mean_unit_r": 0.09451162728414618,
+            "mean_risk_budget_usd": 318.76498086734557
+          },
+          "oos": {
+            "units": 46,
+            "net_usd": -769.5722142856603,
+            "mean_unit_r": -0.04808147886788987,
+            "mean_risk_budget_usd": 311.60690217391175
+          },
+          "sum_lots": 33.29,
+          "direct_spread_bill_usd": 532.64,
+          "direct_commission_bill_usd": 166.45
+        },
+        "4_plus_swap_canonical": {
+          "spread_pts": 16.0,
+          "commission": true,
+          "swap": true,
+          "net_usd": 1728.8980000000302,
+          "return_pct": 1.7288980000000231,
+          "tranches": 253,
+          "tranche_expectancy_r": 0.4934753875469255,
+          "pf_all": 1.083070182727097,
+          "pf_oos": 0.8630849396992955,
+          "all": {
+            "units": 158,
+            "net_usd": 1728.8980000001636,
+            "mean_unit_r": 0.03734309065694235,
+            "mean_risk_budget_usd": 316.0628933092211
+          },
+          "is": {
+            "units": 112,
+            "net_usd": 2627.670214285824,
+            "mean_unit_r": 0.07612866307316324,
+            "mean_risk_budget_usd": 317.89303252550883
+          },
+          "oos": {
+            "units": 46,
+            "net_usd": -898.7722142856604,
+            "mean_unit_r": -0.05709134653037805,
+            "mean_risk_budget_usd": 311.60690217391175
+          },
+          "sum_lots": 33.23,
+          "direct_spread_bill_usd": 531.68,
+          "direct_commission_bill_usd": 166.14999999999998
+        }
+      },
+      "rerun_deltas": {
+        "rerun_spread_cost_usd": -2660.995857142887,
+        "rerun_commission_cost_usd": 144.77678571444994,
+        "rerun_swap_cost_usd": 736.5428571428201,
+        "rerun_total_cost_usd": -1779.6762142856169,
+        "note": "re-run deltas mix cost with path divergence; same_path block is the authoritative attribution"
+      },
+      "same_path": {
+        "all": {
+          "units": 158,
+          "gross_ex_spread_usd": 3200.278000000163,
+          "spread_bill_usd": 531.68,
+          "commission_usd": 166.15,
+          "swap_usd_signed": 773.55,
+          "net_usd": 1728.8980000001636,
+          "per_unit_r": {
+            "gross_ex_spread": 0.06408510609569557,
+            "spread": 0.010646815435708298,
+            "commission": 0.0033271298236588437,
+            "swap": 0.015490227355349372,
+            "net": 0.03462093348097906
+          },
+          "mean_risk_budget_usd": 316.0628933092211
+        },
+        "is": {
+          "units": 112,
+          "gross_ex_spread_usd": 3870.5202142858234,
+          "spread_bill_usd": 456.0,
+          "commission_usd": 142.5,
+          "swap_usd_signed": 644.3499999999999,
+          "net_usd": 2627.670214285824,
+          "per_unit_r": {
+            "gross_ex_spread": 0.10871020331723531,
+            "spread": 0.012807542647547224,
+            "commission": 0.004002357077358507,
+            "swap": 0.018097675668743537,
+            "net": 0.07380262792358606
+          },
+          "mean_risk_budget_usd": 317.89303252550883
+        },
+        "oos": {
+          "units": 46,
+          "gross_ex_spread_usd": -670.2422142856601,
+          "spread_bill_usd": 75.68,
+          "commission_usd": 23.65,
+          "swap_usd_signed": 129.2,
+          "net_usd": -898.7722142856604,
+          "per_unit_r": {
+            "gross_ex_spread": -0.046759179009204066,
+            "spread": 0.005279784818072262,
+            "commission": 0.0016499327556475816,
+            "swap": 0.009013586132332666,
+            "net": -0.0627024827152566
+          },
+          "mean_risk_budget_usd": 311.60690217391175
+        }
+      },
+      "rung1_vs_rung2_trade_set_overlap": {
+        "units_a": 154,
+        "units_b": 158,
+        "common": 149,
+        "pnl_a_common": 722.5146428572482,
+        "pnl_b_common": 854.1157857144796,
+        "pnl_a_only": -773.2928571428624,
+        "pnl_b_only": 1756.1018571428272
+      },
+      "spread_response_curve_full_costs": [
+        {
+          "spread_pts": 0,
+          "net_usd": -830.0774999997957,
+          "units": 152
+        },
+        {
+          "spread_pts": 4,
+          "net_usd": -835.2877142854268,
+          "units": 153
+        },
+        {
+          "spread_pts": 8,
+          "net_usd": -863.4200714284088,
+          "units": 153
+        },
+        {
+          "spread_pts": 12,
+          "net_usd": 1747.4681428573967,
+          "units": 158
+        },
+        {
+          "spread_pts": 16,
+          "net_usd": 1728.8980000000302,
+          "units": 158
+        },
+        {
+          "spread_pts": 20,
+          "net_usd": 2260.9321428572584,
+          "units": 160
+        },
+        {
+          "spread_pts": 24,
+          "net_usd": 2541.450857143034,
+          "units": 159
+        },
+        {
+          "spread_pts": 28,
+          "net_usd": 2781.286285714261,
+          "units": 158
+        },
+        {
+          "spread_pts": 32,
+          "net_usd": 2762.798785714229,
+          "units": 156
+        },
+        {
+          "spread_pts": 36,
+          "net_usd": 1809.6298571428197,
+          "units": 154
+        },
+        {
+          "spread_pts": 40,
+          "net_usd": 1812.2400000001653,
+          "units": 154
+        }
+      ],
+      "analytic_breakeven_spread_pts_same_path": 68.02822750527125
+    }
+  }
+}

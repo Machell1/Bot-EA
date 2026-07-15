@@ -1,0 +1,1070 @@
+{
+  "EURUSD": {
+    "V1_canonical": {
+      "my_return_pct": 1.0624885714287435,
+      "published_return_pct": 1.0624885714287435,
+      "return_match": true,
+      "my_tranches": 172,
+      "published_tranches": 172,
+      "trades_identical": true
+    },
+    "V2_r4_equals_r3_unguarded": true,
+    "V2_r4_equals_r3_guarded": true,
+    "V2_ladder": {
+      "R0": {
+        "guarded": {
+          "units": 165,
+          "is_": {
+            "n": 165,
+            "net": -7782.56,
+            "pf": 0.6942,
+            "mean": -47.17,
+            "t": -2.099
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -7.7826,
+          "ending_balance": 92217.44,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2024-09-25 15:00:00"
+        },
+        "unguarded": {
+          "units": 395,
+          "is_": {
+            "n": 279,
+            "net": -13748.42,
+            "pf": 0.6699,
+            "mean": -49.28,
+            "t": -2.99
+          },
+          "oos": {
+            "n": 116,
+            "net": 1095.31,
+            "pf": 1.0786,
+            "mean": 9.44,
+            "t": 0.359
+          },
+          "return_pct": -12.6531,
+          "ending_balance": 87346.89,
+          "n_oos_tranches": 196,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        }
+      },
+      "R1": {
+        "guarded": {
+          "units": 127,
+          "is_": {
+            "n": 127,
+            "net": -7828.93,
+            "pf": 0.6016,
+            "mean": -61.65,
+            "t": -2.546
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -7.8289,
+          "ending_balance": 92171.07,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2024-09-27 15:00:00"
+        },
+        "unguarded": {
+          "units": 278,
+          "is_": {
+            "n": 200,
+            "net": -9367.48,
+            "pf": 0.6743,
+            "mean": -46.84,
+            "t": -2.458
+          },
+          "oos": {
+            "n": 78,
+            "net": 2848.97,
+            "pf": 1.334,
+            "mean": 36.53,
+            "t": 1.102
+          },
+          "return_pct": -6.5185,
+          "ending_balance": 93481.49,
+          "n_oos_tranches": 136,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        }
+      },
+      "R2": {
+        "guarded": {
+          "units": 169,
+          "is_": {
+            "n": 169,
+            "net": -7785.54,
+            "pf": 0.681,
+            "mean": -46.07,
+            "t": -2.197
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -7.7855,
+          "ending_balance": 92214.46,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2025-07-08 10:00:00"
+        },
+        "unguarded": {
+          "units": 258,
+          "is_": {
+            "n": 182,
+            "net": -7381.37,
+            "pf": 0.7122,
+            "mean": -40.56,
+            "t": -2.011
+          },
+          "oos": {
+            "n": 76,
+            "net": 3143.9,
+            "pf": 1.3854,
+            "mean": 41.37,
+            "t": 1.223
+          },
+          "return_pct": -4.2375,
+          "ending_balance": 95762.53,
+          "n_oos_tranches": 133,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        }
+      },
+      "R3": {
+        "guarded": {
+          "units": 100,
+          "is_": {
+            "n": 72,
+            "net": -1215.19,
+            "pf": 0.8818,
+            "mean": -16.88,
+            "t": -0.467
+          },
+          "oos": {
+            "n": 28,
+            "net": 2277.68,
+            "pf": 1.8671,
+            "mean": 81.35,
+            "t": 1.362
+          },
+          "return_pct": 1.0625,
+          "ending_balance": 101062.49,
+          "n_oos_tranches": 53,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        },
+        "unguarded": {
+          "units": 100,
+          "is_": {
+            "n": 72,
+            "net": -1215.19,
+            "pf": 0.8818,
+            "mean": -16.88,
+            "t": -0.467
+          },
+          "oos": {
+            "n": 28,
+            "net": 2277.68,
+            "pf": 1.8671,
+            "mean": 81.35,
+            "t": 1.362
+          },
+          "return_pct": 1.0625,
+          "ending_balance": 101062.49,
+          "n_oos_tranches": 53,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        }
+      },
+      "R4": {
+        "guarded": {
+          "units": 100,
+          "is_": {
+            "n": 72,
+            "net": -1215.19,
+            "pf": 0.8818,
+            "mean": -16.88,
+            "t": -0.467
+          },
+          "oos": {
+            "n": 28,
+            "net": 2277.68,
+            "pf": 1.8671,
+            "mean": 81.35,
+            "t": 1.362
+          },
+          "return_pct": 1.0625,
+          "ending_balance": 101062.49,
+          "n_oos_tranches": 53,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        },
+        "unguarded": {
+          "units": 100,
+          "is_": {
+            "n": 72,
+            "net": -1215.19,
+            "pf": 0.8818,
+            "mean": -16.88,
+            "t": -0.467
+          },
+          "oos": {
+            "n": 28,
+            "net": 2277.68,
+            "pf": 1.8671,
+            "mean": 81.35,
+            "t": 1.362
+          },
+          "return_pct": 1.0625,
+          "ending_balance": 101062.49,
+          "n_oos_tranches": 53,
+          "last_trade_exit": "2026-06-24 14:00:00"
+        }
+      }
+    },
+    "V3_census": {
+      "raw": 546,
+      "fail_each_independent": {
+        "buffer": 249,
+        "candle": 122,
+        "htf": 344,
+        "vol": 1
+      },
+      "vol_binds_after_all_others": 0,
+      "pass_all": 97
+    }
+  },
+  "GBPUSD": {
+    "V1_canonical": {
+      "my_return_pct": -1.2327542857146767,
+      "published_return_pct": -1.2327542857146767,
+      "return_match": true,
+      "my_tranches": 171,
+      "published_tranches": 171,
+      "trades_identical": true
+    },
+    "V2_r4_equals_r3_unguarded": true,
+    "V2_r4_equals_r3_guarded": true,
+    "V2_ladder": {
+      "R0": {
+        "guarded": {
+          "units": 93,
+          "is_": {
+            "n": 93,
+            "net": -9566.67,
+            "pf": 0.4701,
+            "mean": -102.87,
+            "t": -2.867
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -9.5667,
+          "ending_balance": 90433.33,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2024-04-10 12:00:00"
+        },
+        "unguarded": {
+          "units": 421,
+          "is_": {
+            "n": 298,
+            "net": -13434.68,
+            "pf": 0.6944,
+            "mean": -45.08,
+            "t": -2.789
+          },
+          "oos": {
+            "n": 123,
+            "net": -1603.1,
+            "pf": 0.9022,
+            "mean": -13.03,
+            "t": -0.512
+          },
+          "return_pct": -15.0378,
+          "ending_balance": 84962.22,
+          "n_oos_tranches": 196,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        }
+      },
+      "R1": {
+        "guarded": {
+          "units": 164,
+          "is_": {
+            "n": 164,
+            "net": -7829.41,
+            "pf": 0.6835,
+            "mean": -47.74,
+            "t": -2.135
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -7.8294,
+          "ending_balance": 92170.59,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2025-02-07 13:00:00"
+        },
+        "unguarded": {
+          "units": 292,
+          "is_": {
+            "n": 219,
+            "net": -9332.15,
+            "pf": 0.7133,
+            "mean": -42.61,
+            "t": -2.202
+          },
+          "oos": {
+            "n": 73,
+            "net": -653.19,
+            "pf": 0.9384,
+            "mean": -8.95,
+            "t": -0.246
+          },
+          "return_pct": -9.9853,
+          "ending_balance": 90014.66,
+          "n_oos_tranches": 119,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        }
+      },
+      "R2": {
+        "guarded": {
+          "units": 186,
+          "is_": {
+            "n": 186,
+            "net": -8215.71,
+            "pf": 0.7124,
+            "mean": -44.17,
+            "t": -1.996
+          },
+          "oos": {
+            "n": 0,
+            "net": 0.0,
+            "pf": null,
+            "mean": null,
+            "t": null
+          },
+          "return_pct": -8.2157,
+          "ending_balance": 91784.29,
+          "n_oos_tranches": 0,
+          "last_trade_exit": "2025-07-16 15:00:00"
+        },
+        "unguarded": {
+          "units": 267,
+          "is_": {
+            "n": 197,
+            "net": -7860.46,
+            "pf": 0.731,
+            "mean": -39.9,
+            "t": -1.933
+          },
+          "oos": {
+            "n": 70,
+            "net": -1259.52,
+            "pf": 0.8782,
+            "mean": -17.99,
+            "t": -0.49
+          },
+          "return_pct": -9.12,
+          "ending_balance": 90880.02,
+          "n_oos_tranches": 112,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        }
+      },
+      "R3": {
+        "guarded": {
+          "units": 105,
+          "is_": {
+            "n": 83,
+            "net": -1901.13,
+            "pf": 0.8467,
+            "mean": -22.91,
+            "t": -0.66
+          },
+          "oos": {
+            "n": 22,
+            "net": 668.37,
+            "pf": 1.2002,
+            "mean": 30.38,
+            "t": 0.385
+          },
+          "return_pct": -1.2328,
+          "ending_balance": 98767.25,
+          "n_oos_tranches": 37,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        },
+        "unguarded": {
+          "units": 105,
+          "is_": {
+            "n": 83,
+            "net": -1901.13,
+            "pf": 0.8467,
+            "mean": -22.91,
+            "t": -0.66
+          },
+          "oos": {
+            "n": 22,
+            "net": 668.37,
+            "pf": 1.2002,
+            "mean": 30.38,
+            "t": 0.385
+          },
+          "return_pct": -1.2328,
+          "ending_balance": 98767.25,
+          "n_oos_tranches": 37,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        }
+      },
+      "R4": {
+        "guarded": {
+          "units": 105,
+          "is_": {
+            "n": 83,
+            "net": -1901.13,
+            "pf": 0.8467,
+            "mean": -22.91,
+            "t": -0.66
+          },
+          "oos": {
+            "n": 22,
+            "net": 668.37,
+            "pf": 1.2002,
+            "mean": 30.38,
+            "t": 0.385
+          },
+          "return_pct": -1.2328,
+          "ending_balance": 98767.25,
+          "n_oos_tranches": 37,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        },
+        "unguarded": {
+          "units": 105,
+          "is_": {
+            "n": 83,
+            "net": -1901.13,
+            "pf": 0.8467,
+            "mean": -22.91,
+            "t": -0.66
+          },
+          "oos": {
+            "n": 22,
+            "net": 668.37,
+            "pf": 1.2002,
+            "mean": 30.38,
+            "t": 0.385
+          },
+          "return_pct": -1.2328,
+          "ending_balance": 98767.25,
+          "n_oos_tranches": 37,
+          "last_trade_exit": "2026-06-25 08:00:00"
+        }
+      }
+    },
+    "V3_census": {
+      "raw": 557,
+      "fail_each_independent": {
+        "buffer": 253,
+        "candle": 128,
+        "htf": 347,
+        "vol": 0
+      },
+      "vol_binds_after_all_others": 0,
+      "pass_all": 98
+    }
+  },
+  "USDJPY": {
+    "V1_canonical": {
+      "my_return_pct": -4.213073807413292,
+      "published_return_pct": -4.213073807413292,
+      "return_match": true,
+      "my_tranches": 142,
+      "published_tranches": 142,
+      "trades_identical": true
+    },
+    "V2_r4_equals_r3_unguarded": false,
+    "V2_r4_equals_r3_guarded": false,
+    "V2_ladder": {
+      "R0": {
+        "guarded": {
+          "units": 332,
+          "is_": {
+            "n": 241,
+            "net": -3195.0,
+            "pf": 0.9104,
+            "mean": -13.26,
+            "t": -0.636
+          },
+          "oos": {
+            "n": 91,
+            "net": -2755.01,
+            "pf": 0.7844,
+            "mean": -30.27,
+            "t": -1.001
+          },
+          "return_pct": -5.95,
+          "ending_balance": 94049.99,
+          "n_oos_tranches": 133,
+          "last_trade_exit": "2026-06-30 19:00:00"
+        },
+        "unguarded": {
+          "units": 332,
+          "is_": {
+            "n": 241,
+            "net": -3195.0,
+            "pf": 0.9104,
+            "mean": -13.26,
+            "t": -0.636
+          },
+          "oos": {
+            "n": 91,
+            "net": -2755.01,
+            "pf": 0.7844,
+            "mean": -30.27,
+            "t": -1.001
+          },
+          "return_pct": -5.95,
+          "ending_balance": 94049.99,
+          "n_oos_tranches": 133,
+          "last_trade_exit": "2026-06-30 19:00:00"
+        }
+      },
+      "R1": {
+        "guarded": {
+          "units": 213,
+          "is_": {
+            "n": 159,
+            "net": 1473.61,
+            "pf": 1.0654,
+            "mean": 9.27,
+            "t": 0.349
+          },
+          "oos": {
+            "n": 54,
+            "net": -1255.65,
+            "pf": 0.8445,
+            "mean": -23.25,
+            "t": -0.548
+          },
+          "return_pct": 0.218,
+          "ending_balance": 100217.96,
+          "n_oos_tranches": 81,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        },
+        "unguarded": {
+          "units": 213,
+          "is_": {
+            "n": 159,
+            "net": 1473.61,
+            "pf": 1.0654,
+            "mean": 9.27,
+            "t": 0.349
+          },
+          "oos": {
+            "n": 54,
+            "net": -1255.65,
+            "pf": 0.8445,
+            "mean": -23.25,
+            "t": -0.548
+          },
+          "return_pct": 0.218,
+          "ending_balance": 100217.96,
+          "n_oos_tranches": 81,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        }
+      },
+      "R2": {
+        "guarded": {
+          "units": 204,
+          "is_": {
+            "n": 152,
+            "net": 1565.14,
+            "pf": 1.0728,
+            "mean": 10.3,
+            "t": 0.377
+          },
+          "oos": {
+            "n": 52,
+            "net": -1056.87,
+            "pf": 0.8638,
+            "mean": -20.32,
+            "t": -0.465
+          },
+          "return_pct": 0.5083,
+          "ending_balance": 100508.27,
+          "n_oos_tranches": 78,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        },
+        "unguarded": {
+          "units": 204,
+          "is_": {
+            "n": 152,
+            "net": 1565.14,
+            "pf": 1.0728,
+            "mean": 10.3,
+            "t": 0.377
+          },
+          "oos": {
+            "n": 52,
+            "net": -1056.87,
+            "pf": 0.8638,
+            "mean": -20.32,
+            "t": -0.465
+          },
+          "return_pct": 0.5083,
+          "ending_balance": 100508.27,
+          "n_oos_tranches": 78,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        }
+      },
+      "R3": {
+        "guarded": {
+          "units": 97,
+          "is_": {
+            "n": 62,
+            "net": -3277.65,
+            "pf": 0.6657,
+            "mean": -52.87,
+            "t": -1.429
+          },
+          "oos": {
+            "n": 35,
+            "net": -824.64,
+            "pf": 0.8283,
+            "mean": -23.56,
+            "t": -0.487
+          },
+          "return_pct": -4.1023,
+          "ending_balance": 95897.71,
+          "n_oos_tranches": 51,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        },
+        "unguarded": {
+          "units": 97,
+          "is_": {
+            "n": 62,
+            "net": -3277.65,
+            "pf": 0.6657,
+            "mean": -52.87,
+            "t": -1.429
+          },
+          "oos": {
+            "n": 35,
+            "net": -824.64,
+            "pf": 0.8283,
+            "mean": -23.56,
+            "t": -0.487
+          },
+          "return_pct": -4.1023,
+          "ending_balance": 95897.71,
+          "n_oos_tranches": 51,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        }
+      },
+      "R4": {
+        "guarded": {
+          "units": 96,
+          "is_": {
+            "n": 61,
+            "net": -3372.44,
+            "pf": 0.6559,
+            "mean": -55.29,
+            "t": -1.473
+          },
+          "oos": {
+            "n": 35,
+            "net": -840.63,
+            "pf": 0.825,
+            "mean": -24.02,
+            "t": -0.497
+          },
+          "return_pct": -4.2131,
+          "ending_balance": 95786.93,
+          "n_oos_tranches": 51,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        },
+        "unguarded": {
+          "units": 96,
+          "is_": {
+            "n": 61,
+            "net": -3372.44,
+            "pf": 0.6559,
+            "mean": -55.29,
+            "t": -1.473
+          },
+          "oos": {
+            "n": 35,
+            "net": -840.63,
+            "pf": 0.825,
+            "mean": -24.02,
+            "t": -0.497
+          },
+          "return_pct": -4.2131,
+          "ending_balance": 95786.93,
+          "n_oos_tranches": 51,
+          "last_trade_exit": "2026-06-22 14:00:00"
+        }
+      }
+    },
+    "V3_census": {
+      "raw": 494,
+      "fail_each_independent": {
+        "buffer": 279,
+        "candle": 110,
+        "htf": 238,
+        "vol": 2
+      },
+      "vol_binds_after_all_others": 2,
+      "pass_all": 95
+    }
+  },
+  "XAUUSD": {
+    "V1_canonical": {
+      "my_return_pct": 1.7288980000000231,
+      "published_return_pct": 1.7288980000000231,
+      "return_match": true,
+      "my_tranches": 253,
+      "published_tranches": 253,
+      "trades_identical": true
+    },
+    "V2_r4_equals_r3_unguarded": true,
+    "V2_r4_equals_r3_guarded": true,
+    "V2_ladder": {
+      "R0": {
+        "guarded": {
+          "units": 412,
+          "is_": {
+            "n": 301,
+            "net": -1951.04,
+            "pf": 0.9508,
+            "mean": -6.48,
+            "t": -0.382
+          },
+          "oos": {
+            "n": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "t": 1.388
+          },
+          "return_pct": 2.7375,
+          "ending_balance": 102737.55,
+          "n_oos_tranches": 186,
+          "last_trade_exit": "2026-06-30 06:00:00"
+        },
+        "unguarded": {
+          "units": 412,
+          "is_": {
+            "n": 301,
+            "net": -1951.04,
+            "pf": 0.9508,
+            "mean": -6.48,
+            "t": -0.382
+          },
+          "oos": {
+            "n": 111,
+            "net": 4688.59,
+            "pf": 1.361,
+            "mean": 42.24,
+            "t": 1.388
+          },
+          "return_pct": 2.7375,
+          "ending_balance": 102737.55,
+          "n_oos_tranches": 186,
+          "last_trade_exit": "2026-06-30 06:00:00"
+        }
+      },
+      "R1": {
+        "guarded": {
+          "units": 295,
+          "is_": {
+            "n": 213,
+            "net": -2603.57,
+            "pf": 0.9087,
+            "mean": -12.22,
+            "t": -0.608
+          },
+          "oos": {
+            "n": 82,
+            "net": -2296.94,
+            "pf": 0.7925,
+            "mean": -28.01,
+            "t": -0.91
+          },
+          "return_pct": -4.9005,
+          "ending_balance": 95099.49,
+          "n_oos_tranches": 123,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        },
+        "unguarded": {
+          "units": 295,
+          "is_": {
+            "n": 213,
+            "net": -2603.57,
+            "pf": 0.9087,
+            "mean": -12.22,
+            "t": -0.608
+          },
+          "oos": {
+            "n": 82,
+            "net": -2296.94,
+            "pf": 0.7925,
+            "mean": -28.01,
+            "t": -0.91
+          },
+          "return_pct": -4.9005,
+          "ending_balance": 95099.49,
+          "n_oos_tranches": 123,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        }
+      },
+      "R2": {
+        "guarded": {
+          "units": 255,
+          "is_": {
+            "n": 187,
+            "net": -2250.42,
+            "pf": 0.9114,
+            "mean": -12.03,
+            "t": -0.553
+          },
+          "oos": {
+            "n": 68,
+            "net": -2107.22,
+            "pf": 0.7714,
+            "mean": -30.99,
+            "t": -0.926
+          },
+          "return_pct": -4.3576,
+          "ending_balance": 95642.36,
+          "n_oos_tranches": 100,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        },
+        "unguarded": {
+          "units": 255,
+          "is_": {
+            "n": 187,
+            "net": -2250.42,
+            "pf": 0.9114,
+            "mean": -12.03,
+            "t": -0.553
+          },
+          "oos": {
+            "n": 68,
+            "net": -2107.22,
+            "pf": 0.7714,
+            "mean": -30.99,
+            "t": -0.926
+          },
+          "return_pct": -4.3576,
+          "ending_balance": 95642.36,
+          "n_oos_tranches": 100,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        }
+      },
+      "R3": {
+        "guarded": {
+          "units": 158,
+          "is_": {
+            "n": 112,
+            "net": 2627.67,
+            "pf": 1.1869,
+            "mean": 23.46,
+            "t": 0.778
+          },
+          "oos": {
+            "n": 46,
+            "net": -898.77,
+            "pf": 0.8617,
+            "mean": -19.54,
+            "t": -0.435
+          },
+          "return_pct": 1.7289,
+          "ending_balance": 101728.9,
+          "n_oos_tranches": 70,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        },
+        "unguarded": {
+          "units": 158,
+          "is_": {
+            "n": 112,
+            "net": 2627.67,
+            "pf": 1.1869,
+            "mean": 23.46,
+            "t": 0.778
+          },
+          "oos": {
+            "n": 46,
+            "net": -898.77,
+            "pf": 0.8617,
+            "mean": -19.54,
+            "t": -0.435
+          },
+          "return_pct": 1.7289,
+          "ending_balance": 101728.9,
+          "n_oos_tranches": 70,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        }
+      },
+      "R4": {
+        "guarded": {
+          "units": 158,
+          "is_": {
+            "n": 112,
+            "net": 2627.67,
+            "pf": 1.1869,
+            "mean": 23.46,
+            "t": 0.778
+          },
+          "oos": {
+            "n": 46,
+            "net": -898.77,
+            "pf": 0.8617,
+            "mean": -19.54,
+            "t": -0.435
+          },
+          "return_pct": 1.7289,
+          "ending_balance": 101728.9,
+          "n_oos_tranches": 70,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        },
+        "unguarded": {
+          "units": 158,
+          "is_": {
+            "n": 112,
+            "net": 2627.67,
+            "pf": 1.1869,
+            "mean": 23.46,
+            "t": 0.778
+          },
+          "oos": {
+            "n": 46,
+            "net": -898.77,
+            "pf": 0.8617,
+            "mean": -19.54,
+            "t": -0.435
+          },
+          "return_pct": 1.7289,
+          "ending_balance": 101728.9,
+          "n_oos_tranches": 70,
+          "last_trade_exit": "2026-06-26 09:00:00"
+        }
+      }
+    },
+    "V3_census": {
+      "raw": 544,
+      "fail_each_independent": {
+        "buffer": 277,
+        "candle": 119,
+        "htf": 208,
+        "vol": 0
+      },
+      "vol_binds_after_all_others": 0,
+      "pass_all": 136
+    }
+  },
+  "EURUSD_filter_deltas": {
+    "per_filter": {
+      "R0->R1": {
+        "is_": 4380.94,
+        "oos": 1753.66
+      },
+      "R1->R2": {
+        "is_": 1986.11,
+        "oos": 294.93
+      },
+      "R2->R3": {
+        "is_": 6166.18,
+        "oos": -866.22
+      },
+      "R3->R4": {
+        "is_": 0.0,
+        "oos": 0.0
+      }
+    },
+    "total_is": 12533.23,
+    "total_oos": 1182.37,
+    "ratio": 10.6
+  },
+  "max_oos_unit_t_anywhere": [
+    [
+      1.388,
+      "XAUUSD",
+      "R0",
+      "unguarded"
+    ],
+    [
+      1.388,
+      "XAUUSD",
+      "R0",
+      "guarded"
+    ],
+    [
+      1.362,
+      "EURUSD",
+      "R4",
+      "unguarded"
+    ],
+    [
+      1.362,
+      "EURUSD",
+      "R4",
+      "guarded"
+    ],
+    [
+      1.362,
+      "EURUSD",
+      "R3",
+      "unguarded"
+    ],
+    [
+      1.362,
+      "EURUSD",
+      "R3",
+      "guarded"
+    ]
+  ],
+  "pooled_oos_per_rung_unguarded": {
+    "R0": {
+      "net": 1425.79,
+      "units": 441,
+      "mean": 3.23
+    },
+    "R1": {
+      "net": -1356.81,
+      "units": 287,
+      "mean": -4.73
+    },
+    "R2": {
+      "net": -1279.71,
+      "units": 266,
+      "mean": -4.81
+    },
+    "R3": {
+      "net": 1222.64,
+      "units": 131,
+      "mean": 9.33
+    },
+    "R4": {
+      "net": 1206.65,
+      "units": 131,
+      "mean": 9.21
+    }
+  }
+}

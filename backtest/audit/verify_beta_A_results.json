@@ -1,0 +1,203 @@
+{
+  "EURUSD": {
+    "ledger_net": 1062.49,
+    "ledger_oos_net": 2277.68,
+    "ledger_oos_pf": 1.838,
+    "ledger_is_pf": 0.883,
+    "max_equity_dd_pct": 4.47,
+    "n_tranches": 172,
+    "n_units": 100,
+    "units_long": 68,
+    "units_short": 32,
+    "long_net": -2741.6,
+    "short_net": 3804.09,
+    "long_pf_tranches": 0.723,
+    "short_pf_tranches": 2.186,
+    "yearly_by_side": {
+      "2023": {
+        "long": -757.81,
+        "short": 1949.23
+      },
+      "2024": {
+        "long": -1561.36,
+        "short": -430.18
+      },
+      "2025": {
+        "long": -143.86,
+        "short": 386.43
+      },
+      "2026": {
+        "long": -278.57,
+        "short": 1898.61
+      }
+    },
+    "oos_net_from_units": 2277.68,
+    "oos_short_units": 5,
+    "oos_short_net": 1898.61,
+    "top3_unit_pnls": [
+      616.26,
+      612.07,
+      576.38
+    ],
+    "top3_sum": 1804.71,
+    "top3_pct_of_net": 169.9,
+    "bootstrap_p_net_le_0_seed12345_10k": 0.3639,
+    "bootstrap_p_mean_100seeds_2k": 0.3676,
+    "bootstrap_p_min_max": [
+      0.3455,
+      0.393
+    ],
+    "mean_unit_r": 0.035
+  },
+  "GBPUSD": {
+    "ledger_net": -1232.75,
+    "ledger_oos_net": 668.37,
+    "ledger_oos_pf": 1.199,
+    "ledger_is_pf": 0.848,
+    "max_equity_dd_pct": 4.23,
+    "n_tranches": 171,
+    "n_units": 105,
+    "units_long": 79,
+    "units_short": 26,
+    "long_net": 172.42,
+    "short_net": -1405.17,
+    "long_pf_tranches": 1.015,
+    "short_pf_tranches": 0.659,
+    "yearly_by_side": {
+      "2023": {
+        "long": -744.19,
+        "short": 365.45
+      },
+      "2024": {
+        "long": 283.36,
+        "short": -845.03
+      },
+      "2025": {
+        "long": 356.12,
+        "short": -607.55
+      },
+      "2026": {
+        "long": 277.14,
+        "short": -318.04
+      }
+    },
+    "oos_net_from_units": 668.37,
+    "oos_short_units": 2,
+    "oos_short_net": -447.96,
+    "top3_unit_pnls": [
+      704.81,
+      667.51,
+      582.97
+    ],
+    "top3_sum": 1955.29,
+    "top3_pct_of_net": -158.6,
+    "bootstrap_p_net_le_0_seed12345_10k": 0.651,
+    "bootstrap_p_mean_100seeds_2k": 0.6467,
+    "bootstrap_p_min_max": [
+      0.6235,
+      0.6685
+    ],
+    "mean_unit_r": -0.0346
+  },
+  "USDJPY": {
+    "ledger_net": -4213.07,
+    "ledger_oos_net": -840.63,
+    "ledger_oos_pf": 0.825,
+    "ledger_is_pf": 0.658,
+    "max_equity_dd_pct": 5.28,
+    "n_tranches": 142,
+    "n_units": 96,
+    "units_long": 86,
+    "units_short": 10,
+    "long_net": -2757.26,
+    "short_net": -1455.81,
+    "long_pf_tranches": 0.785,
+    "short_pf_tranches": 0.207,
+    "yearly_by_side": {
+      "2023": {
+        "long": -370.88,
+        "short": -474.93
+      },
+      "2024": {
+        "long": -1545.75,
+        "short": -422.07
+      },
+      "2025": {
+        "long": 172.5,
+        "short": -558.82
+      },
+      "2026": {
+        "long": -1013.13,
+        "short": 0.0
+      }
+    },
+    "oos_net_from_units": -840.63,
+    "oos_short_units": 0,
+    "oos_short_net": 0,
+    "top3_unit_pnls": [
+      623.19,
+      559.51,
+      558.3
+    ],
+    "top3_sum": 1741.0,
+    "top3_pct_of_net": -41.3,
+    "bootstrap_p_net_le_0_seed12345_10k": 0.9303,
+    "bootstrap_p_mean_100seeds_2k": 0.9307,
+    "bootstrap_p_min_max": [
+      0.9145,
+      0.9445
+    ],
+    "mean_unit_r": -0.1396
+  },
+  "XAUUSD": {
+    "ledger_net": 1728.9,
+    "ledger_oos_net": -898.77,
+    "ledger_oos_pf": 0.863,
+    "ledger_is_pf": 1.184,
+    "max_equity_dd_pct": 4.09,
+    "n_tranches": 253,
+    "n_units": 158,
+    "units_long": 145,
+    "units_short": 13,
+    "long_net": 744.21,
+    "short_net": 984.68,
+    "long_pf_tranches": 1.039,
+    "short_pf_tranches": 1.638,
+    "yearly_by_side": {
+      "2023": {
+        "long": -209.89,
+        "short": 1604.74
+      },
+      "2024": {
+        "long": 733.32,
+        "short": 0.0
+      },
+      "2025": {
+        "long": -1245.77,
+        "short": 0.0
+      },
+      "2026": {
+        "long": 1466.56,
+        "short": -620.06
+      }
+    },
+    "oos_net_from_units": -898.77,
+    "oos_short_units": 2,
+    "oos_short_net": -620.06,
+    "top3_unit_pnls": [
+      687.81,
+      686.22,
+      660.76
+    ],
+    "top3_sum": 2034.8,
+    "top3_pct_of_net": 117.7,
+    "bootstrap_p_net_le_0_seed12345_10k": 0.3284,
+    "bootstrap_p_mean_100seeds_2k": 0.3322,
+    "bootstrap_p_min_max": [
+      0.3025,
+      0.359
+    ],
+    "mean_unit_r": 0.0373
+  },
+  "TOTAL_net_4_symbols": -2654.44
+}

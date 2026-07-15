@@ -1,0 +1,382 @@
+{
+  "EURUSD": {
+    "bars": 17499,
+    "window": {
+      "from": "2023-09-18 11:00:00",
+      "to": "2026-06-30 19:00:00"
+    },
+    "price_drift_pct_from_warmup": 7.16,
+    "baselines": {
+      "ema_cross_long_short": {
+        "net": -7682.49,
+        "return_pct": -7.682,
+        "is_net": -5140.12,
+        "oos_net": -2542.37,
+        "positions": 113,
+        "wins": 31,
+        "profit_factor": 0.868,
+        "max_dd_pct": 11.39,
+        "swap_paid": -2238.13,
+        "yearly_net": {
+          "2023": -695.26,
+          "2024": -3738.57,
+          "2025": -2141.33,
+          "2026": -1105.6
+        }
+      },
+      "ema_cross_long_short_stop": {
+        "net": -6409.66,
+        "return_pct": -6.41,
+        "is_net": -5278.33,
+        "oos_net": -1131.33,
+        "positions": 113,
+        "wins": 20,
+        "profit_factor": 0.804,
+        "max_dd_pct": 10.54,
+        "swap_paid": -915.5,
+        "yearly_net": {
+          "2023": -573.61,
+          "2024": 195.99,
+          "2025": -7138.18,
+          "2026": 1107.88
+        }
+      },
+      "ema_cross_long_flat": {
+        "net": -4087.4,
+        "return_pct": -4.087,
+        "is_net": -57.48,
+        "oos_net": -4029.93,
+        "positions": 56,
+        "wins": 16,
+        "profit_factor": 0.974,
+        "max_dd_pct": 7.87,
+        "swap_paid": -3531.12,
+        "yearly_net": {
+          "2023": 1490.35,
+          "2024": -5495.71,
+          "2025": 3548.76,
+          "2026": -3630.8
+        }
+      },
+      "ema_cross_long_flat_stop": {
+        "net": -7333.11,
+        "return_pct": -7.333,
+        "is_net": -3189.75,
+        "oos_net": -4143.36,
+        "positions": 56,
+        "wins": 7,
+        "profit_factor": 0.634,
+        "max_dd_pct": 9.76,
+        "swap_paid": -1863.03,
+        "yearly_net": {
+          "2023": 1731.5,
+          "2024": -3444.93,
+          "2025": -2082.06,
+          "2026": -3537.62
+        }
+      },
+      "bh_risk_scaled": {
+        "net": 55.73,
+        "return_pct": 0.056,
+        "is_net": 7036.74,
+        "oos_net": -6981.01,
+        "positions": 1,
+        "wins": 1,
+        "profit_factor": null,
+        "max_dd_pct": 18.03,
+        "swap_paid": -11827.59,
+        "yearly_net": {
+          "2023": 4614.23,
+          "2024": -15128.52,
+          "2025": 17700.96,
+          "2026": -7127.02
+        }
+      }
+    }
+  },
+  "GBPUSD": {
+    "bars": 17499,
+    "window": {
+      "from": "2023-09-15 08:00:00",
+      "to": "2026-06-30 19:00:00"
+    },
+    "price_drift_pct_from_warmup": 6.62,
+    "baselines": {
+      "ema_cross_long_short": {
+        "net": -12716.01,
+        "return_pct": -12.716,
+        "is_net": -106.42,
+        "oos_net": -12609.59,
+        "positions": 117,
+        "wins": 34,
+        "profit_factor": 0.771,
+        "max_dd_pct": 17.08,
+        "swap_paid": -2397.9,
+        "yearly_net": {
+          "2023": 1745.18,
+          "2024": 90.04,
+          "2025": -6708.04,
+          "2026": -7841.93
+        }
+      },
+      "ema_cross_long_short_stop": {
+        "net": -2174.71,
+        "return_pct": -2.175,
+        "is_net": 8143.31,
+        "oos_net": -10318.02,
+        "positions": 117,
+        "wins": 28,
+        "profit_factor": 0.987,
+        "max_dd_pct": 12.77,
+        "swap_paid": -1791.15,
+        "yearly_net": {
+          "2023": 3593.61,
+          "2024": 5294.64,
+          "2025": -4953.09,
+          "2026": -6108.45
+        }
+      },
+      "ema_cross_long_flat": {
+        "net": -3515.6,
+        "return_pct": -3.516,
+        "is_net": 4876.01,
+        "oos_net": -8391.61,
+        "positions": 58,
+        "wins": 18,
+        "profit_factor": 0.937,
+        "max_dd_pct": 9.77,
+        "swap_paid": -2034.27,
+        "yearly_net": {
+          "2023": 1882.94,
+          "2024": 1756.12,
+          "2025": -2051.13,
+          "2026": -5103.53
+        }
+      },
+      "ema_cross_long_flat_stop": {
+        "net": 4467.48,
+        "return_pct": 4.467,
+        "is_net": 10539.18,
+        "oos_net": -6071.7,
+        "positions": 58,
+        "wins": 16,
+        "profit_factor": 1.42,
+        "max_dd_pct": 6.95,
+        "swap_paid": -1513.53,
+        "yearly_net": {
+          "2023": 2464.91,
+          "2024": 6382.15,
+          "2025": -1819.41,
+          "2026": -2560.18
+        }
+      },
+      "bh_risk_scaled": {
+        "net": 3990.91,
+        "return_pct": 3.991,
+        "is_net": 9363.88,
+        "oos_net": -5372.97,
+        "positions": 1,
+        "wins": 1,
+        "profit_factor": null,
+        "max_dd_pct": 16.34,
+        "swap_paid": -6832.31,
+        "yearly_net": {
+          "2023": 3187.23,
+          "2024": -5525.58,
+          "2025": 10282.84,
+          "2026": -3950.31
+        }
+      }
+    }
+  },
+  "USDJPY": {
+    "bars": 17498,
+    "window": {
+      "from": "2023-09-15 08:00:00",
+      "to": "2026-06-30 19:00:00"
+    },
+    "price_drift_pct_from_warmup": 10.02,
+    "baselines": {
+      "ema_cross_long_short": {
+        "net": 601.88,
+        "return_pct": 0.602,
+        "is_net": 6445.85,
+        "oos_net": -5843.97,
+        "positions": 95,
+        "wins": 26,
+        "profit_factor": 1.001,
+        "max_dd_pct": 17.74,
+        "swap_paid": 565.14,
+        "yearly_net": {
+          "2023": 2921.03,
+          "2024": 5382.19,
+          "2025": -7845.83,
+          "2026": 148.24
+        }
+      },
+      "ema_cross_long_short_stop": {
+        "net": -7264.93,
+        "return_pct": -7.265,
+        "is_net": 174.29,
+        "oos_net": -7439.23,
+        "positions": 95,
+        "wins": 16,
+        "profit_factor": 0.738,
+        "max_dd_pct": 13.56,
+        "swap_paid": -515.75,
+        "yearly_net": {
+          "2023": 1798.72,
+          "2024": 83.43,
+          "2025": -4806.19,
+          "2026": -4340.9
+        }
+      },
+      "ema_cross_long_flat": {
+        "net": 12057.26,
+        "return_pct": 12.057,
+        "is_net": 8006.21,
+        "oos_net": 4051.05,
+        "positions": 48,
+        "wins": 16,
+        "profit_factor": 1.298,
+        "max_dd_pct": 6.13,
+        "swap_paid": 6552.12,
+        "yearly_net": {
+          "2023": 1000.13,
+          "2024": 9097.26,
+          "2025": -1536.41,
+          "2026": 3500.45
+        }
+      },
+      "ema_cross_long_flat_stop": {
+        "net": -1301.68,
+        "return_pct": -1.302,
+        "is_net": 333.72,
+        "oos_net": -1635.39,
+        "positions": 48,
+        "wins": 8,
+        "profit_factor": 0.648,
+        "max_dd_pct": 6.66,
+        "swap_paid": 3171.76,
+        "yearly_net": {
+          "2023": -1404.42,
+          "2024": 1715.84,
+          "2025": 711.97,
+          "2026": -2325.07
+        }
+      },
+      "bh_risk_scaled": {
+        "net": 31705.93,
+        "return_pct": 31.706,
+        "is_net": 11215.71,
+        "oos_net": 20490.22,
+        "positions": 1,
+        "wins": 1,
+        "profit_factor": null,
+        "max_dd_pct": 17.25,
+        "swap_paid": 17131.05,
+        "yearly_net": {
+          "2023": -4902.36,
+          "2024": 22056.04,
+          "2025": 5688.67,
+          "2026": 8867.55
+        }
+      }
+    }
+  },
+  "XAUUSD": {
+    "bars": 17376,
+    "window": {
+      "from": "2023-07-25 09:00:00",
+      "to": "2026-06-30 20:00:00"
+    },
+    "price_drift_pct_from_warmup": 104.43,
+    "baselines": {
+      "ema_cross_long_short": {
+        "net": 28945.48,
+        "return_pct": 28.945,
+        "is_net": 15106.75,
+        "oos_net": 13838.73,
+        "positions": 86,
+        "wins": 26,
+        "profit_factor": 2.191,
+        "max_dd_pct": 9.69,
+        "swap_paid": -6382.3,
+        "yearly_net": {
+          "2023": 4920.95,
+          "2024": 8648.53,
+          "2025": 11078.47,
+          "2026": 4297.74
+        }
+      },
+      "ema_cross_long_short_stop": {
+        "net": 6742.6,
+        "return_pct": 6.743,
+        "is_net": -3989.53,
+        "oos_net": 10732.13,
+        "positions": 86,
+        "wins": 15,
+        "profit_factor": 1.46,
+        "max_dd_pct": 14.08,
+        "swap_paid": -3020.65,
+        "yearly_net": {
+          "2023": 3939.73,
+          "2024": -5869.31,
+          "2025": 5935.06,
+          "2026": 2737.27
+        }
+      },
+      "ema_cross_long_flat": {
+        "net": 30605.72,
+        "return_pct": 30.606,
+        "is_net": 19868.95,
+        "oos_net": 10736.78,
+        "positions": 43,
+        "wins": 17,
+        "profit_factor": 3.698,
+        "max_dd_pct": 8.34,
+        "swap_paid": -8068.05,
+        "yearly_net": {
+          "2023": 2732.76,
+          "2024": 11205.38,
+          "2025": 17314.69,
+          "2026": -647.11
+        }
+      },
+      "ema_cross_long_flat_stop": {
+        "net": 9848.96,
+        "return_pct": 9.849,
+        "is_net": 2008.62,
+        "oos_net": 7840.34,
+        "positions": 43,
+        "wins": 9,
+        "profit_factor": 2.292,
+        "max_dd_pct": 8.66,
+        "swap_paid": -3761.1,
+        "yearly_net": {
+          "2023": 2788.97,
+          "2024": -1800.25,
+          "2025": 10470.78,
+          "2026": -1610.55
+        }
+      },
+      "bh_risk_scaled": {
+        "net": 67475.7,
+        "return_pct": 67.476,
+        "is_net": 47214.23,
+        "oos_net": 20261.47,
+        "positions": 1,
+        "wins": 1,
+        "profit_factor": null,
+        "max_dd_pct": 31.34,
+        "swap_paid": -24684.75,
+        "yearly_net": {
+          "2023": 858.82,
+          "2024": 16800.75,
+          "2025": 67842.45,
+          "2026": -18025.2
+        }
+      }
+    }
+  }
+}

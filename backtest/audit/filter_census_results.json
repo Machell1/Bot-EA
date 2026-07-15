@@ -1,0 +1,54 @@
+{
+  "EURUSD": {
+    "raw": 546,
+    "fail_buffer": 249,
+    "fail_candle_after_buffer": 36,
+    "fail_htf_h4": 84,
+    "fail_htf_d1": 80,
+    "fail_vol": 0,
+    "fail_vol_unconditional": 1,
+    "pass_all": 97,
+    "dir_residue": 0,
+    "bars": 17499,
+    "split_index": 12249
+  },
+  "GBPUSD": {
+    "raw": 557,
+    "fail_buffer": 253,
+    "fail_candle_after_buffer": 40,
+    "fail_htf_h4": 91,
+    "fail_htf_d1": 75,
+    "fail_vol": 0,
+    "fail_vol_unconditional": 0,
+    "pass_all": 98,
+    "dir_residue": 0,
+    "bars": 17499,
+    "split_index": 12249
+  },
+  "USDJPY": {
+    "raw": 494,
+    "fail_buffer": 279,
+    "fail_candle_after_buffer": 15,
+    "fail_htf_h4": 54,
+    "fail_htf_d1": 49,
+    "fail_vol": 2,
+    "fail_vol_unconditional": 2,
+    "pass_all": 95,
+    "dir_residue": 0,
+    "bars": 17498,
+    "split_index": 12248
+  },
+  "XAUUSD": {
+    "raw": 544,
+    "fail_buffer": 277,
+    "fail_candle_after_buffer": 38,
+    "fail_htf_h4": 69,
+    "fail_htf_d1": 24,
+    "fail_vol": 0,
+    "fail_vol_unconditional": 0,
+    "pass_all": 136,
+    "dir_residue": 0,
+    "bars": 17376,
+    "split_index": 12163
+  }
+}

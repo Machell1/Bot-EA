@@ -1,0 +1,114 @@
+{
+  "EURUSD": {
+    "n_events": 100,
+    "n_units_ledger": 100,
+    "n_eligible": 5741,
+    "horizons": {
+      "h4": {
+        "actual_mean_atr": 0.20653882018992087,
+        "control_portfolio_mean_atr": -0.141462877354745,
+        "excess_atr": 0.34800169754466587,
+        "percentile": 94.5,
+        "population_control_mean_atr": -0.13348526650657142
+      },
+      "h24": {
+        "actual_mean_atr": 0.3110589726556557,
+        "control_portfolio_mean_atr": -0.1647936226125521,
+        "excess_atr": 0.4758525952682078,
+        "percentile": 85.1,
+        "population_control_mean_atr": -0.16537419305348008
+      },
+      "h72": {
+        "actual_mean_atr": -0.9915236071966378,
+        "control_portfolio_mean_atr": -0.441171940775478,
+        "excess_atr": -0.5503516664211598,
+        "percentile": 22.1,
+        "population_control_mean_atr": -0.43018275870621964
+      }
+    }
+  },
+  "GBPUSD": {
+    "n_events": 105,
+    "n_units_ledger": 105,
+    "n_eligible": 5744,
+    "horizons": {
+      "h4": {
+        "actual_mean_atr": 0.21361680601597383,
+        "control_portfolio_mean_atr": -0.19372087495485849,
+        "excess_atr": 0.40733768097083234,
+        "percentile": 97.6,
+        "population_control_mean_atr": -0.18982840005522533
+      },
+      "h24": {
+        "actual_mean_atr": 0.24118743063060186,
+        "control_portfolio_mean_atr": -0.219949782815399,
+        "excess_atr": 0.4611372134460009,
+        "percentile": 87.7,
+        "population_control_mean_atr": -0.2292823620975587
+      },
+      "h72": {
+        "actual_mean_atr": 0.19800488500773072,
+        "control_portfolio_mean_atr": -0.25486811233272766,
+        "excess_atr": 0.4528729973404584,
+        "percentile": 75.7,
+        "population_control_mean_atr": -0.24910481890492875
+      }
+    }
+  },
+  "USDJPY": {
+    "n_events": 96,
+    "n_units_ledger": 96,
+    "n_eligible": 5744,
+    "horizons": {
+      "h4": {
+        "actual_mean_atr": 0.014333923476344738,
+        "control_portfolio_mean_atr": -0.20675541063388866,
+        "excess_atr": 0.2210893341102334,
+        "percentile": 88.4,
+        "population_control_mean_atr": -0.20781360243386182
+      },
+      "h24": {
+        "actual_mean_atr": -1.1475125760462035,
+        "control_portfolio_mean_atr": -0.23552609873330804,
+        "excess_atr": -0.9119864773128954,
+        "percentile": 2.0,
+        "population_control_mean_atr": -0.22510373057125324
+      },
+      "h72": {
+        "actual_mean_atr": -1.4144716442208598,
+        "control_portfolio_mean_atr": -0.12303179761224677,
+        "excess_atr": -1.291439846608613,
+        "percentile": 4.7,
+        "population_control_mean_atr": -0.12259102602160087
+      }
+    }
+  },
+  "XAUUSD": {
+    "n_events": 158,
+    "n_units_ledger": 158,
+    "n_eligible": 6031,
+    "horizons": {
+      "h4": {
+        "actual_mean_atr": 0.3279119492443055,
+        "control_portfolio_mean_atr": 0.043134357752636264,
+        "excess_atr": 0.28477759149166926,
+        "percentile": 96.5,
+        "population_control_mean_atr": 0.04649240281546738
+      },
+      "h24": {
+        "actual_mean_atr": 0.9698119997128247,
+        "control_portfolio_mean_atr": 0.339533592713947,
+        "excess_atr": 0.6302784069988777,
+        "percentile": 96.4,
+        "population_control_mean_atr": 0.33126421509078546
+      },
+      "h72": {
+        "actual_mean_atr": 2.9231923455042668,
+        "control_portfolio_mean_atr": 0.8557095949733131,
+        "excess_atr": 2.067482750530954,
+        "percentile": 100.0,
+        "population_control_mean_atr": 0.8359019292171248
+      }
+    }
+  }
+}

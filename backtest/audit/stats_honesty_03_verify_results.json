@@ -1,0 +1,192 @@
+{
+ "V1_unit_construction": {
+  "EURUSD": {
+   "n_tranches": 172,
+   "n_zero_r_tranches": 0,
+   "n_units": 100,
+   "entrytime_collisions": 0,
+   "recon_net_vs_ledger": [
+    1062.4885714287304,
+    1062.4885714287304
+   ],
+   "recon_ok": true
+  },
+  "GBPUSD": {
+   "n_tranches": 171,
+   "n_zero_r_tranches": 0,
+   "n_units": 105,
+   "entrytime_collisions": 0,
+   "recon_net_vs_ledger": [
+    -1232.7542857146484,
+    -1232.7542857146482
+   ],
+   "recon_ok": true
+  },
+  "USDJPY": {
+   "n_tranches": 142,
+   "n_zero_r_tranches": 0,
+   "n_units": 96,
+   "entrytime_collisions": 0,
+   "recon_net_vs_ledger": [
+    -4213.073807413286,
+    -4213.073807413286
+   ],
+   "recon_ok": true
+  },
+  "XAUUSD": {
+   "n_tranches": 253,
+   "n_zero_r_tranches": 0,
+   "n_units": 158,
+   "entrytime_collisions": 0,
+   "recon_net_vs_ledger": [
+    1728.8980000001632,
+    1728.8980000001632
+   ],
+   "recon_ok": true
+  },
+  "EURUSD_risk_magnitude_check": {
+   "expected_risk_at_100k": 318.18181818181813,
+   "first_unit_risk": 316.9071428571528,
+   "risk_ratio_min": 0.9772882653061326,
+   "risk_ratio_max": 1.0208112244897747,
+   "risk_ratio_mean": 0.9963856683673512
+  }
+ },
+ "V7_ledger_headlines": {
+  "EURUSD": {
+   "return_pct": 1.0624885714287435,
+   "ledger_expectancy_r_all": 0.5140112953756575,
+   "ledger_oos_net_profit": 2277.6767857143523
+  },
+  "GBPUSD": {
+   "return_pct": -1.2327542857146767,
+   "ledger_expectancy_r_all": 0.47592023694745245,
+   "ledger_oos_net_profit": 668.3724999998694
+  },
+  "USDJPY": {
+   "return_pct": -4.213073807413292,
+   "ledger_expectancy_r_all": 0.27457811070870525,
+   "ledger_oos_net_profit": -840.6293180426658
+  },
+  "XAUUSD": {
+   "return_pct": 1.7288980000000231,
+   "ledger_expectancy_r_all": 0.4934753875469255,
+   "ledger_oos_net_profit": -898.7722142856603
+  }
+ },
+ "V2_pooled": {
+  "n": 459,
+  "mean_r": -0.016608875494366057,
+  "sd_r": 0.989723793287694,
+  "t_naive": -0.35952786957133337,
+  "clusters_day": 257,
+  "t_cluster_day": -0.2671828351204293
+ },
+ "V3_per_symbol": {
+  "EURUSD": {
+   "n": 100,
+   "mean_r": 0.03503001986722678,
+   "sd_r": 0.9811097616230849,
+   "t_naive": 0.3570448612118115,
+   "clusters_day": 80,
+   "t_cluster_day": 0.3124563627476709,
+   "IS_mean": -0.051950522633844996,
+   "OOS_mean": 0.2586942720128399
+  },
+  "GBPUSD": {
+   "n": 105,
+   "mean_r": -0.03457007462435182,
+   "sd_r": 1.0380569851222907,
+   "t_naive": -0.3412508732452203,
+   "clusters_day": 80,
+   "t_cluster_day": -0.30511026679991965,
+   "IS_mean": -0.0705273269892195,
+   "OOS_mean": 0.10108683202492172
+  },
+  "USDJPY": {
+   "n": 96,
+   "mean_r": -0.1395502742382984,
+   "sd_r": 0.9301560728004228,
+   "t_naive": -1.4699768150527786,
+   "clusters_day": 75,
+   "t_cluster_day": -1.2256082000311745,
+   "IS_mean": -0.17586556984089874,
+   "OOS_mean": -0.07625790190233786
+  },
+  "XAUUSD": {
+   "n": 158,
+   "mean_r": 0.03734309065694234,
+   "sd_r": 0.9995836693343796,
+   "t_naive": 0.46959087609710387,
+   "clusters_day": 117,
+   "t_cluster_day": 0.3997045577731776,
+   "IS_mean": 0.07612866307316322,
+   "OOS_mean": -0.05709134653037803
+  }
+ },
+ "V4_eurusd_oos": {
+  "n": 28,
+  "mean_r": 0.2586942720128399,
+  "sd_r": 1.0045770727309935,
+  "t_naive": 1.362644495722333,
+  "clusters_day": 22,
+  "t_cluster_day": 1.2641738140928174,
+  "oos_net_dollars": 2277.6767857143523,
+  "ledger_oos_net": 2277.6767857143523,
+  "p_naive_normal_approx": 0.17299457837252175,
+  "p_cluster_normal_approx": 0.206167647426984
+ },
+ "V5_resplit_EURUSD": {
+  "n": 100,
+  "n_oos": 28,
+  "obs_is_mean": -0.051950522633844996,
+  "obs_oos_mean": 0.2586942720128399,
+  "p_oos_ge_obs_min": 0.07555,
+  "p_oos_ge_obs_max": 0.0812,
+  "p_oos_ge_obs_mean": 0.07860500000000001,
+  "p_any_signflip_mean": 0.2829025,
+  "n_draws_per_seed": 20000,
+  "n_seeds": 20
+ },
+ "V5_resplit_XAUUSD": {
+  "n": 158,
+  "n_oos": 46,
+  "obs_is_mean": 0.07612866307316322,
+  "obs_oos_mean": -0.05709134653037803,
+  "p_oos_ge_obs_min": 0.7695,
+  "p_oos_ge_obs_max": 0.7798,
+  "p_oos_ge_obs_mean": 0.77527,
+  "p_any_signflip_mean": 0.233,
+  "n_draws_per_seed": 20000,
+  "n_seeds": 20
+ },
+ "V6_analytic": {
+  "bonferroni_z": {
+   "4": 2.4977054744123737,
+   "8": 2.734368786533176,
+   "9": 2.772921294608662,
+   "13": 2.890511560691739,
+   "36": 3.1969502291312533,
+   "100": 3.4807564043462422
+  },
+  "expected_max_null_t": {
+   "4": 1.0521228241893004,
+   "8": 1.4590140774418094,
+   "9": 1.5207781907028006,
+   "36": 2.147531942453467,
+   "100": 2.5306028932016846
+  },
+  "power_n_+0.05R_EURUSD": {
+   "sd": 0.9811097616230849,
+   "n_80pct": 3022.0584475706673,
+   "n_95pct": 5003.360287710348
+  },
+  "power_n_+0.05R_pooled": {
+   "sd": 0.989723793287694,
+   "n_80pct": 3075.35806326386,
+   "n_95pct": 5091.603842603838
+  },
+  "eurusd_units_per_year": 36.452095808383234,
+  "pooled_units_per_year": 159.51450999048527
+ }
+}

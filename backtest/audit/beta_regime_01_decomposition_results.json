@@ -1,0 +1,534 @@
+{
+  "EURUSD": {
+    "ledger": "EURUSD.json",
+    "window": {
+      "from": "2023-09-05 17:00:00",
+      "to": "2026-06-30 19:00:00",
+      "split_time": "2025-08-26 02:00:00"
+    },
+    "net_full": 1062.49,
+    "return_pct": 1.062,
+    "long_short": {
+      "long": {
+        "tranches": 108,
+        "net": -2741.6,
+        "gross_profit": 7168.07,
+        "gross_loss": 9909.67,
+        "profit_factor": 0.723,
+        "units": 68,
+        "unit_sum_r": -8.52
+      },
+      "short": {
+        "tranches": 64,
+        "net": 3804.09,
+        "gross_profit": 7012.02,
+        "gross_loss": 3207.93,
+        "profit_factor": 2.186,
+        "units": 32,
+        "unit_sum_r": 12.02
+      }
+    },
+    "buy_and_hold": {
+      "full": {
+        "from": "2023-09-05 17:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": 6.56
+      },
+      "is": {
+        "from": "2023-09-05 17:00:00",
+        "to": "2025-08-26 02:00:00",
+        "bh_return_pct": 8.52
+      },
+      "oos": {
+        "from": "2025-08-26 02:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": -1.81
+      }
+    },
+    "concentration": {
+      "units_total": 100,
+      "top3_units_net": 1804.71,
+      "top3_share_of_net_pct": 169.9,
+      "top3_detail": [
+        {
+          "entry": "2024-06-20 08:00:00",
+          "side": -1,
+          "pnl": 616.26,
+          "r": 1.94
+        },
+        {
+          "entry": "2026-06-22 08:00:00",
+          "side": -1,
+          "pnl": 612.07,
+          "r": 1.94
+        },
+        {
+          "entry": "2026-01-27 13:00:00",
+          "side": 1,
+          "pnl": 576.38,
+          "r": 1.83
+        }
+      ],
+      "bottom3_detail": [
+        {
+          "entry": "2024-07-17 09:00:00",
+          "side": 1,
+          "pnl": -352.43,
+          "r": -1.1
+        },
+        {
+          "entry": "2024-03-06 16:00:00",
+          "side": 1,
+          "pnl": -351.41,
+          "r": -1.1
+        },
+        {
+          "entry": "2025-08-13 08:00:00",
+          "side": 1,
+          "pnl": -343.97,
+          "r": -1.09
+        }
+      ]
+    },
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261186,
+      "observed_net": 1062.49,
+      "p_resampled_net_le_zero": 0.3692,
+      "ci95_net": [
+        -5060.69,
+        7103.41
+      ],
+      "mean_unit_r": 0.035
+    },
+    "yearly": {
+      "2023": {
+        "net": 1191.42,
+        "long_net": -757.81,
+        "short_net": 1949.23,
+        "units": 18,
+        "bh_return_pct": 2.95
+      },
+      "2024": {
+        "net": -2114.1,
+        "long_net": -1561.36,
+        "short_net": -552.74,
+        "units": 34,
+        "bh_return_pct": -5.78
+      },
+      "2025": {
+        "net": 365.13,
+        "long_net": -143.86,
+        "short_net": 508.99,
+        "units": 38,
+        "bh_return_pct": 13.43
+      },
+      "2026": {
+        "net": 1620.03,
+        "long_net": -278.57,
+        "short_net": 1898.61,
+        "units": 10,
+        "bh_return_pct": -2.73
+      }
+    }
+  },
+  "GBPUSD": {
+    "ledger": "GBPUSD_relaxedgate.json",
+    "window": {
+      "from": "2023-09-04 14:00:00",
+      "to": "2026-06-30 19:00:00",
+      "split_time": "2025-08-24 23:00:00"
+    },
+    "net_full": -1232.75,
+    "return_pct": -1.233,
+    "long_short": {
+      "long": {
+        "tranches": 130,
+        "net": 172.42,
+        "gross_profit": 11906.14,
+        "gross_loss": 11733.72,
+        "profit_factor": 1.015,
+        "units": 79,
+        "unit_sum_r": 0.82
+      },
+      "short": {
+        "tranches": 41,
+        "net": -1405.17,
+        "gross_profit": 2720.42,
+        "gross_loss": 4125.6,
+        "profit_factor": 0.659,
+        "units": 26,
+        "unit_sum_r": -4.45
+      }
+    },
+    "buy_and_hold": {
+      "full": {
+        "from": "2023-09-04 14:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": 5.12
+      },
+      "is": {
+        "from": "2023-09-04 14:00:00",
+        "to": "2025-08-24 23:00:00",
+        "bh_return_pct": 7.06
+      },
+      "oos": {
+        "from": "2025-08-24 23:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": -1.81
+      }
+    },
+    "concentration": {
+      "units_total": 105,
+      "top3_units_net": 1955.29,
+      "top3_share_of_net_pct": -158.6,
+      "top3_detail": [
+        {
+          "entry": "2024-07-10 14:00:00",
+          "side": 1,
+          "pnl": 704.81,
+          "r": 2.25
+        },
+        {
+          "entry": "2024-08-21 15:00:00",
+          "side": 1,
+          "pnl": 667.51,
+          "r": 2.1
+        },
+        {
+          "entry": "2026-01-26 15:00:00",
+          "side": 1,
+          "pnl": 582.97,
+          "r": 1.86
+        }
+      ],
+      "bottom3_detail": [
+        {
+          "entry": "2026-01-28 11:00:00",
+          "side": 1,
+          "pnl": -331.39,
+          "r": -1.04
+        },
+        {
+          "entry": "2024-05-27 15:00:00",
+          "side": 1,
+          "pnl": -331.28,
+          "r": -1.04
+        },
+        {
+          "entry": "2024-09-17 08:00:00",
+          "side": 1,
+          "pnl": -330.56,
+          "r": -1.02
+        }
+      ]
+    },
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261167,
+      "observed_net": -1232.75,
+      "p_resampled_net_le_zero": 0.6453,
+      "ci95_net": [
+        -7536.05,
+        5363.88
+      ],
+      "mean_unit_r": -0.0346
+    },
+    "yearly": {
+      "2023": {
+        "net": -378.74,
+        "long_net": -744.19,
+        "short_net": 365.45,
+        "units": 16,
+        "bh_return_pct": 0.92
+      },
+      "2024": {
+        "net": -561.67,
+        "long_net": 283.36,
+        "short_net": -845.03,
+        "units": 45,
+        "bh_return_pct": -1.4
+      },
+      "2025": {
+        "net": -251.44,
+        "long_net": 356.12,
+        "short_net": -607.55,
+        "units": 31,
+        "bh_return_pct": 7.62
+      },
+      "2026": {
+        "net": -40.9,
+        "long_net": 277.14,
+        "short_net": -318.04,
+        "units": 13,
+        "bh_return_pct": -1.5
+      }
+    }
+  },
+  "USDJPY": {
+    "ledger": "USDJPY.json",
+    "window": {
+      "from": "2023-09-04 14:00:00",
+      "to": "2026-06-30 19:00:00",
+      "split_time": "2025-08-24 23:00:00"
+    },
+    "net_full": -4213.07,
+    "return_pct": -4.213,
+    "long_short": {
+      "long": {
+        "tranches": 129,
+        "net": -2757.26,
+        "gross_profit": 10067.26,
+        "gross_loss": 12824.53,
+        "profit_factor": 0.785,
+        "units": 86,
+        "unit_sum_r": -8.71
+      },
+      "short": {
+        "tranches": 13,
+        "net": -1455.81,
+        "gross_profit": 379.39,
+        "gross_loss": 1835.2,
+        "profit_factor": 0.207,
+        "units": 10,
+        "unit_sum_r": -4.69
+      }
+    },
+    "buy_and_hold": {
+      "full": {
+        "from": "2023-09-04 14:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": 11.01
+      },
+      "is": {
+        "from": "2023-09-04 14:00:00",
+        "to": "2025-08-24 23:00:00",
+        "bh_return_pct": 0.56
+      },
+      "oos": {
+        "from": "2025-08-24 23:00:00",
+        "to": "2026-06-30 19:00:00",
+        "bh_return_pct": 10.4
+      }
+    },
+    "concentration": {
+      "units_total": 96,
+      "top3_units_net": 1741.0,
+      "top3_share_of_net_pct": -41.3,
+      "top3_detail": [
+        {
+          "entry": "2025-11-19 10:00:00",
+          "side": 1,
+          "pnl": 623.19,
+          "r": 2.04
+        },
+        {
+          "entry": "2023-11-08 13:00:00",
+          "side": 1,
+          "pnl": 559.51,
+          "r": 1.77
+        },
+        {
+          "entry": "2025-10-07 15:00:00",
+          "side": 1,
+          "pnl": 558.3,
+          "r": 1.83
+        }
+      ],
+      "bottom3_detail": [
+        {
+          "entry": "2025-06-04 15:00:00",
+          "side": -1,
+          "pnl": -338.31,
+          "r": -1.11
+        },
+        {
+          "entry": "2024-07-03 11:00:00",
+          "side": 1,
+          "pnl": -326.81,
+          "r": -1.02
+        },
+        {
+          "entry": "2024-07-03 10:00:00",
+          "side": 1,
+          "pnl": -326.41,
+          "r": -1.02
+        }
+      ]
+    },
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261193,
+      "observed_net": -4213.07,
+      "p_resampled_net_le_zero": 0.9306,
+      "ci95_net": [
+        -9569.26,
+        1469.14
+      ],
+      "mean_unit_r": -0.1396
+    },
+    "yearly": {
+      "2023": {
+        "net": -845.81,
+        "long_net": -370.88,
+        "short_net": -474.93,
+        "units": 19,
+        "bh_return_pct": -3.7
+      },
+      "2024": {
+        "net": -1967.82,
+        "long_net": -1545.75,
+        "short_net": -422.07,
+        "units": 39,
+        "bh_return_pct": 11.46
+      },
+      "2025": {
+        "net": -386.32,
+        "long_net": 172.5,
+        "short_net": -558.82,
+        "units": 17,
+        "bh_return_pct": -0.53
+      },
+      "2026": {
+        "net": -1013.13,
+        "long_net": -1013.13,
+        "short_net": 0,
+        "units": 21,
+        "bh_return_pct": 3.77
+      }
+    }
+  },
+  "XAUUSD": {
+    "ledger": "XAUUSD.json",
+    "window": {
+      "from": "2023-07-12 04:00:00",
+      "to": "2026-06-30 20:00:00",
+      "split_time": "2025-08-08 05:00:00"
+    },
+    "net_full": 1728.9,
+    "return_pct": 1.729,
+    "long_short": {
+      "long": {
+        "tranches": 230,
+        "net": 744.21,
+        "gross_profit": 20012.44,
+        "gross_loss": 19268.23,
+        "profit_factor": 1.039,
+        "units": 145,
+        "unit_sum_r": 2.84
+      },
+      "short": {
+        "tranches": 23,
+        "net": 984.68,
+        "gross_profit": 2528.95,
+        "gross_loss": 1544.27,
+        "profit_factor": 1.638,
+        "units": 13,
+        "unit_sum_r": 3.06
+      }
+    },
+    "buy_and_hold": {
+      "full": {
+        "from": "2023-07-12 04:00:00",
+        "to": "2026-06-30 20:00:00",
+        "bh_return_pct": 106.88
+      },
+      "is": {
+        "from": "2023-07-12 04:00:00",
+        "to": "2025-08-08 05:00:00",
+        "bh_return_pct": 74.96
+      },
+      "oos": {
+        "from": "2025-08-08 05:00:00",
+        "to": "2026-06-30 20:00:00",
+        "bh_return_pct": 18.24
+      }
+    },
+    "concentration": {
+      "units_total": 158,
+      "top3_units_net": 2034.8,
+      "top3_share_of_net_pct": 117.7,
+      "top3_detail": [
+        {
+          "entry": "2026-01-28 08:00:00",
+          "side": 1,
+          "pnl": 687.81,
+          "r": 2.33
+        },
+        {
+          "entry": "2023-09-25 15:00:00",
+          "side": -1,
+          "pnl": 686.22,
+          "r": 2.17
+        },
+        {
+          "entry": "2023-09-26 13:00:00",
+          "side": -1,
+          "pnl": 660.76,
+          "r": 2.08
+        }
+      ],
+      "bottom3_detail": [
+        {
+          "entry": "2023-11-29 15:00:00",
+          "side": 1,
+          "pnl": -362.32,
+          "r": -1.13
+        },
+        {
+          "entry": "2023-12-27 16:00:00",
+          "side": 1,
+          "pnl": -362.18,
+          "r": -1.14
+        },
+        {
+          "entry": "2024-10-30 13:00:00",
+          "side": 1,
+          "pnl": -351.35,
+          "r": -1.1
+        }
+      ]
+    },
+    "bootstrap": {
+      "resamples": 10000,
+      "seed": 20261188,
+      "observed_net": 1728.9,
+      "p_resampled_net_le_zero": 0.3253,
+      "ci95_net": [
+        -5939.95,
+        9739.56
+      ],
+      "mean_unit_r": 0.0373
+    },
+    "yearly": {
+      "2023": {
+        "net": 1394.85,
+        "long_net": -209.89,
+        "short_net": 1604.74,
+        "units": 26,
+        "bh_return_pct": 6.41
+      },
+      "2024": {
+        "net": 733.32,
+        "long_net": 733.32,
+        "short_net": 0,
+        "units": 52,
+        "bh_return_pct": 26.31
+      },
+      "2025": {
+        "net": -1245.77,
+        "long_net": -1245.77,
+        "short_net": 0,
+        "units": 68,
+        "bh_return_pct": 65.38
+      },
+      "2026": {
+        "net": 846.5,
+        "long_net": 1466.56,
+        "short_net": -620.06,
+        "units": 12,
+        "bh_return_pct": -7.75
+      }
+    }
+  }
+}
