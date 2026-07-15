@@ -69,6 +69,20 @@ under the discipline below, with the stated expectation that both likely die:
   Note the engine-level result: random entries through the same exits made
   MORE — so the value is exposure, not the breakout. Any redesign here
   converges to Branch B. Treat C2 as closed unless B fails narrowly.
+- **C3. Short-side bias (tested 2026-07-14, NOT an edge).** Proposal: run the
+  EA shorts-only (the EA already has `InpAllowLong`/`InpAllowShort`; the
+  screen mirrors them via `Config(allow_longs/allow_shorts)`). Screened on
+  all four symbols: helps ONLY EURUSD (+3.85%/+3.60% at 1×/2×, IS and OOS
+  both positive), HURTS GBPUSD (−1.41%; its better side is long), no OOS
+  trades on USDJPY, and OOS-negative on XAUUSD (shorting the bull). The
+  EURUSD cell: 32 units, day-clustered t = 1.48 — essentially equal to the
+  expected max of 8 noise cells (1.46) from picking the best of 4 symbols ×
+  2 sides; 47% of profit in 3 trades; profit concentrated in the two known
+  EUR-down windows (2023 +$1,949 / 2026 +$1,948, 2024 negative). Verdict:
+  post-hoc regime bet, not an edge. If pursued anyway: pre-register
+  "EURUSD shorts-only, defaults frozen" and test ONCE on never-screened
+  EURUSD history (pre-2023 or another venue); kill on clustered t < 2.5.
+  Do not flip the live input on the strength of this sample.
 
 Discipline if C is pursued: one pre-registered hypothesis per iteration with
 its kill threshold written first; evaluation only on data never screened

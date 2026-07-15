@@ -354,6 +354,28 @@ class BacktestEngineTests(unittest.TestCase):
         ]
         self.assertEqual(locked_tc_that_day, [])  # locked day: no flip flatten
 
+    def test_side_switches_mirror_ea_inputs(self) -> None:
+        # allow_longs / allow_shorts mirror InpAllowLong / InpAllowShort.
+        start = datetime(2026, 1, 1)
+        bars = [
+            Bar(start + timedelta(hours=i), float(i), i + 0.2, i - 0.2, i + 0.1, 0.01)
+            for i in range(20)
+        ]
+        fast = [float(i) for i in range(20)]
+        slow = [float(i) - 1.0 for i in range(20)]
+        base = dict(donchian=3, ema_fast=2, ema_slow=5)
+        self.assertEqual(signal(19, bars, fast, slow, Config(**base)), 1)
+        self.assertEqual(
+            signal(19, bars, fast, slow, Config(**base, allow_longs=False)), 0
+        )
+        down = [Bar(b.time, -b.open, -b.low, -b.high, -b.close, 0.01) for b in bars]
+        fast_d = [-v for v in fast]
+        slow_d = [-v for v in slow]
+        self.assertEqual(signal(19, down, fast_d, slow_d, Config(**base)), -1)
+        self.assertEqual(
+            signal(19, down, fast_d, slow_d, Config(**base, allow_shorts=False)), 0
+        )
+
     def test_soft_floor_matches_ea_defaults(self) -> None:
         self.assertEqual(active_floor(100_000, 103_000, Config()), 99_000)
 

@@ -74,6 +74,9 @@ class Trade:
 
 @dataclass(frozen=True)
 class Config:
+    # Side switches, mirroring the EA's InpAllowLong / InpAllowShort inputs.
+    allow_longs: bool = True
+    allow_shorts: bool = True
     donchian: int = 20
     ema_fast: int = 50
     ema_slow: int = 200
@@ -299,14 +302,16 @@ def signal(
         and lower_wick / candle_range <= config.candle_wick_max
     )
     if (
-        close > upper + buffer
+        config.allow_longs
+        and close > upper + buffer
         and fast[index - 1] > slow[index - 1]
         and fast[index - 1] > fast[index - 2]
         and bullish_candle
     ):
         return 1
     if (
-        close < lower - buffer
+        config.allow_shorts
+        and close < lower - buffer
         and fast[index - 1] < slow[index - 1]
         and fast[index - 1] < fast[index - 2]
         and bearish_candle
